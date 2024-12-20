@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AussieConnect Plus - Decision Aid Tool</title>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN for visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- jsPDF CDN for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AussieConnect Plus Decision Aid Tool</h1>
+        </header>
+        
+        <!-- Introduction Section -->
+        <section class="introduction" aria-labelledby="introduction-heading">
+            <h2 id="introduction-heading" class="sr-only">Introduction</h2>
+            <p>Loneliness affects over five million Australians, especially older adults, leading to significant health and economic challenges. This online decision aid tool is developed from a discrete choice experiment that identified older adults' preferences for various support programs designed to reduce loneliness in Australia. Utilizing the DCE’s insights and estimates, the tool predicts the probability of uptake for different program packages, enabling personalized support services based on the key factors older adults consider when seeking social connection.</p>
+        </section>
+        
+        <!-- Instructions Section -->
+        <section class="instructions" aria-labelledby="instructions-heading">
+            <h2 id="instructions-heading">How to Use This Tool</h2>
+            <p>Welcome to AussieConnect Plus! This tool is designed to help you assess the likelihood of program uptake aimed at reducing loneliness among older adults in Australia. Follow the steps below to get your predicted probability:</p>
+            <ol>
+                <li>Select your preferences from the drop-down menus provided.</li>
+                <li>Click the <strong>"Calculate Probability"</strong> button to see your results.</li>
+                <li>Review the predicted probability, your selected program package, and the cost-benefit analysis.</li>
+                <li>Download your selected program package and Uptake Probability chart for future reference.</li>
+            </ol>
+            <p>These support programs are essential in fostering community engagement and enhancing the well-being of our senior population.</p>
+        </section>
+        
+        <!-- Decision Form -->
+        <form id="decisionForm" aria-labelledby="decision-form-heading">
+            <h2 id="decision-form-heading" class="sr-only">Decision Form</h2>
+            
+            <!-- Cost Continuum -->
+            <label for="cost_cont">Cost Continuum:</label>
+            <select id="cost_cont" name="cost_cont" aria-required="true" aria-describedby="cost_cont_desc">
+                <option value="0">Cost Free (0)</option>
+                <option value="10">Affordable (10)</option>
+                <option value="15">Low Cost (15)</option>
+                <option value="20">Medium Cost (20)</option>
+                <option value="25">Moderate Cost (25)</option>
+                <option value="50">High Cost (50)</option>
+                <option value="60">Expensive (60)</option>
+            </select>
+            <span id="cost_cont_desc" class="sr-only">Select the cost level of the support program</span>
+    
+            <!-- Distance Significance -->
+            <label for="dist_signif">Distance Significance:</label>
+            <select id="dist_signif" name="dist_signif" aria-describedby="dist_signif_desc">
+                <option value="0">High Accessibility (0)</option>
+                <option value="1">Low Accessibility (1)</option>
+            </select>
+            <span id="dist_signif_desc" class="sr-only">Select the significance of distance accessibility</span>
+    
+            <!-- Distance Local -->
+            <label for="dist_local">Distance Local:</label>
+            <select id="dist_local" name="dist_local" aria-describedby="dist_local_desc">
+                <option value="1">Local Area Accessibility (1)</option>
+                <option value="0">Non-Local Area Accessibility (0)</option>
+            </select>
+            <span id="dist_local_desc" class="sr-only">Select whether local area accessibility is available</span>
+    
+            <!-- Frequency Monthly -->
+            <label for="freq_monthly">Frequency Monthly:</label>
+            <select id="freq_monthly" name="freq_monthly" aria-describedby="freq_monthly_desc">
+                <option value="1">Monthly (1)</option>
+                <option value="0">Not Monthly (0)</option>
+            </select>
+            <span id="freq_monthly_desc" class="sr-only">Select if the program occurs monthly</span>
+    
+            <!-- Frequency Weekly -->
+            <label for="freq_weekly">Frequency Weekly:</label>
+            <select id="freq_weekly" name="freq_weekly" aria-describedby="freq_weekly_desc">
+                <option value="1">Weekly (1)</option>
+                <option value="0">Not Weekly (0)</option>
+            </select>
+            <span id="freq_weekly_desc" class="sr-only">Select if the program occurs weekly</span>
+    
+            <!-- Mode Virtual -->
+            <label for="mode_virtual">Mode Virtual:</label>
+            <select id="mode_virtual" name="mode_virtual" aria-describedby="mode_virtual_desc">
+                <option value="0">In-Person Only (0)</option>
+                <option value="1">Virtual Available (1)</option>
+            </select>
+            <span id="mode_virtual_desc" class="sr-only">Select if virtual mode is available</span>
+    
+            <!-- Mode Hybrid -->
+            <label for="mode_hybrid">Mode Hybrid:</label>
+            <select id="mode_hybrid" name="mode_hybrid" aria-describedby="mode_hybrid_desc">
+                <option value="0">In-Person Only (0)</option>
+                <option value="1">Hybrid Available (1)</option>
+            </select>
+            <span id="mode_hybrid_desc" class="sr-only">Select if hybrid mode is available</span>
+    
+            <!-- Duration 2 Hours -->
+            <label for="dur_2hrs">Duration 2 Hours:</label>
+            <select id="dur_2hrs" name="dur_2hrs" aria-describedby="dur_2hrs_desc">
+                <option value="1">Yes (1)</option>
+                <option value="0">No (0)</option>
+            </select>
+            <span id="dur_2hrs_desc" class="sr-only">Select if the program duration is 2 hours</span>
+    
+            <!-- Duration 4 Hours -->
+            <label for="dur_4hrs">Duration 4 Hours:</label>
+            <select id="dur_4hrs" name="dur_4hrs" aria-describedby="dur_4hrs_desc">
+                <option value="1">Yes (1)</option>
+                <option value="0">No (0)</option>
+            </select>
+            <span id="dur_4hrs_desc" class="sr-only">Select if the program duration is 4 hours</span>
+    
+            <!-- Type of Support Program -->
+            <label for="type_comm">Community Engagement:</label>
+            <select id="type_comm" name="type_comm" aria-describedby="type_comm_desc">
+                <option value="1">Yes (1)</option>
+                <option value="0">No (0)</option>
+            </select>
+            <span id="type_comm_desc" class="sr-only">Select if community engagement is included</span>
+    
+            <label for="type_psych">Psychological Counselling:</label>
+            <select id="type_psych" name="type_psych" aria-describedby="type_psych_desc">
+                <option value="1">Yes (1)</option>
+                <option value="0">No (0)</option>
+            </select>
+            <span id="type_psych_desc" class="sr-only">Select if psychological counselling is included</span>
+    
+            <label for="type_vr">Virtual Reality:</label>
+            <select id="type_vr" name="type_vr" aria-describedby="type_vr_desc">
+                <option value="1">Yes (1)</option>
+                <option value="0">No (0)</option>
+            </select>
+            <span id="type_vr_desc" class="sr-only">Select if virtual reality is included</span>
+    
+            <!-- Submit Button -->
+            <button type="button" onclick="calculateProbability()" aria-label="Calculate the probability of program uptake">Calculate Probability</button>
+        </form>
+    
+        <!-- Display Result Section -->
+        <section id="result" aria-labelledby="result-heading">
+            <h2 id="result-heading">Predicted Probability of Program Uptake: <span id="probability" tabindex="-1">--</span></h2>
+            <!-- Brief Interpretations -->
+            <div id="interpretations" aria-live="polite">
+                <!-- Dynamic interpretations will appear here -->
+            </div>
+            <!-- Program Package Display -->
+            <section id="programPackage" aria-labelledby="program-package-heading">
+                <h3 id="program-package-heading">Your Selected Program Package:</h3>
+                <ul id="packageList">
+                    <!-- Selected attributes will be listed here -->
+                </ul>
+                <button id="downloadPackageBtn" onclick="downloadPackage()" aria-label="Download your selected program package">Download Program Package</button>
+                <button id="downloadChartBtn" onclick="downloadChart()" aria-label="Download the Uptake Probability chart">Download Uptake Probability Chart</button>
+                
+                <!-- Cost Information Section -->
+                <div id="costInformation" aria-labelledby="cost-information-heading">
+                    <h3 id="cost-information-heading">Cost Analysis:</h3>
+                    <ul id="costList">
+                        <!-- Cost components will be listed here -->
+                    </ul>
+                    <p><strong>Total Estimated Cost:</strong> <span id="totalCost">--</span> AUD</p>
+                    
+                    <h3>Benefit Analysis:</h3>
+                    <p><strong>Total Estimated Benefits:</strong> <span id="totalBenefits">--</span> AUD</p>
+                    
+                    <h3>Cost-Benefit Analysis:</h3>
+                    <p><strong>Net Benefit:</strong> <span id="netBenefit">--</span> AUD</p>
+                    <p><strong>Benefit-Cost Ratio:</strong> <span id="bcr">--</span></p>
+                    
+                    <!-- CBA Chart -->
+                    <div class="chart-container">
+                        <canvas id="cbaChart" aria-label="Bar chart showing Cost-Benefit Analysis" role="img"></canvas>
+                        <div id="chartSummary" class="sr-only">
+                            <p>The Cost-Benefit Analysis chart compares the total estimated costs against the total estimated benefits of the selected program package.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Download CBA Report -->
+                    <button id="downloadCBAPDFBtn" onclick="downloadCBAPDF()" aria-label="Download the Cost-Benefit Analysis report as PDF">Download CBA Report as PDF</button>
+                </div>
+            </section>
+        </section>
+    
+        <!-- Chart Container for Uptake Probability -->
+        <div class="chart-container">
+            <canvas id="probabilityChart" aria-label="Doughnut chart showing uptake probability" role="img"></canvas>
+            <div id="probabilityChartSummary" class="sr-only">
+                <p>The Uptake Probability chart displays the likelihood of program uptake compared to the remaining probability.</p>
+            </div>
+        </div>
+    
+        <!-- Feedback Section -->
+        <section class="feedback" aria-labelledby="feedback-heading">
+            <h3 id="feedback-heading">Feedback</h3>
+            <form id="feedbackForm">
+                <label for="feedback">Your Feedback:</label>
+                <textarea id="feedback" name="feedback" rows="4" placeholder="Enter your feedback here..." aria-required="true"></textarea>
+                <button type="submit" aria-label="Submit your feedback">Submit Feedback</button>
+            </form>
+        </section>
+    </div>
+    
+    <!-- Affiliation Section -->
+    <footer>
+        <p>by Mesfin Genie, The University of Newcastle, Australia</p>
+    </footer>
+    
+    <!-- Link to external JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
