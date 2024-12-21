@@ -87,7 +87,7 @@ select {
     border-radius: 5px;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
-    max-width: 400px;
+    max-width: 600px; /* Increased width */
     margin-bottom: 10px;
 }
 
@@ -335,4 +335,28 @@ footer {
     color: #ffffff;
     font-size: 1.1em;
     border-radius: 0 0 12px 12px;
+}
+
+/* Support Programs Layout */
+.support-programs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.support-program {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 250px; /* Increased width */
+}
+
+.support-program label {
+    margin-bottom: 5px;
+    font-size: 1em;
+}
+
+.support-program select {
+    width: 100%; /* Ensure full width within the container */
 }
