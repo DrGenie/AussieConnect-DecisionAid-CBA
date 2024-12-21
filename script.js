@@ -246,25 +246,37 @@ function calculateProbability() {
     const type_psych = parseFloat(document.getElementById('type_psych').value);
     const type_vr = parseFloat(document.getElementById('type_vr').value);
 
-    // Validate that both durations are not selected as 'Yes'
+    // Validate that only one duration is selected
     if (dur_2hrs === 1 && dur_4hrs === 1) {
         alert("Please select only one duration: either 2 Hours or 4 Hours.");
         return;
     }
 
-    // Validate that both frequencies are not selected as 'Yes'
+    // Validate that only one frequency is selected
     if (freq_monthly === 1 && freq_weekly === 1) {
         alert("Please select only one frequency: either Monthly or Weekly.");
         return;
     }
 
-    // Validate that both accessibility attributes are not selected as 'Yes'
+    // Validate that only one accessibility option is selected
     if (dist_local === 1 && dist_signif === 1) {
         alert("Please select only one accessibility option: either Local Area Accessibility or Low Accessibility.");
         return;
     }
 
+    // Validate that if 'Adjust Costs for Living Expenses' is 'Yes', a state is selected
+    if (adjustCosts === 'yes' && !state) {
+        alert("Please select a state if you choose to adjust costs for living expenses.");
+        return;
+    }
+
     // Calculate U_alt1
+    let adjusted_cost_cont = cost_cont; // Initialize adjusted cost_cont
+
+    if (adjustCosts === 'yes' && state && costOfLivingMultipliers[state]) {
+        adjusted_cost_cont = cost_cont * costOfLivingMultipliers[state];
+    }
+
     let U_alt1 = coefficients.ASC_alt1 +
                 coefficients.type_comm * type_comm +
                 coefficients.type_psych * type_psych +
@@ -277,7 +289,7 @@ function calculateProbability() {
                 coefficients.dur_4hrs * dur_4hrs +
                 coefficients.dist_local * dist_local +
                 coefficients.dist_signif * dist_signif +
-                coefficients.cost_cont * cost_cont;
+                coefficients.cost_cont * adjusted_cost_cont;
 
     // Calculate U_optout
     const U_optout = coefficients.ASC_optout;
@@ -366,6 +378,9 @@ function generateProgramPackage() {
     const form = document.getElementById('decisionForm');
     const selects = form.getElementsByTagName('select');
     for (let select of selects) {
+        if (select.id === 'state_select' || select.id === 'adjust_costs') {
+            continue; // Skip state and adjust costs selections
+        }
         if (select.value === "1") {
             let label = select.previousElementSibling.innerText;
             label = label.replace(':', '').trim();
@@ -549,7 +564,9 @@ function downloadChart() {
 
 // Function to download CBA report as PDF
 function downloadCBAPDF() {
-    const { grandTotal } = calculateTotalCost(document.getElementById('state_select').value, document.getElementById('adjust_costs').value);
+    const state = document.getElementById('state_select').value;
+    const adjustCosts = document.getElementById('adjust_costs').value;
+    const { grandTotal } = calculateTotalCost(state, adjustCosts);
     const P_final = parseFloat((document.getElementById('probability').innerText).replace('%', '')) / 100;
     const benefits = calculateBenefits(P_final);
     const netBenefit = benefits - grandTotal;
@@ -562,10 +579,12 @@ function downloadCBAPDF() {
     doc.setFontSize(16);
     doc.text("AussieConnect Plus - Cost-Benefit Analysis Report", 10, 20);
     doc.setFontSize(12);
-    doc.text(`Total Estimated Cost: $${grandTotal.toLocaleString()} AUD`, 10, 40);
-    doc.text(`Total Estimated Benefits: $${benefits.toLocaleString()} AUD`, 10, 50);
-    doc.text(`Net Benefit: $${netBenefit.toLocaleString()} AUD`, 10, 60);
-    doc.text(`Benefit-Cost Ratio: ${bcr.toFixed(2)}`, 10, 70);
+    doc.text(`Selected State: ${state ? state : 'N/A'}`, 10, 30);
+    doc.text(`Adjust Costs for Living Expenses: ${adjustCosts === 'yes' ? 'Yes' : 'No'}`, 10, 40);
+    doc.text(`Total Estimated Cost: $${grandTotal.toLocaleString()} AUD`, 10, 50);
+    doc.text(`Total Estimated Benefits: $${benefits.toLocaleString()} AUD`, 10, 60);
+    doc.text(`Net Benefit: $${netBenefit.toLocaleString()} AUD`, 10, 70);
+    doc.text(`Benefit-Cost Ratio: ${bcr.toFixed(2)}`, 10, 80);
     
     doc.save('CBA_Report.pdf');
 
