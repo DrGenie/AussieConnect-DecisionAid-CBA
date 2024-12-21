@@ -50,7 +50,28 @@ h1, h2, h3 {
 form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 25px;
+}
+
+/* Form Sections */
+.form-section {
+    border: 2px solid #bdc3c7;
+    padding: 20px 25px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.form-section legend {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: #2980b9;
+    padding: 0 10px;
+}
+
+.form-section p {
+    font-size: 1em;
+    color: #34495e;
+    margin-bottom: 15px;
 }
 
 label {
@@ -65,6 +86,9 @@ select {
     border: 2px solid #bdc3c7;
     border-radius: 5px;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 10px;
 }
 
 select:focus {
