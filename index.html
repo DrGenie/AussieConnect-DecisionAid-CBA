@@ -44,6 +44,39 @@
         <form id="decisionForm" aria-labelledby="decision-form-heading">
             <h2 id="decision-form-heading" class="sr-only">Decision Form</h2>
             
+            <!-- State Selection -->
+            <fieldset class="form-section" aria-labelledby="state-selection-heading">
+                <legend id="state-selection-heading">State Selection</legend>
+                <p>Select the state in Australia relevant to your analysis.</p>
+                
+                <label for="state_select">Select State:</label>
+                <select id="state_select" name="state_select" aria-required="true" aria-describedby="state_select_desc">
+                    <option value="">-- Select State --</option>
+                    <option value="NSW">New South Wales (NSW)</option>
+                    <option value="VIC">Victoria (VIC)</option>
+                    <option value="QLD">Queensland (QLD)</option>
+                    <option value="WA">Western Australia (WA)</option>
+                    <option value="SA">South Australia (SA)</option>
+                    <option value="TAS">Tasmania (TAS)</option>
+                    <option value="ACT">Australian Capital Territory (ACT)</option>
+                    <option value="NT">Northern Territory (NT)</option>
+                </select>
+                <span id="state_select_desc" class="sr-only">Select the Australian state for the analysis</span>
+            </fieldset>
+            
+            <!-- Adjust Costs for Living Expenses -->
+            <fieldset class="form-section" aria-labelledby="adjust-costs-heading">
+                <legend id="adjust-costs-heading">Adjust Costs for Living Expenses</legend>
+                <p>Whether support costs should be adjusted by the cost of living expenses across states.</p>
+                
+                <label for="adjust_costs">Adjust Costs for Living Expenses?</label>
+                <select id="adjust_costs" name="adjust_costs" aria-required="true" aria-describedby="adjust_costs_desc">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+                <span id="adjust_costs_desc" class="sr-only">Select whether to adjust costs based on the state's cost of living</span>
+            </fieldset>
+            
             <!-- Costs of Support Program -->
             <fieldset class="form-section" aria-labelledby="costs-heading">
                 <legend id="costs-heading">Costs of Support Program</legend>
