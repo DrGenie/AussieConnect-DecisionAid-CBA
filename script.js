@@ -270,7 +270,7 @@ function calculateProbability() {
         return;
     }
 
-    // Calculate U_alt1
+    // Calculate U_alt1 with Cost-of-Living Adjustment
     let adjusted_cost_cont = cost_cont; // Initialize adjusted cost_cont
 
     if (adjustCosts === 'yes' && state && costOfLivingMultipliers[state]) {
