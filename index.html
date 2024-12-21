@@ -44,104 +44,129 @@
         <form id="decisionForm" aria-labelledby="decision-form-heading">
             <h2 id="decision-form-heading" class="sr-only">Decision Form</h2>
             
-            <!-- Cost Continuum -->
-            <label for="cost_cont">Cost Continuum:</label>
-            <select id="cost_cont" name="cost_cont" aria-required="true" aria-describedby="cost_cont_desc">
-                <option value="0">Cost Free (0)</option>
-                <option value="10">Affordable (10)</option>
-                <option value="15">Low Cost (15)</option>
-                <option value="20">Medium Cost (20)</option>
-                <option value="25">Moderate Cost (25)</option>
-                <option value="50">High Cost (50)</option>
-                <option value="60">Expensive (60)</option>
-            </select>
-            <span id="cost_cont_desc" class="sr-only">Select the cost level of the support program</span>
+            <!-- Costs of Support Program -->
+            <fieldset class="form-section" aria-labelledby="costs-heading">
+                <legend id="costs-heading">Costs of Support Program</legend>
+                <p>This refers to the out-of-pocket cost participants will incur each time they participate in the support program.</p>
+                <label for="cost_cont">Cost Continuum:</label>
+                <select id="cost_cont" name="cost_cont" aria-required="true" aria-describedby="cost_cont_desc">
+                    <option value="0">Cost Free (0)</option>
+                    <option value="10">Affordable (10)</option>
+                    <option value="15">Low Cost (15)</option>
+                    <option value="20">Medium Cost (20)</option>
+                    <option value="25">Moderate Cost (25)</option>
+                    <option value="50">High Cost (50)</option>
+                    <option value="60">Expensive (60)</option>
+                </select>
+                <span id="cost_cont_desc" class="sr-only">Select the cost level of the support program</span>
+            </fieldset>
     
-            <!-- Distance Significance -->
-            <label for="dist_signif">Distance Significance:</label>
-            <select id="dist_signif" name="dist_signif" aria-describedby="dist_signif_desc">
-                <option value="0">High Accessibility (0)</option>
-                <option value="1">Low Accessibility (1)</option>
-            </select>
-            <span id="dist_signif_desc" class="sr-only">Select the significance of distance accessibility</span>
+            <!-- Accessibility/Convenience -->
+            <fieldset class="form-section" aria-labelledby="accessibility-heading">
+                <legend id="accessibility-heading">Accessibility/Convenience</legend>
+                <p>This refers to the ease of accessing the program, considering physical mobility and transportation.</p>
+                
+                <label for="dist_signif">Distance Significance:</label>
+                <select id="dist_signif" name="dist_signif" aria-describedby="dist_signif_desc">
+                    <option value="0">High Accessibility (0)</option>
+                    <option value="1">Low Accessibility (1)</option>
+                </select>
+                <span id="dist_signif_desc" class="sr-only">Select the significance of distance accessibility</span>
+        
+                <label for="dist_local">Distance Local:</label>
+                <select id="dist_local" name="dist_local" aria-describedby="dist_local_desc">
+                    <option value="1">Local Area Accessibility (1)</option>
+                    <option value="0">Non-Local Area Accessibility (0)</option>
+                </select>
+                <span id="dist_local_desc" class="sr-only">Select whether local area accessibility is available</span>
+            </fieldset>
     
-            <!-- Distance Local -->
-            <label for="dist_local">Distance Local:</label>
-            <select id="dist_local" name="dist_local" aria-describedby="dist_local_desc">
-                <option value="1">Local Area Accessibility (1)</option>
-                <option value="0">Non-Local Area Accessibility (0)</option>
-            </select>
-            <span id="dist_local_desc" class="sr-only">Select whether local area accessibility is available</span>
+            <!-- Frequency of Interaction or Engagement -->
+            <fieldset class="form-section" aria-labelledby="frequency-heading">
+                <legend id="frequency-heading">Frequency of Interaction or Engagement</legend>
+                <p>This refers to how often individuals will participate in the program.</p>
+                
+                <label for="freq_monthly">Frequency Monthly:</label>
+                <select id="freq_monthly" name="freq_monthly" aria-describedby="freq_monthly_desc">
+                    <option value="1">Monthly (1)</option>
+                    <option value="0">Not Monthly (0)</option>
+                </select>
+                <span id="freq_monthly_desc" class="sr-only">Select if the program occurs monthly</span>
+        
+                <label for="freq_weekly">Frequency Weekly:</label>
+                <select id="freq_weekly" name="freq_weekly" aria-describedby="freq_weekly_desc">
+                    <option value="1">Weekly (1)</option>
+                    <option value="0">Not Weekly (0)</option>
+                </select>
+                <span id="freq_weekly_desc" class="sr-only">Select if the program occurs weekly</span>
+            </fieldset>
     
-            <!-- Frequency Monthly -->
-            <label for="freq_monthly">Frequency Monthly:</label>
-            <select id="freq_monthly" name="freq_monthly" aria-describedby="freq_monthly_desc">
-                <option value="1">Monthly (1)</option>
-                <option value="0">Not Monthly (0)</option>
-            </select>
-            <span id="freq_monthly_desc" class="sr-only">Select if the program occurs monthly</span>
+            <!-- Method of Engagement or Interaction -->
+            <fieldset class="form-section" aria-labelledby="method-heading">
+                <legend id="method-heading">Method of Engagement or Interaction</legend>
+                <p>This refers to how individuals prefer to connect, catering to those who may have mobility issues or prefer digital communication.</p>
+                
+                <label for="mode_virtual">Mode Virtual:</label>
+                <select id="mode_virtual" name="mode_virtual" aria-describedby="mode_virtual_desc">
+                    <option value="0">In-Person Only (0)</option>
+                    <option value="1">Virtual Available (1)</option>
+                </select>
+                <span id="mode_virtual_desc" class="sr-only">Select if virtual mode is available</span>
+        
+                <label for="mode_hybrid">Mode Hybrid:</label>
+                <select id="mode_hybrid" name="mode_hybrid" aria-describedby="mode_hybrid_desc">
+                    <option value="0">In-Person Only (0)</option>
+                    <option value="1">Hybrid Available (1)</option>
+                </select>
+                <span id="mode_hybrid_desc" class="sr-only">Select if hybrid mode is available</span>
+            </fieldset>
     
-            <!-- Frequency Weekly -->
-            <label for="freq_weekly">Frequency Weekly:</label>
-            <select id="freq_weekly" name="freq_weekly" aria-describedby="freq_weekly_desc">
-                <option value="1">Weekly (1)</option>
-                <option value="0">Not Weekly (0)</option>
-            </select>
-            <span id="freq_weekly_desc" class="sr-only">Select if the program occurs weekly</span>
-    
-            <!-- Mode Virtual -->
-            <label for="mode_virtual">Mode Virtual:</label>
-            <select id="mode_virtual" name="mode_virtual" aria-describedby="mode_virtual_desc">
-                <option value="0">In-Person Only (0)</option>
-                <option value="1">Virtual Available (1)</option>
-            </select>
-            <span id="mode_virtual_desc" class="sr-only">Select if virtual mode is available</span>
-    
-            <!-- Mode Hybrid -->
-            <label for="mode_hybrid">Mode Hybrid:</label>
-            <select id="mode_hybrid" name="mode_hybrid" aria-describedby="mode_hybrid_desc">
-                <option value="0">In-Person Only (0)</option>
-                <option value="1">Hybrid Available (1)</option>
-            </select>
-            <span id="mode_hybrid_desc" class="sr-only">Select if hybrid mode is available</span>
-    
-            <!-- Duration 2 Hours -->
-            <label for="dur_2hrs">Duration 2 Hours:</label>
-            <select id="dur_2hrs" name="dur_2hrs" aria-describedby="dur_2hrs_desc">
-                <option value="1">Yes (1)</option>
-                <option value="0">No (0)</option>
-            </select>
-            <span id="dur_2hrs_desc" class="sr-only">Select if the program duration is 2 hours</span>
-    
-            <!-- Duration 4 Hours -->
-            <label for="dur_4hrs">Duration 4 Hours:</label>
-            <select id="dur_4hrs" name="dur_4hrs" aria-describedby="dur_4hrs_desc">
-                <option value="1">Yes (1)</option>
-                <option value="0">No (0)</option>
-            </select>
-            <span id="dur_4hrs_desc" class="sr-only">Select if the program duration is 4 hours</span>
+            <!-- Duration of Each Interaction -->
+            <fieldset class="form-section" aria-labelledby="duration-heading">
+                <legend id="duration-heading">Duration of Each Interaction</legend>
+                <p>This refers to the length of each interaction or activity.</p>
+                
+                <label for="dur_2hrs">Duration 2 Hours:</label>
+                <select id="dur_2hrs" name="dur_2hrs" aria-describedby="dur_2hrs_desc">
+                    <option value="1">Yes (1)</option>
+                    <option value="0">No (0)</option>
+                </select>
+                <span id="dur_2hrs_desc" class="sr-only">Select if the program duration is 2 hours</span>
+        
+                <label for="dur_4hrs">Duration 4 Hours:</label>
+                <select id="dur_4hrs" name="dur_4hrs" aria-describedby="dur_4hrs_desc">
+                    <option value="1">Yes (1)</option>
+                    <option value="0">No (0)</option>
+                </select>
+                <span id="dur_4hrs_desc" class="sr-only">Select if the program duration is 4 hours</span>
+            </fieldset>
     
             <!-- Type of Support Program -->
-            <label for="type_comm">Community Engagement:</label>
-            <select id="type_comm" name="type_comm" aria-describedby="type_comm_desc">
-                <option value="1">Yes (1)</option>
-                <option value="0">No (0)</option>
-            </select>
-            <span id="type_comm_desc" class="sr-only">Select if community engagement is included</span>
-    
-            <label for="type_psych">Psychological Counselling:</label>
-            <select id="type_psych" name="type_psych" aria-describedby="type_psych_desc">
-                <option value="1">Yes (1)</option>
-                <option value="0">No (0)</option>
-            </select>
-            <span id="type_psych_desc" class="sr-only">Select if psychological counselling is included</span>
-    
-            <label for="type_vr">Virtual Reality:</label>
-            <select id="type_vr" name="type_vr" aria-describedby="type_vr_desc">
-                <option value="1">Yes (1)</option>
-                <option value="0">No (0)</option>
-            </select>
-            <span id="type_vr_desc" class="sr-only">Select if virtual reality is included</span>
+            <fieldset class="form-section" aria-labelledby="type-support-heading">
+                <legend id="type-support-heading">Type of Support Program</legend>
+                <p>This refers to how participants connect with others and what kinds of activities they might do together.</p>
+                
+                <label for="type_comm">Community Engagement:</label>
+                <select id="type_comm" name="type_comm" aria-describedby="type_comm_desc">
+                    <option value="1">Yes (1)</option>
+                    <option value="0">No (0)</option>
+                </select>
+                <span id="type_comm_desc" class="sr-only">Select if community engagement is included</span>
+        
+                <label for="type_psych">Psychological Counselling:</label>
+                <select id="type_psych" name="type_psych" aria-describedby="type_psych_desc">
+                    <option value="1">Yes (1)</option>
+                    <option value="0">No (0)</option>
+                </select>
+                <span id="type_psych_desc" class="sr-only">Select if psychological counselling is included</span>
+        
+                <label for="type_vr">Virtual Reality:</label>
+                <select id="type_vr" name="type_vr" aria-describedby="type_vr_desc">
+                    <option value="1">Yes (1)</option>
+                    <option value="0">No (0)</option>
+                </select>
+                <span id="type_vr_desc" class="sr-only">Select if virtual reality is included</span>
+            </fieldset>
     
             <!-- Submit Button -->
             <button type="button" onclick="calculateProbability()" aria-label="Calculate the probability of program uptake">Calculate Probability</button>
