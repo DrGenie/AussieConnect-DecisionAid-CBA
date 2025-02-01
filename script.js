@@ -1,8 +1,8 @@
 /****************************************************************************
  * SCRIPT.JS
  * Enhanced tabs with working icons and tooltips, improved Inputs layout,
- * interactive Cost-Benefits section with toggle buttons and combined bar chart,
- * and export to PDF functionality.
+ * interactive Cost-Benefits section with toggle buttons and a combined bar chart,
+ * detailed educational summaries, and export to PDF functionality.
  ****************************************************************************/
 
 /** On page load, set default tab */
@@ -280,15 +280,12 @@ function openComparison() {
     return;
   }
   const { jsPDF } = window.jspdf;
-  // Create a new PDF document
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const pageWidth = doc.internal.pageSize.getWidth();
   let currentY = 15;
-  
   doc.setFontSize(16);
   doc.text("LonelyLessAustralia - Scenarios Comparison", pageWidth / 2, currentY, { align: 'center' });
   currentY += 10;
-  
   savedScenarios.forEach((scenario, index) => {
     if (currentY > 260) {
       doc.addPage();
@@ -327,7 +324,6 @@ function openComparison() {
     doc.text(`VR: ${scenario.vrCheck ? 'Yes' : 'No'}`, 15, currentY);
     currentY += 10;
   });
-  
   doc.save("Scenarios_Comparison.pdf");
 }
 
@@ -372,7 +368,7 @@ function renderCostsBenefits() {
     <p><strong>Total QALYs:</strong> ${totalQALY.toFixed(2)}</p>
     <p><strong>Monetised Benefits:</strong> A$${monetizedBenefits.toLocaleString()}</p>
     <p><strong>Net Benefit:</strong> A$${netBenefit.toLocaleString()}</p>
-    <p>This analysis combines fixed and variable costs. Benefits are derived from QALY gains multiplied by a monetary value. Use the interactive sliders and info boxes in the Inputs tab to explore different scenarios.</p>
+    <p>This analysis combines fixed costs (e.g. advertisement, training) and variable costs (e.g. delivery, travel). Benefits are derived from QALY gains multiplied by a monetary conversion factor. Adjust the inputs to see how changes affect the outcomes.</p>
   `;
   costsTab.appendChild(summaryDiv);
   
