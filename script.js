@@ -1,23 +1,23 @@
 /****************************************************************************
  * SCRIPT.JS
- * Enhanced with icons, tooltips, transitions, and responsive behavior.
+ * Enhanced tabs, icons, tooltips, transitions and responsive layout.
  ****************************************************************************/
 
-/** On page load, default to introduction tab */
+/** On page load, set default tab */
 window.onload = function() {
   openTab('introTab', document.querySelector('.tablink'));
 };
 
-/** Tab switching */
+/** Tab Switching Function */
 function openTab(tabId, btn) {
-  const allTabs = document.getElementsByClassName("tabcontent");
-  for (let tab of allTabs) {
+  const tabs = document.getElementsByClassName("tabcontent");
+  for (let tab of tabs) {
     tab.style.display = "none";
   }
-  const allBtns = document.getElementsByClassName("tablink");
-  for (let b of allBtns) {
-    b.classList.remove("active");
-    b.setAttribute("aria-selected", "false");
+  const tabButtons = document.getElementsByClassName("tablink");
+  for (let button of tabButtons) {
+    button.classList.remove("active");
+    button.setAttribute("aria-selected", "false");
   }
   document.getElementById(tabId).style.display = "block";
   btn.classList.add("active");
@@ -27,13 +27,13 @@ function openTab(tabId, btn) {
   if (tabId === 'costsTab') renderCostsBenefits();
 }
 
-/** Update range slider display */
+/** Update Range Slider Display */
 function updateCostDisplay(val) {
   document.getElementById("costLabel").textContent = val;
 }
 
 /***************************************************************************
- * DCE COEFFICIENTS & COST-OF-LIVING MULTIPLIERS
+ * Main DCE Coefficients & Cost Multipliers
  ***************************************************************************/
 const mainCoefficients = {
   ASC_mean: -0.112,
@@ -65,7 +65,7 @@ const costOfLivingMultipliers = {
 };
 
 /***************************************************************************
- * WTP DATA
+ * WTP Data
  ***************************************************************************/
 const wtpDataMain = [
   { attribute: "Community engagement", wtp: 14.47, pVal: 0.000, se: 3.31 },
@@ -121,15 +121,10 @@ function buildScenarioFromInputs() {
     return null;
   }
   if (adjustCosts === 'yes' && !state) {
-    alert("Select a state if adjusting cost-of-living.");
+    alert("Select a state when adjusting cost-of-living.");
     return null;
   }
-  return {
-    state, adjustCosts, cost_val,
-    localCheck, widerCheck, weeklyCheck, monthlyCheck,
-    virtualCheck, hybridCheck, twoHCheck, fourHCheck,
-    commCheck, psychCheck, vrCheck
-  };
+  return { state, adjustCosts, cost_val, localCheck, widerCheck, weeklyCheck, monthlyCheck, virtualCheck, hybridCheck, twoHCheck, fourHCheck, commCheck, psychCheck, vrCheck };
 }
 
 /***************************************************************************
@@ -183,8 +178,8 @@ function renderWTPChart() {
     datasets: [{
       label: "WTP (A$)",
       data: values,
-      backgroundColor: values.map(v => v >= 0 ? 'rgba(39,174,96,0.6)' : 'rgba(231,76,60,0.6)'),
-      borderColor: values.map(v => v >= 0 ? 'rgba(39,174,96,1)' : 'rgba(231,76,60,1)'),
+      backgroundColor: values.map(v => v >= 0 ? 'rgba(0,123,255,0.6)' : 'rgba(220,53,69,0.6)'),
+      borderColor: values.map(v => v >= 0 ? 'rgba(0,123,255,1)' : 'rgba(220,53,69,1)'),
       borderWidth: 1,
       error: errors
     }]
@@ -197,11 +192,7 @@ function renderWTPChart() {
       scales: { y: { beginAtZero: true } },
       plugins: {
         legend: { display: false },
-        title: {
-          display: true,
-          text: "Willingness to Pay (A$) for Attributes",
-          font: { size: 16 }
-        },
+        title: { display: true, text: "WTP (A$) for Attributes", font: { size: 16 } },
         tooltip: {
           callbacks: {
             afterBody: function(context) {
@@ -225,7 +216,7 @@ function renderWTPChart() {
             const bottomY = y.getPixelForValue(value - se);
             ctx.save();
             ctx.beginPath();
-            ctx.strokeStyle = 'black';
+            ctx.strokeStyle = '#000';
             ctx.lineWidth = 1;
             ctx.moveTo(centerX, topY);
             ctx.lineTo(centerX, bottomY);
@@ -253,8 +244,8 @@ function saveScenario() {
   savedScenarios.push(scenario);
   const tableBody = document.querySelector("#scenarioTable tbody");
   const row = document.createElement("tr");
-  const properties = ["name", "state", "adjustCosts", "cost_val", "localCheck", "widerCheck", "weeklyCheck", "monthlyCheck", "virtualCheck", "hybridCheck", "twoHCheck", "fourHCheck", "commCheck", "psychCheck", "vrCheck"];
-  properties.forEach(prop => {
+  const props = ["name", "state", "adjustCosts", "cost_val", "localCheck", "widerCheck", "weeklyCheck", "monthlyCheck", "virtualCheck", "hybridCheck", "twoHCheck", "fourHCheck", "commCheck", "psychCheck", "vrCheck"];
+  props.forEach(prop => {
     const cell = document.createElement("td");
     if (prop === "cost_val") {
       cell.textContent = `A$${scenario[prop].toFixed(2)}`;
@@ -374,24 +365,20 @@ function openComparison() {
           data: {
             labels,
             datasets: [{
-              label: 'Programme Uptake (%)',
+              label: 'Uptake (%)',
               data: uptakeData,
-              backgroundColor: uptakeData.map(p => p < 30 ? 'rgba(231,76,60,0.6)' : p < 70 ? 'rgba(241,196,15,0.6)' : 'rgba(39,174,96,0.6)'),
-              borderColor: uptakeData.map(p => p < 30 ? 'rgba(231,76,60,1)' : p < 70 ? 'rgba(241,196,15,1)' : 'rgba(39,174,96,1)'),
+              backgroundColor: uptakeData.map(p => p < 30 ? 'rgba(220,53,69,0.6)' : p < 70 ? 'rgba(255,193,7,0.6)' : 'rgba(40,167,69,0.6)'),
+              borderColor: uptakeData.map(p => p < 30 ? 'rgba(220,53,69,1)' : p < 70 ? 'rgba(255,193,7,1)' : 'rgba(40,167,69,1)'),
               borderWidth: 1
             }]
           },
           options: {
             responsive: true,
+            scales: { y: { beginAtZero: true, max: 100 } },
             plugins: {
               legend: { display: false },
-              title: {
-                display: true,
-                text: 'Programme Uptake Probability',
-                font: { size: 16 }
-              }
-            },
-            scales: { y: { beginAtZero: true, max: 100 } }
+              title: { display: true, text: 'Programme Uptake Probability', font: { size: 16 } }
+            }
           }
         });
         const ctxBenefit = document.getElementById("compBenefitChart").getContext("2d");
@@ -402,22 +389,18 @@ function openComparison() {
             datasets: [{
               label: 'Monetised Benefits (A$)',
               data: benefitData,
-              backgroundColor: 'rgba(39,174,96,0.6)',
-              borderColor: 'rgba(27,163,156,1)',
+              backgroundColor: 'rgba(40,167,69,0.6)',
+              borderColor: 'rgba(40,167,69,1)',
               borderWidth: 1
             }]
           },
           options: {
             responsive: true,
+            scales: { y: { beginAtZero: true } },
             plugins: {
               legend: { display: false },
-              title: {
-                display: true,
-                text: 'Monetised QALY Benefits',
-                font: { size: 16 }
-              }
-            },
-            scales: { y: { beginAtZero: true } }
+              title: { display: true, text: 'Monetised QALY Benefits', font: { size: 16 } }
+            }
           }
         });
       <\/script>
@@ -452,13 +435,13 @@ function exportToPDF() {
     doc.setFontSize(12);
     doc.text(`State: ${scenario.state || 'None'}`, margin, currentY);
     currentY += 5;
-    doc.text(`Adjust for Cost of Living: ${scenario.adjustCosts === 'yes' ? 'Yes' : 'No'}`, margin, currentY);
+    doc.text(`Cost Adjust: ${scenario.adjustCosts === 'yes' ? 'Yes' : 'No'}`, margin, currentY);
     currentY += 5;
     doc.text(`Cost per Session: A$${scenario.cost_val.toFixed(2)}`, margin, currentY);
     currentY += 5;
-    doc.text(`Local Area: ${scenario.localCheck ? 'Yes' : 'No'}`, margin, currentY);
+    doc.text(`Local: ${scenario.localCheck ? 'Yes' : 'No'}`, margin, currentY);
     currentY += 5;
-    doc.text(`Wider Community: ${scenario.widerCheck ? 'Yes' : 'No'}`, margin, currentY);
+    doc.text(`Wider: ${scenario.widerCheck ? 'Yes' : 'No'}`, margin, currentY);
     currentY += 5;
     doc.text(`Weekly: ${scenario.weeklyCheck ? 'Yes' : 'No'}`, margin, currentY);
     currentY += 5;
@@ -509,12 +492,12 @@ function renderCostsBenefits() {
   const costPerPerson = totalInterventionCost / numberOfParticipants;
   const netBenefit = monetizedBenefits - totalInterventionCost;
   const costComponents = [
-    { item: "Advertisements in Local Press", value: 2978.80, quantity: 2, unitCost: 2978.80 / 2, totalCost: 2978.80 },
-    { item: "Printing of Leaflets", value: 0.12, quantity: 10000, unitCost: 0.12, totalCost: 1200.00 },
-    { item: "Parcel and Postage", value: 0.147, quantity: 10000, unitCost: 0.147, totalCost: 1470.00 },
-    { item: "Administrative Personnel", value: 49.99, quantity: 10, unitCost: 49.99, totalCost: 499.90 },
-    { item: "Trainer Cost (5h)", value: 223.86, quantity: 100, unitCost: 223.86, totalCost: 22386.00 },
-    { item: "On-Costs (30%)", value: 44.77, quantity: 100, unitCost: 44.77, totalCost: 4477.00 },
+    { item: "Advertisements", value: 2978.80, quantity: 2, unitCost: 2978.80 / 2, totalCost: 2978.80 },
+    { item: "Leaflet Printing", value: 0.12, quantity: 10000, unitCost: 0.12, totalCost: 1200.00 },
+    { item: "Postage", value: 0.147, quantity: 10000, unitCost: 0.147, totalCost: 1470.00 },
+    { item: "Admin Personnel", value: 49.99, quantity: 10, unitCost: 49.99, totalCost: 499.90 },
+    { item: "Trainer Cost", value: 223.86, quantity: 100, unitCost: 223.86, totalCost: 22386.00 },
+    { item: "On-Costs", value: 44.77, quantity: 100, unitCost: 44.77, totalCost: 4477.00 },
     { item: "Facilitator Salaries", value: 100.00, quantity: 100, unitCost: 100.00, totalCost: 10000.00 },
     { item: "Material Costs", value: 50.00, quantity: 100, unitCost: 50.00, totalCost: 5000.00 },
     { item: "Venue Hire", value: 15.00, quantity: 100, unitCost: 15.00, totalCost: 3000.00 },
@@ -552,11 +535,11 @@ function renderCostsBenefits() {
   summaryDiv.id = "summaryCalculations";
   summaryDiv.innerHTML = `
     <h3>Cost & Benefits Analysis</h3>
-    <p><strong>Programme Uptake:</strong> ${uptakePercentage.toFixed(2)}%</p>
+    <p><strong>Uptake:</strong> ${uptakePercentage.toFixed(2)}%</p>
     <p><strong>Participants:</strong> ${numberOfParticipants.toFixed(0)}</p>
-    <p><strong>Total Intervention Cost:</strong> A$${totalInterventionCost.toFixed(2)}</p>
+    <p><strong>Total Cost:</strong> A$${totalInterventionCost.toFixed(2)}</p>
     <p><strong>Cost per Participant:</strong> A$${costPerPerson.toFixed(2)}</p>
-    <p><strong>Total QALY Gains:</strong> ${totalQALY.toFixed(2)} QALYs</p>
+    <p><strong>Total QALYs:</strong> ${totalQALY.toFixed(2)}</p>
     <p><strong>Monetised Benefits:</strong> A$${monetizedBenefits.toLocaleString()}</p>
     <p><strong>Net Benefit:</strong> A$${netBenefit.toLocaleString()}</p>
   `;
@@ -581,8 +564,8 @@ function renderCostsBenefits() {
       datasets: [{
         label: 'A$',
         data: [totalInterventionCost],
-        backgroundColor: 'rgba(231,76,60,0.6)',
-        borderColor: 'rgba(192,57,43,1)',
+        backgroundColor: 'rgba(220,53,69,0.6)',
+        borderColor: 'rgba(220,53,69,1)',
         borderWidth: 1
       }]
     },
@@ -604,8 +587,8 @@ function renderCostsBenefits() {
       datasets: [{
         label: 'A$',
         data: [monetizedBenefits],
-        backgroundColor: 'rgba(39,174,96,0.6)',
-        borderColor: 'rgba(27,163,156,1)',
+        backgroundColor: 'rgba(40,167,69,0.6)',
+        borderColor: 'rgba(40,167,69,1)',
         borderWidth: 1
       }]
     },
@@ -641,12 +624,12 @@ function renderProbChart() {
   probChartInstance = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ["Programme Uptake Probability"],
+      labels: ["Uptake Probability"],
       datasets: [{
-        label: 'Programme Uptake (%)',
+        label: 'Uptake (%)',
         data: [pVal],
-        backgroundColor: pVal < 30 ? 'rgba(231,76,60,0.6)' : pVal < 70 ? 'rgba(241,196,15,0.6)' : 'rgba(39,174,96,0.6)',
-        borderColor: pVal < 30 ? 'rgba(231,76,60,1)' : pVal < 70 ? 'rgba(241,196,15,1)' : 'rgba(39,174,96,1)',
+        backgroundColor: pVal < 30 ? 'rgba(220,53,69,0.6)' : pVal < 70 ? 'rgba(255,193,7,0.6)' : 'rgba(40,167,69,0.6)',
+        borderColor: pVal < 30 ? 'rgba(220,53,69,1)' : pVal < 70 ? 'rgba(255,193,7,1)' : 'rgba(40,167,69,1)',
         borderWidth: 1
       }]
     },
@@ -656,12 +639,12 @@ function renderProbChart() {
       scales: { x: { beginAtZero: true, max: 100 } },
       plugins: {
         legend: { display: false },
-        title: { display: true, text: `Programme Uptake Probability = ${pVal.toFixed(2)}%`, font: { size: 16 } }
+        title: { display: true, text: `Uptake Probability: ${pVal.toFixed(2)}%`, font: { size: 16 } }
       }
     }
   });
-  let interpretation = pVal < 30 ? "Uptake is low. Consider lowering cost or improving accessibility." :
-                       pVal < 70 ? "Uptake is moderate. Small improvements may boost participation." :
-                       "Uptake is high. Maintain these attributes.";
-  alert(`Predicted probability: ${pVal.toFixed(2)}%. ${interpretation}`);
+  let interpretation = pVal < 30 ? "Low uptake. Consider lowering costs or improving accessibility." :
+                       pVal < 70 ? "Moderate uptake. Some improvements could boost participation." :
+                       "High uptake. Maintain current attributes.";
+  alert(`Predicted uptake: ${pVal.toFixed(2)}%. ${interpretation}`);
 }
