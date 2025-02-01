@@ -1,6 +1,7 @@
 /****************************************************************************
  * SCRIPT.JS
- * Enhanced tabs, icons, tooltips, transitions, and professional layouts.
+ * Enhanced tabs, icons, detailed attributes, cost-benefits layout,
+ * tooltips (on hover and focus) and additional suggestions for lay users.
  ****************************************************************************/
 
 /** On page load, set default tab */
@@ -33,7 +34,7 @@ function updateCostDisplay(val) {
 }
 
 /***************************************************************************
- * DCE Coefficients & Cost Multipliers
+ * Main DCE Coefficients & Cost Multipliers
  ***************************************************************************/
 const mainCoefficients = {
   ASC_mean: -0.112,
@@ -466,7 +467,7 @@ function exportToPDF() {
 }
 
 /***************************************************************************
- * Costs & Benefits Calculations & Layout
+ * Costs & Benefits Calculations & Rendering
  ***************************************************************************/
 const QALY_SCENARIOS_VALUES = { low: 0.02, moderate: 0.05, high: 0.1 };
 const VALUE_PER_QALY = 50000;
@@ -504,47 +505,58 @@ function renderCostsBenefits() {
     { item: "Time Cost", value: 20.00, quantity: 250, unitCost: 20.00, totalCost: 5000.00 },
     { item: "Travel Costs", value: 10.00, quantity: 250, unitCost: 10.00, totalCost: 2500.00 }
   ];
-  
-  // Render cost components table
-  const costComponentsArea = document.getElementById("costComponentsArea");
-  costComponentsArea.innerHTML = `
-    <table id="costComponentsTable">
-      <thead>
+  const costsTab = document.getElementById("costsBenefitsResults");
+  costsTab.innerHTML = '';
+  const table = document.createElement("table");
+  table.id = "costComponentsTable";
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th>Cost Item</th>
+        <th>Value (A$)</th>
+        <th>Quantity</th>
+        <th>Unit Cost (A$)</th>
+        <th>Total Cost (A$)</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${costComponents.map(c => `
         <tr>
-          <th>Cost Item</th>
-          <th>Value (A$)</th>
-          <th>Quantity</th>
-          <th>Unit Cost (A$)</th>
-          <th>Total Cost (A$)</th>
+          <td><i class="fa-solid fa-receipt" title="${c.item}"></i> ${c.item}</td>
+          <td>A$${c.value.toFixed(2)}</td>
+          <td>${c.quantity}</td>
+          <td>A$${c.unitCost.toFixed(2)}</td>
+          <td>A$${c.totalCost.toFixed(2)}</td>
         </tr>
-      </thead>
-      <tbody>
-        ${costComponents.map(c => `
-          <tr>
-            <td>${c.item}</td>
-            <td>A$${c.value.toFixed(2)}</td>
-            <td>${c.quantity}</td>
-            <td>A$${c.unitCost.toFixed(2)}</td>
-            <td>A$${c.totalCost.toFixed(2)}</td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
+      `).join('')}
+    </tbody>
   `;
-  
-  // Render summary calculations and charts
-  const summaryDiv = document.getElementById("summaryCalculations");
+  costsTab.appendChild(table);
+  const summaryDiv = document.createElement("div");
+  summaryDiv.id = "summaryCalculations";
   summaryDiv.innerHTML = `
-    <h3>Cost & Benefits Analysis</h3>
+    <h3><i class="fa-solid fa-chart-line"></i> Cost &amp; Benefits Analysis</h3>
     <p><strong>Uptake:</strong> ${uptakePercentage.toFixed(2)}%</p>
     <p><strong>Participants:</strong> ${numberOfParticipants.toFixed(0)}</p>
-    <p><strong>Total Cost:</strong> A$${totalInterventionCost.toFixed(2)}</p>
+    <p><strong>Total Intervention Cost:</strong> A$${totalInterventionCost.toFixed(2)}</p>
     <p><strong>Cost per Participant:</strong> A$${costPerPerson.toFixed(2)}</p>
     <p><strong>Total QALYs:</strong> ${totalQALY.toFixed(2)}</p>
     <p><strong>Monetised Benefits:</strong> A$${monetizedBenefits.toLocaleString()}</p>
     <p><strong>Net Benefit:</strong> A$${netBenefit.toLocaleString()}</p>
+    <p class="suggestion">Tip: Consider further enhancements like interactive cost sliders, pop-up information boxes, and brief educational summaries to explain key modelling assumptions to lay users.</p>
   `;
-  
+  costsTab.appendChild(summaryDiv);
+  const chartsDiv = document.createElement("div");
+  chartsDiv.className = "chart-grid";
+  const costChartBox = document.createElement("div");
+  costChartBox.className = "chart-box";
+  costChartBox.innerHTML = `<h3><i class="fa-solid fa-money-bill-wave"></i> Total Intervention Cost</h3><canvas id="costChart"></canvas>`;
+  chartsDiv.appendChild(costChartBox);
+  const benefitChartBox = document.createElement("div");
+  benefitChartBox.className = "chart-box";
+  benefitChartBox.innerHTML = `<h3><i class="fa-solid fa-hand-holding-dollar"></i> Monetised Benefits</h3><canvas id="benefitChart"></canvas>`;
+  chartsDiv.appendChild(benefitChartBox);
+  costsTab.appendChild(chartsDiv);
   const ctxCost = document.getElementById("costChart").getContext("2d");
   if (costsChartInstance) costsChartInstance.destroy();
   costsChartInstance = new Chart(ctxCost, {
@@ -568,7 +580,6 @@ function renderCostsBenefits() {
       scales: { y: { beginAtZero: true, suggestedMax: totalInterventionCost * 1.2 } }
     }
   });
-  
   const ctxBenefit = document.getElementById("benefitChart").getContext("2d");
   if (benefitsChartInstance) benefitsChartInstance.destroy();
   benefitsChartInstance = new Chart(ctxBenefit, {
