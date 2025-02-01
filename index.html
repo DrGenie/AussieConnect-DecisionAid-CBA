@@ -16,7 +16,7 @@
   <div class="container">
     <header>
       <h1>LonelyLessAustralia Decision Aid Tool</h1>
-      <p>This tool helps you evaluate programme configurations for reducing loneliness. </p>
+      <p>This tool helps you evaluate programme configurations for reducing loneliness. It explains how costs and benefits are calculated so that even lay users can understand the trade‐offs.</p>
     </header>
 
     <nav class="tabs" role="tablist">
@@ -55,10 +55,10 @@
         <ul>
           <li><strong>Instructions</strong> – Step-by-step guidance.</li>
           <li><strong>Attributes</strong> – Detailed explanation of programme features (hover over info icons for extra details).</li>
-          <li><strong>Inputs</strong> – Configure your scenario parameters using user-friendly controls.</li>
+          <li><strong>Inputs</strong> – Configure your scenario parameters using user-friendly level cards.</li>
           <li><strong>WTP Results</strong> – View charts showing willingness-to-pay estimates.</li>
           <li><strong>Predicted Programme Uptake</strong> – See the predicted uptake percentage and suggestions for improvements.</li>
-          <li><strong>Costs &amp; Benefits</strong> – Analyse detailed cost components and QALY-based benefits with interactive sliders, pop-up info boxes and educational summaries.</li>
+          <li><strong>Costs &amp; Benefits</strong> – Analyse detailed cost components and QALY-based benefits, with interactive sliders, pop-up info boxes and educational summaries.</li>
           <li><strong>Scenarios</strong> – Save, compare and export various configurations.</li>
         </ul>
       </div>
@@ -69,8 +69,8 @@
       <div class="calculation-info">
         <h4>How to Use This Tool</h4>
         <ol>
-          <li style="margin-left: 20px;">Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over the info icons to view extra information.</li>
-          <li style="margin-left: 20px;">Configure your scenario in the <strong>Inputs</strong> tab by selecting your state, cost adjustments, and delivery options.</li>
+          <li style="margin-left: 20px;">Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over the info icons to view extra details.</li>
+          <li style="margin-left: 20px;">Configure your scenario in the <strong>Inputs</strong> tab using the level cards. (Hover over each info button for instructions.)</li>
           <li style="margin-left: 20px;">Click “Calculate &amp; View Results” to update charts and the cost-benefit analysis.</li>
           <li style="margin-left: 20px;">Examine the <strong>WTP Results</strong> tab to see the monetary value respondents assign to each attribute.</li>
           <li style="margin-left: 20px;">Check the <strong>Predicted Programme Uptake</strong> tab to view the predicted uptake percentage and suggestions for adjustments.</li>
@@ -188,7 +188,9 @@
       <div class="form-grid">
         <div class="form-item">
           <label for="state_select">State:
-            <button class="info-button" aria-label="Choose your state to adjust for cost-of-living differences."><i class="fa-solid fa-info-circle"></i></button>
+            <button class="info-button" aria-label="Choose your state to adjust for cost-of-living differences.">
+              <i class="fa-solid fa-info-circle"></i>
+            </button>
             <span class="tooltip-text">Choose your state to adjust for cost-of-living differences.</span>
           </label>
           <select id="state_select">
@@ -203,7 +205,9 @@
             <option value="NT">Northern Territory</option>
           </select>
           <label for="adjustCosts">Adjust for Cost of Living?
-            <button class="info-button" aria-label="Select Yes to apply cost-of-living multipliers for the chosen state."><i class="fa-solid fa-info-circle"></i></button>
+            <button class="info-button" aria-label="Select Yes to apply cost-of-living multipliers for the chosen state.">
+              <i class="fa-solid fa-info-circle"></i>
+            </button>
             <span class="tooltip-text">Select Yes to apply cost-of-living multipliers for the chosen state.</span>
           </label>
           <select id="adjustCosts">
@@ -213,7 +217,9 @@
         </div>
         <div class="form-item">
           <label for="costSlider">Cost per Session (AUD):
-            <button class="info-button" aria-label="Use the slider to set the base cost per session."><i class="fa-solid fa-info-circle"></i></button>
+            <button class="info-button" aria-label="Use the slider to set the base cost per session.">
+              <i class="fa-solid fa-info-circle"></i>
+            </button>
             <span class="tooltip-text">Use the slider to set the base cost per session.</span>
           </label>
           <input type="range" id="costSlider" min="0" max="100" step="1" value="50" oninput="updateCostDisplay(this.value)" />
@@ -327,7 +333,7 @@
         <div class="modelling-assumptions">
           <h3><i class="fa-solid fa-lightbulb"></i> Modelling Assumptions</h3>
           <p>
-            Our analysis uses interactive cost sliders, pop-up info boxes and brief educational summaries to explain how costs and benefits are calculated. Hover over the info icon <i class="fa-solid fa-info-circle tooltip" data-tooltip="Fixed costs include advertisement, printing, postage, personnel, training, on-costs, facilitator salaries, materials, venue hire, session time and travel. Benefits are calculated based on QALY gains multiplied by a conversion factor."></i> for further details.
+            Our analysis uses interactive cost sliders, pop-up info boxes and brief educational summaries to explain how costs and benefits are calculated. Hover over the info icon <i class="fa-solid fa-info-circle tooltip" data-tooltip="Fixed costs include advertisement, printing, postage, administrative personnel, training, on-costs, facilitator salaries, material costs, venue hire, session time and travel; benefits are calculated based on QALY gains multiplied by A$50,000."></i> for further details.
           </p>
         </div>
         <div class="cost-icons">
@@ -335,7 +341,6 @@
           <button class="buttons-row" onclick="toggleBenefitsAnalysis()">Benefits Analysis</button>
         </div>
         <div id="detailedCostBreakdown" class="cost-cards" style="display:none;">
-          <!-- All cost components as cards -->
           <div class="cost-card">
             <h4><i class="fa-solid fa-newspaper"></i> Advertisements in Local Press</h4>
             <p><strong>Value:</strong> A$2978.80</p>
@@ -413,6 +418,13 @@
             <p><strong>Unit Cost:</strong> A$10.00</p>
             <p><strong>Total Cost:</strong> A$2500.00</p>
           </div>
+        </div>
+        <div id="detailedBenefitsAnalysis" class="cost-cards" style="display:none;">
+          <div class="cost-card">
+            <h4><i class="fa-solid fa-hand-holding-dollar"></i> QALY Benefits</h4>
+            <p>Calculated as: (Participants × QALY per Participant) × A$50,000.</p>
+          </div>
+          <!-- Additional benefits cards can be added here -->
         </div>
       </div>
     </section>
