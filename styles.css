@@ -1,17 +1,14 @@
-/* Reset & Bases */
+/* Base Reset & Typography */
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #eef2f7;
-  color: #2c3e50;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #f0f4f8;
+  color: #2d3e50;
   line-height: 1.6;
-}
-a {
-  color: #2980b9;
-  text-decoration: none;
 }
 
 /* Container */
@@ -19,16 +16,16 @@ a {
   max-width: 1400px;
   margin: 20px auto;
   padding: 20px 30px;
-  background: #fff;
+  background: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
 }
 
 /* Header */
 header h1 {
   text-align: center;
   margin-bottom: 20px;
-  color: #2980b9;
+  color: #003366;
 }
 
 /* Tabs Navigation */
@@ -37,80 +34,82 @@ header h1 {
   flex-wrap: wrap;
   justify-content: center;
   margin-bottom: 20px;
+  border-bottom: 2px solid #003366;
 }
 .tablink {
-  background: #bdc3c7;
+  background: #5a8bb7;
+  color: #ffffff;
   border: none;
-  padding: 10px 15px;
-  margin: 5px;
+  padding: 10px 20px;
+  margin: 5px 10px;
   cursor: pointer;
+  border-radius: 4px 4px 0 0;
   font-size: 1em;
-  color: #2c3e50;
-  border-radius: 4px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background 0.3s ease;
 }
-.tablink:hover,
-.tablink:focus {
-  background: #95a5a6;
+.tablink:hover, .tablink:focus {
+  background: #4071a8;
   outline: none;
 }
 .tablink.active {
-  background: #2980b9;
-  color: #fff;
+  background: #003366;
+  color: #ffffff;
 }
 
-/* Tabcontent */
+/* Tab Content */
 .tabcontent {
   display: none;
-  margin-top: 10px;
+  padding: 20px;
+  outline: none;
 }
 .tabcontent h2 {
-  margin-top: 0;
-  color: #2980b9;
+  margin-bottom: 15px;
+  color: #003366;
 }
 
 /* Card Layout */
 .card {
-  background: #f9f9f9;
+  background: #eef2f7;
   border-radius: 6px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   transition: transform 0.3s ease;
 }
 .card:hover {
   transform: translateY(-3px);
 }
 
-/* Intro Box Specific */
+/* Intro Box */
 .intro-box {
-  border-left: 5px solid #2980b9;
+  border-left: 5px solid #003366;
+  padding-left: 15px;
 }
 
-/* Attribute List with Icons & Tooltips */
+/* Attribute List & Tooltips */
 .attribute-list {
   list-style: none;
-  padding: 0;
+  padding-left: 0;
 }
 .attribute-list li {
-  margin: 10px 0;
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
 }
 .attribute-list li i {
   margin-right: 10px;
-  color: #2980b9;
+  color: #003366;
   position: relative;
   cursor: help;
 }
 .tooltip::after {
   content: attr(data-tooltip);
   position: absolute;
-  bottom: -1.8em;
+  bottom: -30px;
   left: 50%;
   transform: translateX(-50%);
-  background: #333;
-  color: #fff;
+  background: #003366;
+  color: #ffffff;
   padding: 5px 8px;
   font-size: 0.8em;
   white-space: nowrap;
@@ -133,20 +132,20 @@ header h1 {
   margin-top: 20px;
 }
 .form-item {
-  background: #fff;
-  border: 1px solid #dcdcdc;
+  background: #ffffff;
+  border: 1px solid #cfd8dc;
   border-radius: 6px;
   padding: 15px;
-  transition: border-color 0.3s ease;
+  transition: border 0.3s ease;
 }
 .form-item:hover {
-  border-color: #2980b9;
+  border-color: #003366;
 }
 .form-item label {
   display: block;
   font-weight: bold;
   margin-bottom: 6px;
-  color: #2c3e50;
+  color: #2d3e50;
 }
 
 /* Buttons */
@@ -155,26 +154,27 @@ header h1 {
   margin: 20px 0;
 }
 .buttons-row button {
-  background-color: #27ae60;
-  color: #fff;
+  background-color: #0073b1;
+  color: #ffffff;
   border: none;
   padding: 10px 20px;
   margin: 0 10px;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-size: 1em;
+  transition: background 0.3s ease;
 }
 .buttons-row button:hover {
-  background-color: #1e8449;
+  background-color: #005a8d;
 }
 
-/* Range Slider Label */
+/* Range Slider */
 #costLabel {
-  color: #e74c3c;
+  color: #d32f2f;
   font-weight: bold;
 }
 
-/* Chart Styles */
+/* Chart Grid */
 .chart-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -182,8 +182,8 @@ header h1 {
   margin-top: 20px;
 }
 .chart-box {
-  background: #fefefe;
-  border: 1px solid #ddd;
+  background: #ffffff;
+  border: 1px solid #cfd8dc;
   border-radius: 6px;
   padding: 15px;
   text-align: center;
@@ -197,13 +197,13 @@ header h1 {
 }
 #scenarioTable th,
 #scenarioTable td {
-  border: 1px solid #ddd;
+  border: 1px solid #cfd8dc;
   padding: 8px;
   text-align: center;
 }
 #scenarioTable th {
-  background: #2980b9;
-  color: #fff;
+  background: #003366;
+  color: #ffffff;
 }
 
 /* QALY Selector */
@@ -218,9 +218,9 @@ header h1 {
 /* Footer */
 footer {
   text-align: center;
-  font-size: 0.9em;
-  color: #7f8c8d;
   margin-top: 20px;
+  font-size: 0.9em;
+  color: #6d6d6d;
 }
 
 /* Responsive */
