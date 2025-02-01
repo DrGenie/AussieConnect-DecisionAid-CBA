@@ -1,4 +1,4 @@
-/* RESET & BASEs */
+/* RESET & BASE */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -121,6 +121,52 @@ header p {
 .buttons-row button:hover {
   background-color: #1c5980;
   transform: translateY(-2px);
+}
+
+/* LEVEL CARDS (Inputs Tab) */
+.input-card {
+  background-color: #f7f9fc;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+.input-card h2 {
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+/* INFO BUTTONS & TOOLTIP TEXT (for level cards) */
+.info-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 5px;
+  cursor: pointer;
+}
+.info-button i {
+  width: 16px;
+  height: 16px;
+  color: #2980b9;
+}
+.tooltip-text {
+  visibility: hidden;
+  width: 240px;
+  background-color: #2c3e50;
+  color: #fff;
+  text-align: left;
+  padding: 10px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 10;
+  top: 100%;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.info-button:hover + .tooltip-text,
+.info-button:focus + .tooltip-text {
+  visibility: visible;
+  opacity: 1;
 }
 
 /* ATTRIBUTES */
