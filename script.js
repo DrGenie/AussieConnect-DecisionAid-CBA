@@ -1,7 +1,7 @@
 /****************************************************************************
  * SCRIPT.JS
- * Enhanced tabs, icons, detailed attributes, cost-benefits layout,
- * tooltips (on hover and focus) and additional suggestions for lay users.
+ * Enhanced tabs, detailed attributes with working tooltips, updated tab names,
+ * and improved interactive cost-benefit section with educational summaries.
  ****************************************************************************/
 
 /** On page load, set default tab */
@@ -207,7 +207,7 @@ function renderWTPChart() {
     plugins: [{
       id: 'errorbars',
       afterDraw: chart => {
-        const { ctx, scales: { x, y } } = chart;
+        const { ctx, scales: { y } } = chart;
         chart.getDatasetMeta(0).data.forEach((bar, i) => {
           const centerX = bar.x;
           const value = values[i];
@@ -543,7 +543,6 @@ function renderCostsBenefits() {
     <p><strong>Total QALYs:</strong> ${totalQALY.toFixed(2)}</p>
     <p><strong>Monetised Benefits:</strong> A$${monetizedBenefits.toLocaleString()}</p>
     <p><strong>Net Benefit:</strong> A$${netBenefit.toLocaleString()}</p>
-    <p class="suggestion">Tip: Consider further enhancements like interactive cost sliders, pop-up information boxes, and brief educational summaries to explain key modelling assumptions to lay users.</p>
   `;
   costsTab.appendChild(summaryDiv);
   const chartsDiv = document.createElement("div");
@@ -614,7 +613,7 @@ function openSingleScenario() {
 }
 
 /***************************************************************************
- * Programme Uptake Probability Chart
+ * Predicted Programme Uptake Chart
  ***************************************************************************/
 let probChartInstance = null;
 function renderProbChart() {
@@ -645,8 +644,8 @@ function renderProbChart() {
       }
     }
   });
-  let interpretation = pVal < 30 ? "Low uptake. Consider lowering costs or improving accessibility." :
-                       pVal < 70 ? "Moderate uptake. Some improvements could boost participation." :
-                       "High uptake. Maintain current attributes.";
+  let interpretation = pVal < 30 ? "Low uptake. Adjust programme cost or enhance local accessibility." :
+                       pVal < 70 ? "Moderate uptake. Consider increasing session frequency or optimising cost." :
+                       "High uptake. The current configuration is effective.";
   alert(`Predicted uptake: ${pVal.toFixed(2)}%. ${interpretation}`);
 }
