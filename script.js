@@ -1,7 +1,8 @@
 /****************************************************************************
  * SCRIPT.JS
- * Enhanced tabs, detailed attributes with working tooltips, updated tab names,
- * and improved interactive cost-benefit section with educational summaries.
+ * Enhanced tabs with working icons and tooltips, detailed attributes,
+ * updated tab names and improved interactive cost-benefit section with a 
+ * combined bar chart for Total Intervention Cost, Monetised Benefits and Net Benefit.
  ****************************************************************************/
 
 /** On page load, set default tab */
@@ -411,63 +412,9 @@ function openComparison() {
   comparisonWindow.document.close();
 }
 
-function exportToPDF() {
-  if (savedScenarios.length < 1) {
-    alert("No scenarios saved to export.");
-    return;
-  }
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 15;
-  let currentY = margin;
-  doc.setFontSize(16);
-  doc.text("LonelyLessAustralia - Scenarios Comparison", pageWidth / 2, currentY, { align: 'center' });
-  currentY += 10;
-  savedScenarios.forEach((scenario, index) => {
-    if (currentY + 80 > pageHeight - margin) {
-      doc.addPage();
-      currentY = margin;
-    }
-    doc.setFontSize(14);
-    doc.text(`Scenario ${index + 1}: ${scenario.name}`, margin, currentY);
-    currentY += 7;
-    doc.setFontSize(12);
-    doc.text(`State: ${scenario.state || 'None'}`, margin, currentY);
-    currentY += 5;
-    doc.text(`Cost Adjust: ${scenario.adjustCosts === 'yes' ? 'Yes' : 'No'}`, margin, currentY);
-    currentY += 5;
-    doc.text(`Cost per Session: A$${scenario.cost_val.toFixed(2)}`, margin, currentY);
-    currentY += 5;
-    doc.text(`Local: ${scenario.localCheck ? 'Yes' : 'No'}`, margin, currentY);
-    currentY += 5;
-    doc.text(`Wider: ${scenario.widerCheck ? 'Yes' : 'No'}`, margin, currentY);
-    currentY += 5;
-    doc.text(`Weekly: ${scenario.weeklyCheck ? 'Yes' : 'No'}`, margin, currentY);
-    currentY += 5;
-    doc.text(`Monthly: ${scenario.monthlyCheck ? 'Yes' : 'No'}`, margin, currentY);
-    currentY += 5;
-    doc.text(`Virtual: ${scenario.virtualCheck ? 'Yes' : 'No'}`, margin, currentY);
-    currentY += 5;
-    doc.text(`Hybrid: ${scenario.hybridCheck ? 'Yes' : 'No'}`, margin, currentY);
-    currentY += 5;
-    doc.text(`2-Hour: ${scenario.twoHCheck ? 'Yes' : 'No'}`, margin, currentY);
-    currentY += 5;
-    doc.text(`4-Hour: ${scenario.fourHCheck ? 'Yes' : 'No'}`, margin, currentY);
-    currentY += 5;
-    doc.text(`Community: ${scenario.commCheck ? 'Yes' : 'No'}`, margin, currentY);
-    currentY += 5;
-    doc.text(`Counselling: ${scenario.psychCheck ? 'Yes' : 'No'}`, margin, currentY);
-    currentY += 5;
-    doc.text(`VR: ${scenario.vrCheck ? 'Yes' : 'No'}`, margin, currentY);
-    currentY += 10;
-  });
-  doc.save("Scenarios_Comparison.pdf");
-}
-
+let combinedChartInstance = null;
 /***************************************************************************
- * Costs & Benefits Calculations & Rendering
+ * Costs & Benefits Calculations & Rendering (Combined Bar Chart)
  ***************************************************************************/
 const QALY_SCENARIOS_VALUES = { low: 0.02, moderate: 0.05, high: 0.1 };
 const VALUE_PER_QALY = 50000;
@@ -476,8 +423,6 @@ const VARIABLE_COSTS = { delivery: 18000.00, participantTimeTravel: 7500.00 };
 const TOTAL_FIXED_COST = FIXED_COSTS.advertisement + FIXED_COSTS.training;
 const TOTAL_VARIABLE_COST = VARIABLE_COSTS.delivery + VARIABLE_COSTS.participantTimeTravel;
 
-let costsChartInstance = null;
-let benefitsChartInstance = null;
 function renderCostsBenefits() {
   const scenario = buildScenarioFromInputs();
   if (!scenario) return;
@@ -492,46 +437,12 @@ function renderCostsBenefits() {
   const totalInterventionCost = TOTAL_FIXED_COST + (TOTAL_VARIABLE_COST * pVal);
   const costPerPerson = totalInterventionCost / numberOfParticipants;
   const netBenefit = monetizedBenefits - totalInterventionCost;
-  const costComponents = [
-    { item: "Advertisements", value: 2978.80, quantity: 2, unitCost: 2978.80 / 2, totalCost: 2978.80 },
-    { item: "Leaflet Printing", value: 0.12, quantity: 10000, unitCost: 0.12, totalCost: 1200.00 },
-    { item: "Postage", value: 0.147, quantity: 10000, unitCost: 0.147, totalCost: 1470.00 },
-    { item: "Admin Personnel", value: 49.99, quantity: 10, unitCost: 49.99, totalCost: 499.90 },
-    { item: "Trainer Cost", value: 223.86, quantity: 100, unitCost: 223.86, totalCost: 22386.00 },
-    { item: "On-Costs", value: 44.77, quantity: 100, unitCost: 44.77, totalCost: 4477.00 },
-    { item: "Facilitator Salaries", value: 100.00, quantity: 100, unitCost: 100.00, totalCost: 10000.00 },
-    { item: "Material Costs", value: 50.00, quantity: 100, unitCost: 50.00, totalCost: 5000.00 },
-    { item: "Venue Hire", value: 15.00, quantity: 100, unitCost: 15.00, totalCost: 3000.00 },
-    { item: "Time Cost", value: 20.00, quantity: 250, unitCost: 20.00, totalCost: 5000.00 },
-    { item: "Travel Costs", value: 10.00, quantity: 250, unitCost: 10.00, totalCost: 2500.00 }
-  ];
+  
+  // Render a combined chart with three bars: Total Cost, Monetised Benefits, Net Benefit.
   const costsTab = document.getElementById("costsBenefitsResults");
   costsTab.innerHTML = '';
-  const table = document.createElement("table");
-  table.id = "costComponentsTable";
-  table.innerHTML = `
-    <thead>
-      <tr>
-        <th>Cost Item</th>
-        <th>Value (A$)</th>
-        <th>Quantity</th>
-        <th>Unit Cost (A$)</th>
-        <th>Total Cost (A$)</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${costComponents.map(c => `
-        <tr>
-          <td><i class="fa-solid fa-receipt" title="${c.item}"></i> ${c.item}</td>
-          <td>A$${c.value.toFixed(2)}</td>
-          <td>${c.quantity}</td>
-          <td>A$${c.unitCost.toFixed(2)}</td>
-          <td>A$${c.totalCost.toFixed(2)}</td>
-        </tr>
-      `).join('')}
-    </tbody>
-  `;
-  costsTab.appendChild(table);
+  
+  // Summary Information
   const summaryDiv = document.createElement("div");
   summaryDiv.id = "summaryCalculations";
   summaryDiv.innerHTML = `
@@ -545,28 +456,33 @@ function renderCostsBenefits() {
     <p><strong>Net Benefit:</strong> A$${netBenefit.toLocaleString()}</p>
   `;
   costsTab.appendChild(summaryDiv);
-  const chartsDiv = document.createElement("div");
-  chartsDiv.className = "chart-grid";
-  const costChartBox = document.createElement("div");
-  costChartBox.className = "chart-box";
-  costChartBox.innerHTML = `<h3><i class="fa-solid fa-money-bill-wave"></i> Total Intervention Cost</h3><canvas id="costChart"></canvas>`;
-  chartsDiv.appendChild(costChartBox);
-  const benefitChartBox = document.createElement("div");
-  benefitChartBox.className = "chart-box";
-  benefitChartBox.innerHTML = `<h3><i class="fa-solid fa-hand-holding-dollar"></i> Monetised Benefits</h3><canvas id="benefitChart"></canvas>`;
-  chartsDiv.appendChild(benefitChartBox);
-  costsTab.appendChild(chartsDiv);
-  const ctxCost = document.getElementById("costChart").getContext("2d");
-  if (costsChartInstance) costsChartInstance.destroy();
-  costsChartInstance = new Chart(ctxCost, {
+  
+  // Combined Chart Container
+  const combinedChartContainer = document.createElement("div");
+  combinedChartContainer.id = "combinedChartContainer";
+  combinedChartContainer.innerHTML = `<canvas id="combinedChart"></canvas>`;
+  costsTab.appendChild(combinedChartContainer);
+  
+  // Create Combined Chart
+  const ctxCombined = document.getElementById("combinedChart").getContext("2d");
+  if (combinedChartInstance) combinedChartInstance.destroy();
+  combinedChartInstance = new Chart(ctxCombined, {
     type: 'bar',
     data: {
-      labels: ["Total Cost"],
+      labels: ["Total Cost", "Monetised Benefits", "Net Benefit"],
       datasets: [{
-        label: 'A$',
-        data: [totalInterventionCost],
-        backgroundColor: 'rgba(220,53,69,0.6)',
-        borderColor: 'rgba(220,53,69,1)',
+        label: "A$",
+        data: [totalInterventionCost, monetizedBenefits, netBenefit],
+        backgroundColor: [
+          'rgba(220,53,69,0.6)',
+          'rgba(40,167,69,0.6)',
+          'rgba(255,193,7,0.6)'
+        ],
+        borderColor: [
+          'rgba(220,53,69,1)',
+          'rgba(40,167,69,1)',
+          'rgba(255,193,7,1)'
+        ],
         borderWidth: 1
       }]
     },
@@ -574,36 +490,18 @@ function renderCostsBenefits() {
       responsive: true,
       plugins: {
         legend: { display: false },
-        title: { display: true, text: 'Total Intervention Cost', font: { size: 16 } }
+        title: { display: true, text: "Combined Cost-Benefit Analysis", font: { size: 16 } }
       },
-      scales: { y: { beginAtZero: true, suggestedMax: totalInterventionCost * 1.2 } }
-    }
-  });
-  const ctxBenefit = document.getElementById("benefitChart").getContext("2d");
-  if (benefitsChartInstance) benefitsChartInstance.destroy();
-  benefitsChartInstance = new Chart(ctxBenefit, {
-    type: 'bar',
-    data: {
-      labels: ["Monetised Benefits"],
-      datasets: [{
-        label: 'A$',
-        data: [monetizedBenefits],
-        backgroundColor: 'rgba(40,167,69,0.6)',
-        borderColor: 'rgba(40,167,69,1)',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-        title: { display: true, text: 'Monetised QALY Benefits', font: { size: 16 } }
-      },
-      scales: { y: { beginAtZero: true, suggestedMax: monetizedBenefits * 1.2 } }
+      scales: {
+        y: {
+          beginAtZero: true,
+          suggestedMax: Math.max(totalInterventionCost, monetizedBenefits, Math.abs(netBenefit)) * 1.2
+        }
+      }
     }
   });
 }
-
+  
 /***************************************************************************
  * Integration: Calculate & View Results
  ***************************************************************************/
