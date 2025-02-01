@@ -1,8 +1,8 @@
 /****************************************************************************
  * SCRIPT.JS
  * Enhanced tabs with working icons and tooltips, detailed attributes,
- * updated tab names, and an improved interactive cost-benefit section
- * featuring a combined bar chart and educational summaries.
+ * updated tab names, improved Inputs layout, and an interactive cost-benefit
+ * section featuring a combined bar chart and educational summaries.
  ****************************************************************************/
 
 /** On page load, set default tab */
@@ -441,7 +441,7 @@ function renderCostsBenefits() {
   const costsTab = document.getElementById("costsBenefitsResults");
   costsTab.innerHTML = "";
   
-  // Render summary information
+  // Render summary information with educational explanation
   const summaryDiv = document.createElement("div");
   summaryDiv.className = "calculation-info";
   summaryDiv.innerHTML = `
@@ -453,6 +453,7 @@ function renderCostsBenefits() {
     <p><strong>Total QALYs:</strong> ${totalQALY.toFixed(2)}</p>
     <p><strong>Monetised Benefits:</strong> A$${monetizedBenefits.toLocaleString()}</p>
     <p><strong>Net Benefit:</strong> A$${netBenefit.toLocaleString()}</p>
+    <p>This analysis incorporates both fixed and variable costs. Benefits are calculated based on QALY gains (quality-adjusted life years) multiplied by an assigned monetary value. Use the interactive sliders in the Inputs tab to explore different scenarios.</p>
   `;
   costsTab.appendChild(summaryDiv);
   
