@@ -37,7 +37,7 @@
         <i class="fa-solid fa-chart-line"></i><span> Uptake</span>
       </button>
       <button class="tablink" role="tab" aria-selected="false" aria-controls="costsTab" onclick="openTab('costsTab', this)">
-        <i class="fa-solid fa-calculator"></i><span> Costs & Benefits</span>
+        <i class="fa-solid fa-calculator"></i><span> Costs &amp; Benefits</span>
       </button>
       <button class="tablink" role="tab" aria-selected="false" aria-controls="scenariosTab" onclick="openTab('scenariosTab', this)">
         <i class="fa-solid fa-folder-open"></i><span> Scenarios</span>
@@ -53,11 +53,11 @@
         <p>Navigate using the tabs above:</p>
         <ul>
           <li><strong>Instructions</strong> – Step-by-step guidance.</li>
-          <li><strong>Attributes</strong> – Detailed descriptions (hover over icons for info).</li>
+          <li><strong>Attributes</strong> – Detailed descriptions with hover icons.</li>
           <li><strong>Inputs</strong> – Configure cost, accessibility, frequency, etc.</li>
           <li><strong>WTP Results</strong> – View charts of willingness to pay (A$) with error bars.</li>
           <li><strong>Uptake</strong> – See predicted programme uptake probability.</li>
-          <li><strong>Costs & Benefits</strong> – Analyze cost components and benefits.</li>
+          <li><strong>Costs &amp; Benefits</strong> – Analyze cost components and benefits.</li>
           <li><strong>Scenarios</strong> – Save, compare, or export configurations.</li>
         </ul>
       </div>
@@ -68,13 +68,13 @@
       <div class="card">
         <h2>How to Use This Tool</h2>
         <ol>
-          <li>Review <strong>Attributes</strong> to understand the key factors (hover on icons for more details).</li>
+          <li>Review <strong>Attributes</strong> to understand key factors (hover on icons for more info).</li>
           <li>Configure your scenario in <strong>Inputs</strong> by selecting your state, cost adjustments, and service options.</li>
           <li>Click “Calculate &amp; View Results” to update charts and analysis.</li>
-          <li>Examine <strong>WTP Results</strong> for attribute value insights.</li>
+          <li>Examine <strong>WTP Results</strong> for insights on monetary values of each attribute.</li>
           <li>Check the <strong>Uptake</strong> tab for predicted participation probabilities.</li>
-          <li>View detailed cost breakdowns and benefits in <strong>Costs & Benefits</strong>.</li>
-          <li>Save and compare multiple scenarios in <strong>Scenarios</strong> or export them to PDF.</li>
+          <li>Review detailed cost breakdowns and benefits in <strong>Costs &amp; Benefits</strong>.</li>
+          <li>Save and compare multiple scenarios in <strong>Scenarios</strong> or export to PDF.</li>
         </ol>
       </div>
     </section>
@@ -85,28 +85,28 @@
         <h2>Programme Attributes</h2>
         <ul class="attribute-list">
           <li>
-            <i class="fa-solid fa-dollar-sign tooltip" data-tooltip="The fee (in AUD) paid per session by participants."></i>
-            <strong>Cost per session:</strong> Out-of-pocket fee.
+            <i class="fa-solid fa-dollar-sign tooltip" data-tooltip="The out-of-pocket fee (AUD) paid per session."></i>
+            <strong>Cost per session:</strong> The fee each time a participant attends.
           </li>
           <li>
-            <i class="fa-solid fa-location-dot tooltip" data-tooltip="Local (up to 12 km) versus wider community (50+ km) impacts accessibility."></i>
+            <i class="fa-solid fa-location-dot tooltip" data-tooltip="Local (up to 12 km) vs wider community (50+ km) affecting mobility, transport costs, and convenience."></i>
             <strong>Accessibility:</strong> Local vs. wider community.
           </li>
           <li>
-            <i class="fa-solid fa-calendar-alt tooltip" data-tooltip="Frequency of sessions: weekly boosts engagement compared to monthly."></i>
-            <strong>Frequency:</strong> Weekly or monthly sessions.
+            <i class="fa-solid fa-calendar-alt tooltip" data-tooltip="Weekly interactions enhance social engagement compared to monthly sessions."></i>
+            <strong>Frequency of Interaction:</strong> Weekly or monthly.
           </li>
           <li>
-            <i class="fa-solid fa-video tooltip" data-tooltip="Delivery mode: choose between virtual or hybrid approaches."></i>
-            <strong>Method:</strong> Virtual or hybrid.
+            <i class="fa-solid fa-video tooltip" data-tooltip="Virtual or hybrid (in-person &amp; virtual) delivery based on user preferences and technology access."></i>
+            <strong>Method of Interaction:</strong> Virtual or hybrid.
           </li>
           <li>
-            <i class="fa-solid fa-clock tooltip" data-tooltip="Session length affects scheduling and interaction depth."></i>
-            <strong>Duration:</strong> 2-hour or 4-hour sessions.
+            <i class="fa-solid fa-clock tooltip" data-tooltip="Session duration impacts depth of interaction and scheduling requirements."></i>
+            <strong>Duration of Each Interaction:</strong> 2-hour or 4-hour sessions.
           </li>
           <li>
-            <i class="fa-solid fa-hands-helping tooltip" data-tooltip="Select the support programme that best fits: community, counselling, or virtual reality."></i>
-            <strong>Support Type:</strong> Community, counselling, or VR.
+            <i class="fa-solid fa-hands-helping tooltip" data-tooltip="Support options include community engagement, psychological counselling, or VR-based sessions."></i>
+            <strong>Type of Support Programme:</strong> Community, counselling, or VR-based.
           </li>
         </ul>
       </div>
@@ -116,7 +116,7 @@
     <section id="inputsTab" class="tabcontent" tabindex="0">
       <div class="card">
         <h2>Programme Inputs</h2>
-        <p>Set up your scenario then click “Calculate &amp; View Results”.</p>
+        <p>Configure your scenario then click “Calculate &amp; View Results”.</p>
         <form onsubmit="event.preventDefault();">
           <div class="form-grid">
             <div class="form-item">
@@ -139,9 +139,7 @@
               </select>
             </div>
             <div class="form-item">
-              <label for="costSlider">
-                Cost per Session (AUD): <span id="costLabel">50</span>
-              </label>
+              <label for="costSlider">Cost per Session (AUD): <span id="costLabel">50</span></label>
               <input type="range" id="costSlider" min="0" max="100" step="1" value="50" oninput="updateCostDisplay(this.value)" />
             </div>
             <div class="form-item">
@@ -200,7 +198,7 @@
       <div class="card">
         <h2>Willingness to Pay (WTP) Results</h2>
         <p>
-          WTP is derived from the ratio of each attribute’s coefficient to the negative cost coefficient, reflecting the monetary value assigned by respondents.
+          WTP is derived from the ratio of each attribute’s coefficient to the negative cost coefficient, reflecting the monetary value respondents assign.
         </p>
         <div class="buttons-row">
           <button onclick="renderWTPChart()">Show WTP Charts</button>
@@ -219,7 +217,7 @@
       <div class="card">
         <h2>Programme Uptake Probability</h2>
         <p>
-          Click “Show Probability Plot” to generate an updated chart based on your inputs. Adjustments to cost, accessibility, or frequency are suggested based on the result.
+          Click “Show Probability Plot” to generate an updated chart based on your inputs. Adjust cost, accessibility, or frequency based on the result.
         </p>
         <div class="buttons-row">
           <button onclick="renderProbChart()">Show Probability Plot</button>
@@ -237,20 +235,28 @@
     <section id="costsTab" class="tabcontent" tabindex="0">
       <div class="card">
         <h2>Costs &amp; Benefits</h2>
-        <div id="costsBenefitsContainer">
-          <div class="qaly-selector">
-            <label for="qalySelect">Select QALY Gain Scenario:</label>
-            <select id="qalySelect" onchange="renderCostsBenefits()">
-              <option value="low">Low (0.02 QALYs)</option>
-              <option value="moderate" selected>Moderate (0.05 QALYs)</option>
-              <option value="high">High (0.1 QALYs)</option>
-            </select>
+        <div id="costsBenefitsContainer" class="cost-benefit-layout">
+          <div class="cost-table">
+            <h3>Cost Components</h3>
+            <div id="costComponentsArea"></div>
           </div>
-          <div id="costsBenefitsResults"></div>
-          <p class="reference">
-            <strong>Reference:</strong> Engel et al. (2021). Reducing loneliness to prevent depression in older adults in Australia: A modelled cost-effectiveness analysis. <a href="https://doi.org/10.1016/j.mhp.2021.200212" target="_blank">View Study</a>.
-          </p>
+          <div class="benefit-summary">
+            <div id="summaryCalculations"></div>
+            <div class="chart-grid">
+              <div class="chart-box">
+                <h3>Total Intervention Cost</h3>
+                <canvas id="costChart"></canvas>
+              </div>
+              <div class="chart-box">
+                <h3>Monetised QALY Benefits</h3>
+                <canvas id="benefitChart"></canvas>
+              </div>
+            </div>
+          </div>
         </div>
+        <p class="reference">
+          <strong>Reference:</strong> Engel et al. (2021). Reducing loneliness to prevent depression in older adults in Australia: A modelled cost-effectiveness analysis. <a href="https://doi.org/10.1016/j.mhp.2021.200212" target="_blank">View Study</a>.
+        </p>
       </div>
     </section>
 
