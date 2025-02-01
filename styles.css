@@ -1,4 +1,4 @@
-/* Reset & Base Stylees */
+/* Reset & Base Styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -203,7 +203,7 @@ header h1 {
   text-align: center;
 }
 
-/* Cost-Benefit Tab Enhancements */
+/* Costs & Benefits Enhancements */
 #costsBenefitsContainer {
   padding: 10px 0;
 }
@@ -221,6 +221,21 @@ header h1 {
 .cost-icons .icon-item i {
   font-size: 2em;
   margin-bottom: 5px;
+}
+.modelling-assumptions {
+  margin: 20px 0;
+  padding: 15px;
+  background: #e6f2ff;
+  border: 1px solid #b3d1ff;
+  border-radius: 6px;
+}
+.modelling-assumptions h3 {
+  margin-bottom: 10px;
+  color: #003366;
+}
+.modelling-assumptions p {
+  font-size: 0.95em;
+  color: #34495e;
 }
 
 /* Scenarios Table */
