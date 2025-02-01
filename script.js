@@ -1,8 +1,8 @@
 /****************************************************************************
  * SCRIPT.JS
- * Enhanced tabs with working icons and tooltips, detailed attributes,
- * updated tab names, improved Inputs layout, and an interactive cost-benefit
- * section featuring a combined bar chart and educational summaries.
+ * Enhanced tabs with working icons and tooltips, improved Inputs layout,
+ * interactive Cost-Benefits section with toggle buttons and combined bar chart,
+ * and export to PDF functionality.
  ****************************************************************************/
 
 /** On page load, set default tab */
@@ -236,6 +236,18 @@ function renderWTPChart() {
 }
 
 /***************************************************************************
+ * Toggle Detailed Cost Breakdown and Benefits Analysis
+ ***************************************************************************/
+function toggleCostBreakdown() {
+  const breakdown = document.getElementById("detailedCostBreakdown");
+  breakdown.style.display = (breakdown.style.display === "none" || breakdown.style.display === "") ? "flex" : "none";
+}
+function toggleBenefitsAnalysis() {
+  const benefits = document.getElementById("detailedBenefitsAnalysis");
+  benefits.style.display = (benefits.style.display === "none" || benefits.style.display === "") ? "flex" : "none";
+}
+
+/***************************************************************************
  * Scenario Saving & PDF Export
  ***************************************************************************/
 let savedScenarios = [];
@@ -267,149 +279,56 @@ function openComparison() {
     alert("Save at least two scenarios to compare.");
     return;
   }
-  const comparisonWindow = window.open("", "Comparison", "width=1400,height=1000");
-  comparisonWindow.document.write(`
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8"/>
-      <title>Scenarios Comparison</title>
-      <link rel="stylesheet" href="styles.css"/>
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    </head>
-    <body>
-      <div class="container">
-        <h2>Scenarios Comparison</h2>
-        <div class="chart-grid">
-          <div class="chart-box">
-            <h3>Programme Uptake Probability</h3>
-            <canvas id="compProbChart"></canvas>
-          </div>
-          <div class="chart-box">
-            <h3>Monetised QALY Benefits</h3>
-            <canvas id="compBenefitChart"></canvas>
-          </div>
-        </div>
-      </div>
-      <script>
-        const savedScenarios = ${JSON.stringify(savedScenarios)};
-        const labels = savedScenarios.map(s => s.name);
-        const uptakeData = savedScenarios.map(s => {
-          let finalCost = s.cost_val;
-          if (s.adjustCosts === 'yes' && s.state && ${JSON.stringify(costOfLivingMultipliers)}[s.state]) {
-            finalCost *= ${JSON.stringify(costOfLivingMultipliers)}[s.state];
-          }
-          const dist_local = s.localCheck ? 1 : 0;
-          const dist_signif = s.widerCheck ? 1 : 0;
-          const freq_weekly = s.weeklyCheck ? 1 : 0;
-          const freq_monthly = s.monthlyCheck ? 1 : 0;
-          const mode_virtual = s.virtualCheck ? 1 : 0;
-          const mode_hybrid = s.hybridCheck ? 1 : 0;
-          const dur_2hrs = s.twoHCheck ? 1 : 0;
-          const dur_4hrs = s.fourHCheck ? 1 : 0;
-          const type_comm = s.commCheck ? 1 : 0;
-          const type_psych = s.psychCheck ? 1 : 0;
-          const type_vr = s.vrCheck ? 1 : 0;
-          const U_alt = ${mainCoefficients.ASC_mean}
-            + ${mainCoefficients.type_comm} * type_comm
-            + ${mainCoefficients.type_psych} * type_psych
-            + ${mainCoefficients.type_vr} * type_vr
-            + ${mainCoefficients.mode_virtual} * mode_virtual
-            + ${mainCoefficients.mode_hybrid} * mode_hybrid
-            + ${mainCoefficients.freq_weekly} * freq_weekly
-            + ${mainCoefficients.freq_monthly} * freq_monthly
-            + ${mainCoefficients.dur_2hrs} * dur_2hrs
-            + ${mainCoefficients.dur_4hrs} * dur_4hrs
-            + ${mainCoefficients.dist_local} * dist_local
-            + ${mainCoefficients.dist_signif} * dist_signif
-            + ${mainCoefficients.cost_cont} * finalCost;
-          const U_optout = ${mainCoefficients.ASC_optout};
-          return (Math.exp(U_alt) / (Math.exp(U_alt) + Math.exp(U_optout))) * 100;
-        });
-        const benefitData = savedScenarios.map(s => {
-          let finalCost = s.cost_val;
-          if (s.adjustCosts === 'yes' && s.state && ${JSON.stringify(costOfLivingMultipliers)}[s.state]) {
-            finalCost *= ${JSON.stringify(costOfLivingMultipliers)}[s.state];
-          }
-          const dist_local = s.localCheck ? 1 : 0;
-          const dist_signif = s.widerCheck ? 1 : 0;
-          const freq_weekly = s.weeklyCheck ? 1 : 0;
-          const freq_monthly = s.monthlyCheck ? 1 : 0;
-          const mode_virtual = s.virtualCheck ? 1 : 0;
-          const mode_hybrid = s.hybridCheck ? 1 : 0;
-          const dur_2hrs = s.twoHCheck ? 1 : 0;
-          const dur_4hrs = s.fourHCheck ? 1 : 0;
-          const type_comm = s.commCheck ? 1 : 0;
-          const type_psych = s.psychCheck ? 1 : 0;
-          const type_vr = s.vrCheck ? 1 : 0;
-          const U_alt = ${mainCoefficients.ASC_mean}
-            + ${mainCoefficients.type_comm} * type_comm
-            + ${mainCoefficients.type_psych} * type_psych
-            + ${mainCoefficients.type_vr} * type_vr
-            + ${mainCoefficients.mode_virtual} * mode_virtual
-            + ${mainCoefficients.mode_hybrid} * mode_hybrid
-            + ${mainCoefficients.freq_weekly} * freq_weekly
-            + ${mainCoefficients.freq_monthly} * freq_monthly
-            + ${mainCoefficients.dur_2hrs} * dur_2hrs
-            + ${mainCoefficients.dur_4hrs} * dur_4hrs
-            + ${mainCoefficients.dist_local} * dist_local
-            + ${mainCoefficients.dist_signif} * dist_signif
-            + ${mainCoefficients.cost_cont} * finalCost;
-          const uptakeProbability = Math.exp(U_alt) / (Math.exp(U_alt) + Math.exp(${mainCoefficients.ASC_optout}));
-          const baseParticipants = 250;
-          const qalyPerParticipant = 0.05;
-          const totalQALY = baseParticipants * uptakeProbability * qalyPerParticipant;
-          return totalQALY * 50000;
-        });
-        const ctxProb = document.getElementById("compProbChart").getContext("2d");
-        new Chart(ctxProb, {
-          type: 'bar',
-          data: {
-            labels,
-            datasets: [{
-              label: 'Uptake (%)',
-              data: uptakeData,
-              backgroundColor: uptakeData.map(p => p < 30 ? 'rgba(220,53,69,0.6)' : p < 70 ? 'rgba(255,193,7,0.6)' : 'rgba(40,167,69,0.6)'),
-              borderColor: uptakeData.map(p => p < 30 ? 'rgba(220,53,69,1)' : p < 70 ? 'rgba(255,193,7,1)' : 'rgba(40,167,69,1)'),
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            scales: { y: { beginAtZero: true, max: 100 } },
-            plugins: {
-              legend: { display: false },
-              title: { display: true, text: 'Programme Uptake Probability', font: { size: 16 } }
-            }
-          }
-        });
-        const ctxBenefit = document.getElementById("compBenefitChart").getContext("2d");
-        new Chart(ctxBenefit, {
-          type: 'bar',
-          data: {
-            labels,
-            datasets: [{
-              label: 'Monetised Benefits (A$)',
-              data: benefitData,
-              backgroundColor: 'rgba(40,167,69,0.6)',
-              borderColor: 'rgba(40,167,69,1)',
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            scales: { y: { beginAtZero: true } },
-            plugins: {
-              legend: { display: false },
-              title: { display: true, text: 'Monetised QALY Benefits', font: { size: 16 } }
-            }
-          }
-        });
-      <\/script>
-    </body>
-    </html>
-  `);
-  comparisonWindow.document.close();
+  const { jsPDF } = window.jspdf;
+  // Create a new PDF document
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  let currentY = 15;
+  
+  doc.setFontSize(16);
+  doc.text("LonelyLessAustralia - Scenarios Comparison", pageWidth / 2, currentY, { align: 'center' });
+  currentY += 10;
+  
+  savedScenarios.forEach((scenario, index) => {
+    if (currentY > 260) {
+      doc.addPage();
+      currentY = 15;
+    }
+    doc.setFontSize(14);
+    doc.text(`Scenario ${index + 1}: ${scenario.name}`, 15, currentY);
+    currentY += 7;
+    doc.setFontSize(12);
+    doc.text(`State: ${scenario.state || 'None'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Cost Adjust: ${scenario.adjustCosts === 'yes' ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Cost per Session: A$${scenario.cost_val.toFixed(2)}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Local: ${scenario.localCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Wider: ${scenario.widerCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Weekly: ${scenario.weeklyCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Monthly: ${scenario.monthlyCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Virtual: ${scenario.virtualCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Hybrid: ${scenario.hybridCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`2-Hour: ${scenario.twoHCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`4-Hour: ${scenario.fourHCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Community: ${scenario.commCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Counselling: ${scenario.psychCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`VR: ${scenario.vrCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 10;
+  });
+  
+  doc.save("Scenarios_Comparison.pdf");
 }
 
 /***************************************************************************
@@ -453,7 +372,7 @@ function renderCostsBenefits() {
     <p><strong>Total QALYs:</strong> ${totalQALY.toFixed(2)}</p>
     <p><strong>Monetised Benefits:</strong> A$${monetizedBenefits.toLocaleString()}</p>
     <p><strong>Net Benefit:</strong> A$${netBenefit.toLocaleString()}</p>
-    <p>This analysis incorporates both fixed and variable costs. Benefits are calculated based on QALY gains (quality-adjusted life years) multiplied by an assigned monetary value. Use the interactive sliders in the Inputs tab to explore different scenarios.</p>
+    <p>This analysis combines fixed and variable costs. Benefits are derived from QALY gains multiplied by a monetary value. Use the interactive sliders and info boxes in the Inputs tab to explore different scenarios.</p>
   `;
   costsTab.appendChild(summaryDiv);
   
