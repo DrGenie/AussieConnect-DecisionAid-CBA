@@ -16,7 +16,7 @@
   <div class="container">
     <header>
       <h1>LonelyLessAustralia Decision Aid Tool</h1>
-      <p>This tool helps you evaluate and predict the outcomes of various programme configurations.</p>
+      <p>This tool helps you evaluate programme configurations for reducing loneliness.</p>
     </header>
 
     <nav class="tabs" role="tablist">
@@ -47,7 +47,7 @@
     </nav>
 
     <!-- Introduction Tab -->
-    <section id="introTab" class="tabcontent" tabindex="0">
+    <section id="introTab" class="tabcontent" tabindex="0" style="display:block;">
       <div class="intro-box">
         <p>
           Loneliness affects over five million Australians, particularly older adults, causing significant health and economic challenges. This tool uses discrete choice experiment estimates to predict programme uptake probabilities, enabling personalised services based on the attributes older adults value most.
@@ -57,8 +57,8 @@
           <li><strong>Attributes</strong> – Detailed explanation of programme features (hover over the info icons for extra details).</li>
           <li><strong>Inputs</strong> – Configure your scenario parameters.</li>
           <li><strong>WTP Results</strong> – View charts showing willingness-to-pay estimates.</li>
-          <li><strong>Predicted Programme Uptake</strong> – See the predicted participation probability based on your inputs.</li>
-          <li><strong>Costs &amp; Benefits</strong> – Analyse detailed cost components and QALY-based benefits with interactive sliders and educational summaries.</li>
+          <li><strong>Predicted Programme Uptake</strong> – See the predicted uptake percentage and suggestions.</li>
+          <li><strong>Costs &amp; Benefits</strong> – Analyse cost components and QALY-based benefits with interactive sliders, pop-up info boxes and educational summaries.</li>
           <li><strong>Scenarios</strong> – Save, compare and export various configurations.</li>
         </ul>
       </div>
@@ -74,7 +74,7 @@
           <li>Click “Calculate &amp; View Results” to update charts and cost-benefit analysis.</li>
           <li>Examine the <strong>WTP Results</strong> tab to see how much monetary value respondents assign to each attribute.</li>
           <li>Check the <strong>Predicted Programme Uptake</strong> tab to view the predicted uptake percentage and suggestions for adjustments.</li>
-          <li>Review the <strong>Costs &amp; Benefits</strong> tab for an interactive cost breakdown and educational summaries explaining key modelling assumptions.</li>
+          <li>Review the <strong>Costs &amp; Benefits</strong> tab for an interactive cost breakdown with educational summaries explaining key modelling assumptions.</li>
           <li>Save and compare different scenarios in the <strong>Scenarios</strong> tab or export the results to PDF.</li>
         </ol>
       </div>
@@ -96,7 +96,7 @@
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
             <i class="fa-solid fa-location-dot"></i>
-            <div class="tooltip">Whether the programme is local (up to 12 km) or in a wider community (50+ km) influences mobility, transport costs and convenience.</div>
+            <div class="tooltip">Whether the programme is local (up to 12 km) or in a wider community (50+ km) influences mobility, transport costs, and convenience.</div>
           </div>
           <div class="attribute-content">
             <h4>Accessibility</h4>
@@ -116,7 +116,7 @@
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
             <i class="fa-solid fa-video"></i>
-            <div class="tooltip">Virtual sessions are delivered online while hybrid sessions combine in-person and virtual elements.</div>
+            <div class="tooltip">Virtual sessions are delivered online, while hybrid sessions combine in-person and virtual elements.</div>
           </div>
           <div class="attribute-content">
             <h4>Method of Interaction</h4>
@@ -126,7 +126,7 @@
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
             <i class="fa-solid fa-clock"></i>
-            <div class="tooltip">Session duration affects both the depth of interactions and scheduling flexibility.</div>
+            <div class="tooltip">The duration of each session affects both the depth of interaction and scheduling flexibility.</div>
           </div>
           <div class="attribute-content">
             <h4>Duration of Each Interaction</h4>
@@ -175,8 +175,7 @@
           </select>
         </div>
         <div class="form-item">
-          <label for="costSlider">
-            Cost per Session (AUD):
+          <label for="costSlider">Cost per Session (AUD):
             <button class="info-button" aria-label="Cost per session info."><i class="fa-solid fa-info-circle"></i></button>
             <span class="tooltip-text">Use the slider to set the base cost per session.</span>
           </label>
@@ -291,7 +290,7 @@
         <div class="modelling-assumptions">
           <h3><i class="fa-solid fa-lightbulb"></i> Modelling Assumptions</h3>
           <p>
-            Our analysis uses interactive cost sliders, pop-up information boxes and brief educational summaries to explain how costs and benefits are calculated. Hover over the info icon <i class="fa-solid fa-info-circle tooltip" data-tooltip="Costs include fixed and variable items, and benefits are based on QALY gains multiplied by a monetary value."></i> for further details.
+            Our analysis uses interactive cost sliders, pop-up information boxes, and concise educational summaries to explain how costs and benefits are calculated. Hover over the info icon <i class="fa-solid fa-info-circle tooltip" data-tooltip="Costs include fixed and variable items; benefits are calculated based on QALY gains multiplied by a monetary value."></i> for further details.
           </p>
         </div>
         <div class="cost-icons">
@@ -316,6 +315,13 @@
           <button onclick="saveScenario()">Save Current Scenario</button>
           <button onclick="openComparison()">Compare Scenarios</button>
           <button onclick="exportToPDF()">Export to PDF</button>
+        </div>
+        <div class="filter-options">
+          <label for="filterSelect">Filter Scenarios:</label>
+          <select id="filterSelect">
+            <option value="all">All</option>
+            <!-- Additional filter options may be added here -->
+          </select>
         </div>
         <table id="scenarioTable">
           <thead>
