@@ -34,7 +34,7 @@
         <i class="fa-solid fa-chart-bar"></i><span> WTP Results</span>
       </button>
       <button class="tablink" role="tab" aria-selected="false" aria-controls="probTab" onclick="openTab('probTab', this)">
-        <i class="fa-solid fa-chart-line"></i><span> Uptake</span>
+        <i class="fa-solid fa-chart-line"></i><span> Predicted Programme Uptake</span>
       </button>
       <button class="tablink" role="tab" aria-selected="false" aria-controls="costsTab" onclick="openTab('costsTab', this)">
         <i class="fa-solid fa-calculator"></i><span> Costs &amp; Benefits</span>
@@ -48,17 +48,17 @@
     <section id="introTab" class="tabcontent" style="display: block;" tabindex="0">
       <div class="card intro-box">
         <p>
-          Loneliness affects over five million Australians, particularly older adults, causing significant health and economic challenges. This tool uses discrete choice experiment estimates to predict programme uptake probabilities, enabling personalized services based on the attributes older adults value most.
+          Loneliness affects over five million Australians, particularly older adults, causing significant health and economic challenges. This tool uses discrete choice experiment estimates to predict programme uptake probabilities, enabling personalised services based on the attributes older adults value most.
         </p>
         <p>Use the tabs above to navigate the tool:</p>
         <ul>
           <li><strong>Instructions</strong> – Step-by-step guidance.</li>
-          <li><strong>Attributes</strong> – Detailed explanation of programme features (hover over icons for extra info).</li>
-          <li><strong>Inputs</strong> – Configure scenario parameters.</li>
-          <li><strong>WTP Results</strong> – Visualize willingness-to-pay estimates with error bars.</li>
-          <li><strong>Uptake</strong> – View predicted programme uptake probability.</li>
-          <li><strong>Costs &amp; Benefits</strong> – Analyze cost components and QALY-based benefits with icons and graphs.</li>
-          <li><strong>Scenarios</strong> – Save, compare, and export different configurations.</li>
+          <li><strong>Attributes</strong> – Detailed explanation of programme features (hover over the icons for extra info).</li>
+          <li><strong>Inputs</strong> – Configure your scenario parameters.</li>
+          <li><strong>WTP Results</strong> – View charts showing willingness-to-pay estimates.</li>
+          <li><strong>Predicted Programme Uptake</strong> – See the predicted participation probability based on your inputs.</li>
+          <li><strong>Costs &amp; Benefits</strong> – Analyse detailed cost components, QALY-based benefits and interactive modelling assumptions.</li>
+          <li><strong>Scenarios</strong> – Save, compare and export various configurations.</li>
         </ul>
       </div>
     </section>
@@ -68,13 +68,13 @@
       <div class="card">
         <h2>How to Use This Tool</h2>
         <ol>
-          <li>Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over the icons for additional explanations.</li>
-          <li>Configure your scenario in the <strong>Inputs</strong> tab by selecting options such as state, cost adjustments, and service delivery methods.</li>
-          <li>Click “Calculate &amp; View Results” to generate updated charts and cost-benefit analyses.</li>
-          <li>Examine the <strong>WTP Results</strong> tab to see how much value respondents assign to each attribute.</li>
-          <li>View predicted participation in the <strong>Uptake</strong> tab.</li>
-          <li>Review detailed cost breakdowns and benefits in the <strong>Costs &amp; Benefits</strong> tab.</li>
-          <li>Save and compare multiple scenarios in the <strong>Scenarios</strong> tab. You can also export results to PDF.</li>
+          <li>Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over the icons to view extra information.</li>
+          <li>Configure your scenario in the <strong>Inputs</strong> tab by selecting your state, cost adjustments, and delivery options.</li>
+          <li>Click “Calculate &amp; View Results” to update charts and cost-benefit analysis.</li>
+          <li>Examine the <strong>WTP Results</strong> tab to see how much monetary value respondents assign to each attribute.</li>
+          <li>Check the <strong>Predicted Programme Uptake</strong> tab to view the predicted uptake probability and suggestions for improvements.</li>
+          <li>Review the <strong>Costs &amp; Benefits</strong> tab for a detailed, interactive cost breakdown and educational summaries explaining key modelling assumptions.</li>
+          <li>Save and compare different scenarios in the <strong>Scenarios</strong> tab or export the results to PDF.</li>
         </ol>
       </div>
     </section>
@@ -84,32 +84,32 @@
       <div class="card">
         <h2>Programme Attributes</h2>
         <p class="description">
-          The following attributes influence how programmes are valued. Detailed descriptions are provided to help you understand each factor.
+          The following attributes determine how programmes are evaluated. Each feature is described in detail below:
         </p>
         <ul class="attribute-list">
           <li>
-            <i class="fa-solid fa-dollar-sign tooltip" data-tooltip="The fee (in AUD) participants pay each time they attend."></i>
-            <strong>Cost per session:</strong> The out-of-pocket fee (AUD) required per attendance.
+            <i class="fa-solid fa-dollar-sign tooltip" data-tooltip="The out-of-pocket fee (in AUD) participants must pay each time they attend."></i>
+            <strong>Cost per session:</strong> The out-of-pocket fee (AUD) participants must pay each time they attend.
           </li>
           <li>
-            <i class="fa-solid fa-location-dot tooltip" data-tooltip="Local: up to 12 km; Wider: 50+ km. This affects accessibility, travel costs, and convenience."></i>
+            <i class="fa-solid fa-location-dot tooltip" data-tooltip="Whether the programme is local (up to 12 km) or in a wider community (50+ km) affects mobility, transport cost, and convenience."></i>
             <strong>Accessibility:</strong> Determines if the programme is offered locally or in a wider community.
           </li>
           <li>
-            <i class="fa-solid fa-calendar-check tooltip" data-tooltip="Weekly sessions may lead to more frequent engagement compared to monthly sessions."></i>
-            <strong>Frequency of Interaction:</strong> Indicates whether sessions are held weekly or monthly.
+            <i class="fa-solid fa-calendar-check tooltip" data-tooltip="Weekly sessions promote more frequent social engagement compared to monthly sessions."></i>
+            <strong>Frequency of Interaction:</strong> Weekly or monthly, influencing how often participants engage socially.
           </li>
           <li>
-            <i class="fa-solid fa-video tooltip" data-tooltip="Virtual sessions rely on technology; hybrid sessions combine in-person and virtual elements."></i>
-            <strong>Method of Interaction:</strong> Choice between virtual and hybrid (in-person &amp; virtual) formats.
+            <i class="fa-solid fa-video tooltip" data-tooltip="Virtual sessions are delivered online while hybrid sessions combine in-person and virtual formats."></i>
+            <strong>Method of Interaction:</strong> Virtual or hybrid (in-person &amp; virtual), reflecting user preferences and technology access.
           </li>
           <li>
-            <i class="fa-solid fa-clock tooltip" data-tooltip="Session duration affects the depth of interaction and scheduling."></i>
-            <strong>Duration of Each Interaction:</strong> Options are 2-hour or 4-hour sessions.
+            <i class="fa-solid fa-clock tooltip" data-tooltip="Session duration affects both the depth of interactions and scheduling flexibility."></i>
+            <strong>Duration of Each Interaction:</strong> 2-hour or 4-hour sessions, affecting the depth of interactions.
           </li>
           <li>
-            <i class="fa-solid fa-hands-helping tooltip" data-tooltip="Support can be provided through community engagement, psychological counselling, or innovative VR-based sessions."></i>
-            <strong>Type of Support Programme:</strong> Options include community engagement, psychological counselling, or VR-based support.
+            <i class="fa-solid fa-hands-helping tooltip" data-tooltip="Support options include community engagement, psychological counselling, or VR-based sessions."></i>
+            <strong>Type of Support Programme:</strong> Community engagement, psychological counselling, or VR-based sessions.
           </li>
         </ul>
       </div>
@@ -119,7 +119,7 @@
     <section id="inputsTab" class="tabcontent" tabindex="0">
       <div class="card">
         <h2>Programme Inputs</h2>
-        <p>Set up your scenario and click “Calculate &amp; View Results” to see outcomes.</p>
+        <p>Set up your scenario and click “Calculate &amp; View Results” to see the outcomes.</p>
         <form onsubmit="event.preventDefault();">
           <div class="form-grid">
             <div class="form-item">
@@ -203,26 +203,29 @@
       <div class="card">
         <h2>Willingness to Pay (WTP) Results</h2>
         <p>
-          WTP is derived from the ratio of each attribute’s coefficient to the negative cost coefficient. This quantifies the monetary value respondents assign to each feature.
+          The willingness-to-pay (WTP) for each programme attribute is calculated by taking the ratio of the attribute’s coefficient to the negative of the cost coefficient. This metric quantifies the monetary value respondents place on each programme attribute, holding other factors constant.
+        </p>
+        <p>
+          For example, among the programme types, community engagement is the most highly valued, with a WTP of A$14.47 (SE=3.31, p &lt; 0.001). This shows older adults are willing to pay an additional A$14.47 for community-based programmes, compared to the reference peer support scenario.
         </p>
         <div class="buttons-row">
           <button onclick="renderWTPChart()">Show WTP Charts</button>
         </div>
         <div class="chart-grid">
           <div class="chart-box">
-            <h3>WTP with Error Bars (A$)</h3>
+            <h3>WTP (A$)</h3>
             <canvas id="wtpChartMain"></canvas>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Programme Uptake Tab -->
+    <!-- Predicted Programme Uptake Tab -->
     <section id="probTab" class="tabcontent" tabindex="0">
       <div class="card">
-        <h2>Programme Uptake Probability</h2>
+        <h2>Predicted Programme Uptake</h2>
         <p>
-          Click “Show Probability Plot” to generate a chart based on your inputs. Suggestions for improvements are provided based on the result.
+          Click “Show Probability Plot” to generate a new bar chart based on your Inputs. The chart displays the predicted uptake as a percentage. If the predicted uptake is below 30%, between 30–70%, or above 70%, the tool provides intuitive suggestions for adjusting programme cost, improving accessibility, or increasing interaction frequency to better meet user needs.
         </p>
         <div class="buttons-row">
           <button onclick="renderProbChart()">Show Probability Plot</button>
@@ -250,7 +253,13 @@
             </select>
           </div>
           <div id="costsBenefitsResults">
-            <!-- Cost-benefit analysis and charts will be injected here -->
+            <!-- Detailed cost-benefit analysis, interactive cost sliders, pop-up info boxes and educational summaries will be rendered here -->
+          </div>
+          <div class="modelling-assumptions">
+            <h3><i class="fa-solid fa-lightbulb"></i> Modelling Assumptions</h3>
+            <p>
+              Our analysis incorporates interactive cost sliders to adjust key parameters, pop-up information boxes that provide detailed explanations, and educational summaries that clarify the assumptions behind cost components and QALY-based benefits. Hover over the <i class="fa-solid fa-info-circle tooltip" data-tooltip="This provides more detailed information on our modelling assumptions."></i> icon for further details.
+            </p>
           </div>
           <div class="cost-icons">
             <div class="icon-item" tabindex="0">
