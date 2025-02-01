@@ -1,4 +1,4 @@
-/* Base Reset & Typography */
+/* Reset & Base Styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,8 +6,8 @@
 }
 body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  background-color: #f7f9fc;
-  color: #333;
+  background-color: #f7fafc;
+  color: #2d3e50;
   line-height: 1.6;
 }
 
@@ -16,7 +16,7 @@ body {
   max-width: 1400px;
   margin: 20px auto;
   padding: 20px 30px;
-  background: #fff;
+  background: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
@@ -37,8 +37,8 @@ header h1 {
   border-bottom: 2px solid #003366;
 }
 .tablink {
-  background: #006699;
-  color: #fff;
+  background: #4a90e2;
+  color: #ffffff;
   border: none;
   padding: 10px 20px;
   margin: 5px 10px;
@@ -49,12 +49,12 @@ header h1 {
 }
 .tablink:hover,
 .tablink:focus {
-  background: #004d80;
+  background: #357abd;
   outline: none;
 }
 .tablink.active {
   background: #003366;
-  color: #fff;
+  color: #ffffff;
 }
 
 /* Tab Content */
@@ -87,15 +87,18 @@ header h1 {
   padding-left: 15px;
 }
 
-/* Attribute List & Tooltips */
+/* Attributes Tab */
 .attribute-list {
   list-style: none;
   padding-left: 0;
+  margin-top: 10px;
 }
 .attribute-list li {
   display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  padding: 8px;
+  border-bottom: 1px solid #cfd8dc;
 }
 .attribute-list li i {
   margin-right: 10px;
@@ -103,14 +106,24 @@ header h1 {
   position: relative;
   cursor: help;
 }
+.attribute-list li strong {
+  margin-right: 5px;
+}
+.description {
+  margin-bottom: 15px;
+  font-size: 1em;
+  color: #34495e;
+}
+
+/* Tooltip */
 .tooltip::after {
   content: attr(data-tooltip);
   position: absolute;
-  bottom: -30px;
+  bottom: -35px;
   left: 50%;
   transform: translateX(-50%);
   background: #003366;
-  color: #fff;
+  color: #ffffff;
   padding: 5px 8px;
   font-size: 0.8em;
   white-space: nowrap;
@@ -133,7 +146,7 @@ header h1 {
   margin-top: 20px;
 }
 .form-item {
-  background: #fff;
+  background: #ffffff;
   border: 1px solid #cfd8dc;
   border-radius: 6px;
   padding: 15px;
@@ -146,7 +159,7 @@ header h1 {
   display: block;
   font-weight: bold;
   margin-bottom: 6px;
-  color: #333;
+  color: #2d3e50;
 }
 
 /* Buttons */
@@ -156,7 +169,7 @@ header h1 {
 }
 .buttons-row button {
   background-color: #0073b1;
-  color: #fff;
+  color: #ffffff;
   border: none;
   padding: 10px 20px;
   margin: 0 10px;
@@ -183,32 +196,31 @@ header h1 {
   margin-top: 20px;
 }
 .chart-box {
-  background: #fff;
+  background: #ffffff;
   border: 1px solid #cfd8dc;
   border-radius: 6px;
   padding: 15px;
   text-align: center;
 }
 
-/* Cost-Benefit Layout */
-.cost-benefit-layout {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+/* Cost-Benefit Tab Enhancements */
+#costsBenefitsContainer {
+  padding: 10px 0;
 }
-.cost-table {
-  flex: 1 1 400px;
-  background: #fff;
-  border: 1px solid #cfd8dc;
-  border-radius: 6px;
-  padding: 15px;
-  overflow-x: auto;
-}
-.benefit-summary {
-  flex: 1 1 400px;
+.cost-icons {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  gap: 30px;
+  margin: 15px 0;
+  justify-content: center;
+}
+.cost-icons .icon-item {
+  text-align: center;
+  color: #003366;
+  cursor: default;
+}
+.cost-icons .icon-item i {
+  font-size: 2em;
+  margin-bottom: 5px;
 }
 
 /* Scenarios Table */
@@ -225,7 +237,7 @@ header h1 {
 }
 #scenarioTable th {
   background: #003366;
-  color: #fff;
+  color: #ffffff;
 }
 
 /* QALY Selector */
@@ -242,15 +254,12 @@ footer {
   text-align: center;
   margin-top: 20px;
   font-size: 0.9em;
-  color: #666;
+  color: #6d6d6d;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .form-grid {
     grid-template-columns: 1fr;
-  }
-  .cost-benefit-layout {
-    flex-direction: column;
   }
 }
