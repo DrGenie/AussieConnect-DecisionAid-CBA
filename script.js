@@ -2,7 +2,7 @@
  * SCRIPT.JS
  * Enhanced tabs with working icons and tooltips, improved Inputs layout
  * using level cards, interactive Cost-Benefits section with toggle buttons
- * and a combined bar chart, detailed educational summaries, and export to PDF functionality.
+ * and a combined bar chart, detailed educational summariess, and export to PDF functionality.
  ****************************************************************************/
 
 /** On page load, set default tab */
