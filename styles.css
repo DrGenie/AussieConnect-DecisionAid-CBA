@@ -1,4 +1,4 @@
-/* Reset & Base */
+/* Reset & Base Styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -104,7 +104,7 @@ header h1 {
   margin-right: 10px;
   color: #003366;
   position: relative;
-  cursor: help;
+  cursor: pointer;
 }
 .attribute-list li strong {
   margin-right: 5px;
@@ -236,6 +236,11 @@ header h1 {
 .modelling-assumptions p {
   font-size: 0.95em;
   color: #34495e;
+}
+
+/* Combined Cost-Benefit Chart */
+#combinedChartContainer {
+  margin-top: 20px;
 }
 
 /* Scenarios Table */
