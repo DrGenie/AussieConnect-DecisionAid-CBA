@@ -16,7 +16,7 @@
   <div class="container">
     <header>
       <h1>LonelyLessAustralia Decision Aid Tool</h1>
-      <p>This tool helps you evaluate programme configurations for reducing loneliness.</p>
+      <p>This tool helps you evaluate programme configurations for reducing loneliness. It explains how costs and benefits are calculated so that even lay users can understand the trade‐offs.</p>
     </header>
 
     <nav class="tabs" role="tablist">
@@ -47,18 +47,18 @@
     </nav>
 
     <!-- Introduction Tab -->
-    <section id="introTab" class="tabcontent" tabindex="0" style="display:block;">
+    <section id="introTab" class="tabcontent" tabindex="0" style="display: block;">
       <div class="intro-box">
         <p>
           Loneliness affects over five million Australians, particularly older adults, causing significant health and economic challenges. This tool uses discrete choice experiment estimates to predict programme uptake probabilities, enabling personalised services based on the attributes older adults value most.
         </p>
         <ul>
           <li><strong>Instructions</strong> – Step-by-step guidance.</li>
-          <li><strong>Attributes</strong> – Detailed explanation of programme features (hover over the info icons for extra details).</li>
-          <li><strong>Inputs</strong> – Configure your scenario parameters.</li>
+          <li><strong>Attributes</strong> – Detailed explanation of programme features (hover over info icons for extra details).</li>
+          <li><strong>Inputs</strong> – Configure your scenario parameters using user-friendly controls.</li>
           <li><strong>WTP Results</strong> – View charts showing willingness-to-pay estimates.</li>
-          <li><strong>Predicted Programme Uptake</strong> – See the predicted uptake percentage and suggestions.</li>
-          <li><strong>Costs &amp; Benefits</strong> – Analyse cost components and QALY-based benefits with interactive sliders, pop-up info boxes and educational summaries.</li>
+          <li><strong>Predicted Programme Uptake</strong> – See the predicted uptake percentage and suggestions for improvements.</li>
+          <li><strong>Costs &amp; Benefits</strong> – Analyse detailed cost components and QALY-based benefits, with interactive sliders, pop-up info boxes and educational summaries.</li>
           <li><strong>Scenarios</strong> – Save, compare and export various configurations.</li>
         </ul>
       </div>
@@ -69,13 +69,13 @@
       <div class="calculation-info">
         <h4>How to Use This Tool</h4>
         <ol>
-          <li>Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over the info icons to view extra information.</li>
-          <li>Configure your scenario in the <strong>Inputs</strong> tab by selecting your state, cost adjustments, and delivery options.</li>
-          <li>Click “Calculate &amp; View Results” to update charts and the cost-benefit analysis.</li>
-          <li>Examine the <strong>WTP Results</strong> tab to see the monetary value respondents assign to each attribute.</li>
-          <li>Check the <strong>Predicted Programme Uptake</strong> tab to view the predicted uptake percentage and suggestions for adjustments.</li>
-          <li>Review the <strong>Costs &amp; Benefits</strong> tab for an interactive cost breakdown with educational summaries explaining key modelling assumptions.</li>
-          <li>Save and compare different scenarios in the <strong>Scenarios</strong> tab or export the results to PDF.</li>
+          <li style="margin-left: 20px;">Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over the info icons to view extra information.</li>
+          <li style="margin-left: 20px;">Configure your scenario in the <strong>Inputs</strong> tab by selecting your state, cost adjustments, and delivery options.</li>
+          <li style="margin-left: 20px;">Click “Calculate &amp; View Results” to update charts and the cost-benefit analysis.</li>
+          <li style="margin-left: 20px;">Examine the <strong>WTP Results</strong> tab to see the monetary value respondents assign to each attribute.</li>
+          <li style="margin-left: 20px;">Check the <strong>Predicted Programme Uptake</strong> tab to view the predicted uptake percentage and suggestions for adjustments.</li>
+          <li style="margin-left: 20px;">Review the <strong>Costs &amp; Benefits</strong> tab for an interactive cost breakdown with educational summaries explaining key modelling assumptions.</li>
+          <li style="margin-left: 20px;">Save and compare different scenarios in the <strong>Scenarios</strong> tab or export the results to PDF.</li>
         </ol>
       </div>
     </section>
@@ -105,10 +105,10 @@
           <div class="attribute-icon">
             <svg width="24" height="24" fill="#e67e22" xmlns="http://www.w3.org/2000/svg">
               <circle cx="12" cy="12" r="10" stroke="#e67e22" stroke-width="2" fill="none"/>
-              <path d="M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8z" fill="#e67e22"/>
+              <path d="M12 4a8 8 0 0 1 0 16 8 8 0 0 1 0-16z" fill="#e67e22"/>
             </svg>
             <div class="tooltip" role="tooltip">
-              Determines if the programme is offered locally (up to 12 km) or in a wider community (50+ km), affecting mobility, transport costs and convenience.
+              Determines if the programme is offered locally (up to 12 km) or in a wider community (50+ km), affecting mobility, transport costs, and convenience.
             </div>
           </div>
           <div class="attribute-content">
@@ -156,7 +156,7 @@
               <path d="M12 6v6l4 2" stroke="#3498db" stroke-width="2" fill="none"/>
             </svg>
             <div class="tooltip" role="tooltip">
-              2-hour or 4-hour sessions affect both interaction depth and scheduling flexibility.
+              2-hour or 4-hour sessions affect both the depth of interaction and scheduling flexibility.
             </div>
           </div>
           <div class="attribute-content">
@@ -327,7 +327,7 @@
         <div class="modelling-assumptions">
           <h3><i class="fa-solid fa-lightbulb"></i> Modelling Assumptions</h3>
           <p>
-            Our analysis uses interactive cost sliders, pop-up information boxes and brief educational summaries to explain how costs and benefits are calculated. Hover over the info icon <i class="fa-solid fa-info-circle tooltip" data-tooltip="Costs include fixed and variable items; benefits are calculated based on QALY gains multiplied by a monetary value."></i> for further details.
+            Our analysis uses interactive cost sliders, pop-up info boxes and brief educational summaries to explain how costs and benefits are calculated. Hover over the info icon <i class="fa-solid fa-info-circle tooltip" data-tooltip="Fixed costs include advertisement and training; variable costs include delivery and participant travel. Benefits are calculated based on QALY gains multiplied by a monetary conversion factor."></i> for further details.
           </p>
         </div>
         <div class="cost-icons">
@@ -335,7 +335,6 @@
           <button class="buttons-row" onclick="toggleBenefitsAnalysis()">Benefits Analysis</button>
         </div>
         <div id="detailedCostBreakdown" class="cost-cards" style="display:none;">
-          <!-- Example Cost Breakdown Card -->
           <div class="cost-card">
             <h4><i class="fa-solid fa-receipt"></i> Advertisements</h4>
             <p>Cost: A$2,978.80</p>
@@ -346,13 +345,27 @@
             <p>Cost: A$1,200.00</p>
             <p>Quantity: 10,000</p>
           </div>
+          <div class="cost-card">
+            <h4><i class="fa-solid fa-envelope"></i> Postage</h4>
+            <p>Cost: A$1,470.00</p>
+            <p>Quantity: 10,000</p>
+          </div>
+          <div class="cost-card">
+            <h4><i class="fa-solid fa-user"></i> Admin Personnel</h4>
+            <p>Cost: A$499.90</p>
+            <p>Quantity: 10</p>
+          </div>
+          <div class="cost-card">
+            <h4><i class="fa-solid fa-chalkboard-teacher"></i> Trainer Cost</h4>
+            <p>Cost: A$22,386.00</p>
+            <p>Quantity: 100</p>
+          </div>
           <!-- Additional cost cards can be added here -->
         </div>
         <div id="detailedBenefitsAnalysis" class="cost-cards" style="display:none;">
-          <!-- Example Benefits Analysis Card -->
           <div class="cost-card">
             <h4><i class="fa-solid fa-hand-holding-dollar"></i> QALY Benefits</h4>
-            <p>Calculated based on QALY gains and monetary conversion factor.</p>
+            <p>Calculated as: (Number of Participants × QALY per Participant) × Monetary Value per QALY.</p>
           </div>
           <!-- Additional benefits cards can be added here -->
         </div>
@@ -375,28 +388,30 @@
             <option value="all">All</option>
           </select>
         </div>
-        <table id="scenarioTable">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>State</th>
-              <th>Cost Adjust?</th>
-              <th>Cost (AUD)</th>
-              <th>Local?</th>
-              <th>Wider?</th>
-              <th>Weekly?</th>
-              <th>Monthly?</th>
-              <th>Virtual?</th>
-              <th>Hybrid?</th>
-              <th>2-Hour?</th>
-              <th>4-Hour?</th>
-              <th>Community?</th>
-              <th>Counselling?</th>
-              <th>VR?</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-container">
+          <table id="scenarioTable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>State</th>
+                <th>Cost Adjust?</th>
+                <th>Cost (AUD)</th>
+                <th>Local?</th>
+                <th>Wider?</th>
+                <th>Weekly?</th>
+                <th>Monthly?</th>
+                <th>Virtual?</th>
+                <th>Hybrid?</th>
+                <th>2-Hour?</th>
+                <th>4-Hour?</th>
+                <th>Community?</th>
+                <th>Counselling?</th>
+                <th>VR?</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
