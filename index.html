@@ -1,311 +1,303 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AussieConnect Plus - Decision Aid Tool</title>
-    <!-- Link to external CSS -->
-    <link rel="stylesheet" href="styles.css">
-    <!-- Google Fonts for better typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Chart.js CDN for visualization -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- jsPDF CDN for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>LonelyLessAustralia Decision Aid Tool</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papNMzNnQn5iH+1G+FHu8SyuXHs6A1k+Ln7tK5qRo1l5eYm6Jzv+1pArJ7N4C9FfpRrmAgM3tYWd3FZ9jKz1Bw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Chart.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- jsPDF Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>AussieConnect Plus Decision Aid Tool</h1>
-        </header>
-        
-        <!-- Introduction Section -->
-        <section class="introduction" aria-labelledby="introduction-heading">
-            <h2 id="introduction-heading" class="sr-only">Introduction</h2>
-            <p>Loneliness affects over five million Australians, especially older adults, leading to significant health and economic challenges. This online decision aid tool is developed from a discrete choice experiment that identified older adults' preferences for various support programs designed to reduce loneliness in Australia. Utilizing the DCE’s insights and estimates, the tool predicts the probability of uptake for different program packages, enabling personalized support services based on the key factors older adults consider when seeking social connection.</p>
-        </section>
-        
-        <!-- Instructions Section -->
-        <section class="instructions" aria-labelledby="instructions-heading">
-            <h2 id="instructions-heading">How to Use This Tool</h2>
-            <p>Welcome to AussieConnect Plus! This tool is designed to help you assess the likelihood of program uptake aimed at reducing loneliness among older adults in Australia. Follow the steps below to get your predicted probability:</p>
-            <ol>
-                <li>Select your preferences from the drop-down menus provided.</li>
-                <li>Click the <strong>"Calculate Probability"</strong> button to see your results.</li>
-                <li>Review the predicted probability, your selected program package, and the cost-benefit analysis.</li>
-                <li>Download your selected program package and Uptake Probability chart for future reference.</li>
-            </ol>
-            <p>These support programs are essential in fostering community engagement and enhancing the well-being of our senior population.</p>
-        </section>
-        
-        <!-- Decision Form -->
-        <form id="decisionForm" aria-labelledby="decision-form-heading">
-            <h2 id="decision-form-heading" class="sr-only">Decision Form</h2>
-            
-            <!-- State Selection -->
-            <fieldset class="form-section" aria-labelledby="state-selection-heading">
-                <legend id="state-selection-heading">State Selection</legend>
-                <p>Select the state in Australia relevant to your analysis.</p>
-                
-                <div class="form-group">
-                    <label for="state_select">Select State:</label>
-                    <select id="state_select" name="state_select" aria-required="true" aria-describedby="state_select_desc">
-                        <option value="">-- Select State --</option>
-                        <option value="NSW">New South Wales (NSW)</option>
-                        <option value="VIC">Victoria (VIC)</option>
-                        <option value="QLD">Queensland (QLD)</option>
-                        <option value="WA">Western Australia (WA)</option>
-                        <option value="SA">South Australia (SA)</option>
-                        <option value="TAS">Tasmania (TAS)</option>
-                        <option value="ACT">Australian Capital Territory (ACT)</option>
-                        <option value="NT">Northern Territory (NT)</option>
-                    </select>
-                    <span id="state_select_desc" class="sr-only">Select the Australian state for the analysis</span>
-                </div>
-            </fieldset>
-            
-            <!-- Adjust Costs for Living Expenses -->
-            <fieldset class="form-section" aria-labelledby="adjust-costs-heading">
-                <legend id="adjust-costs-heading">Adjust Costs for Living Expenses</legend>
-                <p>Whether support costs should be adjusted by the cost of living expenses across states.</p>
-                
-                <div class="form-group">
-                    <label for="adjust_costs">Adjust Costs for Living Expenses?</label>
-                    <select id="adjust_costs" name="adjust_costs" aria-required="true" aria-describedby="adjust_costs_desc">
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-                    <span id="adjust_costs_desc" class="sr-only">Select whether to adjust costs based on the state's cost of living</span>
-                </div>
-            </fieldset>
-            
-            <!-- Costs of Support Program -->
-            <fieldset class="form-section" aria-labelledby="costs-heading">
-                <legend id="costs-heading">Costs of Support Program</legend>
-                <p>This refers to the out-of-pocket cost participants will incur each time they participate in the support program.</p>
-                
-                <div class="form-group">
-                    <label for="cost_cont">Cost Continuum:</label>
-                    <select id="cost_cont" name="cost_cont" aria-required="true" aria-describedby="cost_cont_desc">
-                        <option value="0">Cost Free (0)</option>
-                        <option value="10">Affordable (10)</option>
-                        <option value="15">Low Cost (15)</option>
-                        <option value="20">Medium Cost (20)</option>
-                        <option value="25">Moderate Cost (25)</option>
-                        <option value="50">High Cost (50)</option>
-                        <option value="60">Expensive (60)</option>
-                    </select>
-                    <span id="cost_cont_desc" class="sr-only">Select the cost level of the support program</span>
-                </div>
-            </fieldset>
-    
-            <!-- Accessibility/Convenience -->
-            <fieldset class="form-section" aria-labelledby="accessibility-heading">
-                <legend id="accessibility-heading">Accessibility/Convenience</legend>
-                <p>This refers to the ease of accessing the program, considering physical mobility and transportation.</p>
-                
-                <div class="form-group">
-                    <label for="dist_signif">Distance Significance:</label>
-                    <select id="dist_signif" name="dist_signif" aria-describedby="dist_signif_desc">
-                        <option value="0">High Accessibility (0)</option>
-                        <option value="1">Low Accessibility (1)</option>
-                    </select>
-                    <span id="dist_signif_desc" class="sr-only">Select the significance of distance accessibility</span>
-                </div>
-        
-                <div class="form-group">
-                    <label for="dist_local">Distance Local:</label>
-                    <select id="dist_local" name="dist_local" aria-describedby="dist_local_desc">
-                        <option value="1">Local Area Accessibility (1)</option>
-                        <option value="0">Non-Local Area Accessibility (0)</option>
-                    </select>
-                    <span id="dist_local_desc" class="sr-only">Select whether local area accessibility is available</span>
-                </div>
-            </fieldset>
-    
-            <!-- Frequency of Interaction or Engagement -->
-            <fieldset class="form-section" aria-labelledby="frequency-heading">
-                <legend id="frequency-heading">Frequency of Interaction or Engagement</legend>
-                <p>This refers to how often individuals will participate in the program.</p>
-                
-                <div class="form-group">
-                    <label for="freq_monthly">Frequency Monthly:</label>
-                    <select id="freq_monthly" name="freq_monthly" aria-describedby="freq_monthly_desc">
-                        <option value="1">Monthly (1)</option>
-                        <option value="0">Not Monthly (0)</option>
-                    </select>
-                    <span id="freq_monthly_desc" class="sr-only">Select if the program occurs monthly</span>
-                </div>
-        
-                <div class="form-group">
-                    <label for="freq_weekly">Frequency Weekly:</label>
-                    <select id="freq_weekly" name="freq_weekly" aria-describedby="freq_weekly_desc">
-                        <option value="1">Weekly (1)</option>
-                        <option value="0">Not Weekly (0)</option>
-                    </select>
-                    <span id="freq_weekly_desc" class="sr-only">Select if the program occurs weekly</span>
-                </div>
-            </fieldset>
-    
-            <!-- Method of Engagement or Interaction -->
-            <fieldset class="form-section" aria-labelledby="method-heading">
-                <legend id="method-heading">Method of Engagement or Interaction</legend>
-                <p>This refers to how individuals prefer to connect, catering to those who may have mobility issues or prefer digital communication.</p>
-                
-                <div class="form-group">
-                    <label for="mode_virtual">Mode Virtual:</label>
-                    <select id="mode_virtual" name="mode_virtual" aria-describedby="mode_virtual_desc">
-                        <option value="0">In-Person Only (0)</option>
-                        <option value="1">Virtual Available (1)</option>
-                    </select>
-                    <span id="mode_virtual_desc" class="sr-only">Select if virtual mode is available</span>
-                </div>
-        
-                <div class="form-group">
-                    <label for="mode_hybrid">Mode Hybrid:</label>
-                    <select id="mode_hybrid" name="mode_hybrid" aria-describedby="mode_hybrid_desc">
-                        <option value="0">In-Person Only (0)</option>
-                        <option value="1">Hybrid Available (1)</option>
-                    </select>
-                    <span id="mode_hybrid_desc" class="sr-only">Select if hybrid mode is available</span>
-                </div>
-            </fieldset>
-    
-            <!-- Duration of Each Interaction -->
-            <fieldset class="form-section" aria-labelledby="duration-heading">
-                <legend id="duration-heading">Duration of Each Interaction</legend>
-                <p>This refers to the length of each interaction or activity.</p>
-                
-                <div class="form-group">
-                    <label for="dur_2hrs">Duration 2 Hours:</label>
-                    <select id="dur_2hrs" name="dur_2hrs" aria-describedby="dur_2hrs_desc">
-                        <option value="1">Yes (1)</option>
-                        <option value="0">No (0)</option>
-                    </select>
-                    <span id="dur_2hrs_desc" class="sr-only">Select if the program duration is 2 hours</span>
-                </div>
-        
-                <div class="form-group">
-                    <label for="dur_4hrs">Duration 4 Hours:</label>
-                    <select id="dur_4hrs" name="dur_4hrs" aria-describedby="dur_4hrs_desc">
-                        <option value="1">Yes (1)</option>
-                        <option value="0">No (0)</option>
-                    </select>
-                    <span id="dur_4hrs_desc" class="sr-only">Select if the program duration is 4 hours</span>
-                </div>
-            </fieldset>
-    
-            <!-- Type of Support Program -->
-            <fieldset class="form-section" aria-labelledby="type-support-heading">
-                <legend id="type-support-heading">Type of Support Program</legend>
-                <p>This refers to how participants connect with others and what kinds of activities they might do together.</p>
-                
-                <div class="support-programs">
-                    <div class="support-program">
-                        <label for="type_comm">Community Engagement:</label>
-                        <select id="type_comm" name="type_comm" aria-describedby="type_comm_desc">
-                            <option value="1">Yes (1)</option>
-                            <option value="0">No (0)</option>
-                        </select>
-                        <span id="type_comm_desc" class="sr-only">Select if community engagement is included</span>
-                    </div>
-                    
-                    <div class="support-program">
-                        <label for="type_psych">Psychological Counselling:</label>
-                        <select id="type_psych" name="type_psych" aria-describedby="type_psych_desc">
-                            <option value="1">Yes (1)</option>
-                            <option value="0">No (0)</option>
-                        </select>
-                        <span id="type_psych_desc" class="sr-only">Select if psychological counselling is included</span>
-                    </div>
-                    
-                    <div class="support-program">
-                        <label for="type_vr">Virtual Reality:</label>
-                        <select id="type_vr" name="type_vr" aria-describedby="type_vr_desc">
-                            <option value="1">Yes (1)</option>
-                            <option value="0">No (0)</option>
-                        </select>
-                        <span id="type_vr_desc" class="sr-only">Select if virtual reality is included</span>
-                    </div>
-                </div>
-            </fieldset>
-    
-            <!-- Submit Button -->
-            <button type="button" onclick="calculateProbability()" aria-label="Calculate the probability of program uptake">Calculate Probability</button>
+  <div class="container">
+    <header>
+      <h1>LonelyLessAustralia Decision Aid Tool</h1>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tablink active" role="tab" aria-selected="true" aria-controls="introTab" onclick="openTab('introTab', this)">
+        <i class="fa-solid fa-info-circle"></i> Introduction
+      </button>
+      <button class="tablink" role="tab" aria-selected="false" aria-controls="instructionsTab" onclick="openTab('instructionsTab', this)">
+        <i class="fa-solid fa-circle-question"></i> Instructions
+      </button>
+      <button class="tablink" role="tab" aria-selected="false" aria-controls="attributesTab" onclick="openTab('attributesTab', this)">
+        <i class="fa-solid fa-list"></i> Attributes
+      </button>
+      <button class="tablink" role="tab" aria-selected="false" aria-controls="inputsTab" onclick="openTab('inputsTab', this)">
+        <i class="fa-solid fa-sliders"></i> Inputs
+      </button>
+      <button class="tablink" role="tab" aria-selected="false" aria-controls="wtpTab" onclick="openTab('wtpTab', this)">
+        <i class="fa-solid fa-chart-bar"></i> WTP Results
+      </button>
+      <button class="tablink" role="tab" aria-selected="false" aria-controls="probTab" onclick="openTab('probTab', this)">
+        <i class="fa-solid fa-chart-line"></i> Programme Uptake
+      </button>
+      <button class="tablink" role="tab" aria-selected="false" aria-controls="costsTab" onclick="openTab('costsTab', this)">
+        <i class="fa-solid fa-calculator"></i> Costs & Benefits
+      </button>
+      <button class="tablink" role="tab" aria-selected="false" aria-controls="scenariosTab" onclick="openTab('scenariosTab', this)">
+        <i class="fa-solid fa-save"></i> Scenarios
+      </button>
+    </nav>
+
+    <!-- Introduction Tab -->
+    <section id="introTab" class="tabcontent" style="display: block;">
+      <div class="card intro-box">
+        <p>
+          Loneliness affects over five million Australians, particularly older adults, resulting in significant health and economic challenges. This tool utilises discrete choice experiment (DCE) estimates to predict programme uptake probabilities, enabling personalised services based on the attributes older adults consider most crucial.
+        </p>
+        <p>Use the tabs above to navigate:</p>
+        <ul>
+          <li><strong>Instructions</strong> – Guidance for each tool feature.</li>
+          <li><strong>Attributes</strong> – Detailed descriptions of the DCE attributes.</li>
+          <li><strong>Inputs</strong> – Configure your scenario’s cost, accessibility, frequency, etc.</li>
+          <li><strong>WTP Results</strong> – View charts of willingness to pay (A$) with error bars.</li>
+          <li><strong>Programme Uptake</strong> – Dynamically computed chart based on your scenario inputs.</li>
+          <li><strong>Costs & Benefits</strong> – Realistic cost items and QALY-based benefits.</li>
+          <li><strong>Scenarios</strong> – Save, compare or export PDF-based results.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Instructions Tab -->
+    <section id="instructionsTab" class="tabcontent">
+      <div class="card">
+        <h2>How to Use This Tool</h2>
+        <ol>
+          <li>Review the <strong>Attributes</strong> to understand cost, accessibility, frequency, method, duration, and support types. Hover over the icons for details.</li>
+          <li>In <strong>Inputs</strong>, select your state, cost adjustments, and service options.</li>
+          <li>Click “Calculate &amp; View Results” to compute and view cost-benefit analyses.</li>
+          <li>The <strong>WTP Results</strong> tab displays bar charts of the main model’s willingness to pay (A$) per attribute.</li>
+          <li>The <strong>Programme Uptake</strong> tab provides a dynamically updated chart based on your inputs.</li>
+          <li>The <strong>Costs &amp; Benefits</strong> tab integrates detailed cost items and QALY benefits.</li>
+          <li>Under <strong>Scenarios</strong>, save multiple configurations, compare them side by side, or export your results to PDF.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Attributes Tab -->
+    <section id="attributesTab" class="tabcontent">
+      <div class="card">
+        <h2>Programme Attributes</h2>
+        <ul class="attribute-list">
+          <li>
+            <i class="fa-solid fa-dollar-sign tooltip" data-tooltip="The fee (AUD) participants pay per session."></i>
+            <strong>Cost per session:</strong> Out-of-pocket fee per attendance.
+          </li>
+          <li>
+            <i class="fa-solid fa-location-dot tooltip" data-tooltip="Local (up to 12 km) vs wider community (50+ km) affects convenience and transport costs."></i>
+            <strong>Accessibility:</strong> Local vs wider community.
+          </li>
+          <li>
+            <i class="fa-solid fa-calendar-check tooltip" data-tooltip="Weekly interactions increase social engagement frequency compared to monthly."></i>
+            <strong>Frequency of Interaction:</strong> Weekly or monthly.
+          </li>
+          <li>
+            <i class="fa-solid fa-video tooltip" data-tooltip="Virtual or hybrid delivery based on user preferences and mobility."></i>
+            <strong>Method of Interaction:</strong> Virtual or hybrid (in-person &amp; virtual).
+          </li>
+          <li>
+            <i class="fa-solid fa-clock tooltip" data-tooltip="Session length influences scheduling and depth of interaction."></i>
+            <strong>Duration of Interaction:</strong> 2-hour or 4-hour sessions.
+          </li>
+          <li>
+            <i class="fa-solid fa-hands-helping tooltip" data-tooltip="Choose the support programme: community, counselling, or VR-based."></i>
+            <strong>Type of Support Programme:</strong> Community engagement, psychological counselling, or virtual reality.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Inputs Tab -->
+    <section id="inputsTab" class="tabcontent">
+      <div class="card">
+        <h2>Programme Inputs</h2>
+        <p>Configure your scenario then click “Calculate &amp; View Results”.</p>
+        <form onsubmit="event.preventDefault();">
+          <div class="form-grid">
+            <div class="form-item">
+              <label for="state_select">State:</label>
+              <select id="state_select">
+                <option value="">None</option>
+                <option value="NSW">New South Wales (NSW)</option>
+                <option value="VIC">Victoria (VIC)</option>
+                <option value="QLD">Queensland (QLD)</option>
+                <option value="WA">Western Australia (WA)</option>
+                <option value="SA">South Australia (SA)</option>
+                <option value="TAS">Tasmania (TAS)</option>
+                <option value="ACT">Australian Capital Territory (ACT)</option>
+                <option value="NT">Northern Territory (NT)</option>
+              </select>
+              <label for="adjustCosts">Adjust for Cost of Living?</label>
+              <select id="adjustCosts">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </div>
+            <div class="form-item">
+              <label for="costSlider">
+                Cost per Session (AUD): <span id="costLabel">50</span>
+              </label>
+              <input type="range" id="costSlider" min="0" max="100" step="1" value="50" oninput="updateCostDisplay(this.value)" />
+            </div>
+            <div class="form-item">
+              <label>
+                <input type="checkbox" id="localCheck" /> Local Area (12 km)
+              </label>
+              <label>
+                <input type="checkbox" id="widerCheck" /> Wider Community (50+ km)
+              </label>
+            </div>
+            <div class="form-item">
+              <label>
+                <input type="checkbox" id="weeklyCheck" /> Weekly
+              </label>
+              <label>
+                <input type="checkbox" id="monthlyCheck" /> Monthly
+              </label>
+            </div>
+            <div class="form-item">
+              <label>
+                <input type="checkbox" id="virtualCheck" /> Virtual
+              </label>
+              <label>
+                <input type="checkbox" id="hybridCheck" /> Hybrid (In-person &amp; Virtual)
+              </label>
+            </div>
+            <div class="form-item">
+              <label>
+                <input type="checkbox" id="twoHCheck" /> 2-hour Interaction
+              </label>
+              <label>
+                <input type="checkbox" id="fourHCheck" /> 4-hour Interaction
+              </label>
+            </div>
+            <div class="form-item">
+              <label>
+                <input type="checkbox" id="commCheck" /> Community Engagement
+              </label>
+              <label>
+                <input type="checkbox" id="psychCheck" /> Psychological Counselling
+              </label>
+              <label>
+                <input type="checkbox" id="vrCheck" /> Virtual Reality
+              </label>
+            </div>
+          </div>
+          <div class="buttons-row">
+            <button type="button" onclick="openSingleScenario()">Calculate &amp; View Results</button>
+          </div>
         </form>
-    
-        <!-- Display Result Section -->
-        <section id="result" aria-labelledby="result-heading">
-            <h2 id="result-heading">Predicted Probability of Program Uptake: <span id="probability" tabindex="-1">--</span></h2>
-            <!-- Brief Interpretations -->
-            <div id="interpretations" aria-live="polite">
-                <!-- Dynamic interpretations will appear here -->
-            </div>
-            <!-- Program Package Display -->
-            <section id="programPackage" aria-labelledby="program-package-heading">
-                <h3 id="program-package-heading">Your Selected Program Package:</h3>
-                <ul id="packageList">
-                    <!-- Selected attributes will be listed here -->
-                </ul>
-                <button id="downloadPackageBtn" onclick="downloadPackage()" aria-label="Download your selected program package">Download Program Package</button>
-                <button id="downloadChartBtn" onclick="downloadChart()" aria-label="Download the Uptake Probability chart">Download Uptake Probability Chart</button>
-                
-                <!-- Cost Information Section -->
-                <div id="costInformation" aria-labelledby="cost-information-heading">
-                    <h3 id="cost-information-heading">Cost Analysis:</h3>
-                    <ul id="costList">
-                        <!-- Cost components will be listed here -->
-                    </ul>
-                    <p><strong>Total Estimated Cost:</strong> <span id="totalCost">--</span> AUD</p>
-                    
-                    <h3>Benefit Analysis:</h3>
-                    <p><strong>Total Estimated Benefits:</strong> <span id="totalBenefits">--</span> AUD</p>
-                    
-                    <h3>Cost-Benefit Analysis:</h3>
-                    <p><strong>Net Benefit:</strong> <span id="netBenefit">--</span> AUD</p>
-                    <p><strong>Benefit-Cost Ratio:</strong> <span id="bcr">--</span></p>
-                    
-                    <!-- CBA Chart -->
-                    <div class="chart-container">
-                        <canvas id="cbaChart" aria-label="Bar chart showing Cost-Benefit Analysis" role="img"></canvas>
-                        <div id="chartSummary" class="sr-only">
-                            <p>The Cost-Benefit Analysis chart compares the total estimated costs against the total estimated benefits of the selected program package.</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Download CBA Report -->
-                    <button id="downloadCBAPDFBtn" onclick="downloadCBAPDF()" aria-label="Download the Cost-Benefit Analysis report as PDF">Download CBA Report as PDF</button>
-                </div>
-            </section>
-        </section>
-    
-        <!-- Chart Container for Uptake Probability -->
-        <div class="chart-container">
-            <canvas id="probabilityChart" aria-label="Doughnut chart showing uptake probability" role="img"></canvas>
-            <div id="probabilityChartSummary" class="sr-only">
-                <p>The Uptake Probability chart displays the likelihood of program uptake compared to the remaining probability.</p>
-            </div>
+      </div>
+    </section>
+
+    <!-- WTP Results Tab -->
+    <section id="wtpTab" class="tabcontent">
+      <div class="card">
+        <h2>Willingness to Pay (WTP) Results</h2>
+        <p>
+          WTP is computed as the ratio of each attribute’s coefficient to the negative cost coefficient. This reflects the monetary value respondents attach to each programme attribute.
+        </p>
+        <div class="buttons-row">
+          <button onclick="renderWTPChart()">Show WTP Plots</button>
         </div>
-    
-        <!-- Feedback Section -->
-        <section class="feedback" aria-labelledby="feedback-heading">
-            <h3 id="feedback-heading">Feedback</h3>
-            <form id="feedbackForm">
-                <label for="feedback">Your Feedback:</label>
-                <textarea id="feedback" name="feedback" rows="4" placeholder="Enter your feedback here..." aria-required="true"></textarea>
-                <button type="submit" aria-label="Submit your feedback">Submit Feedback</button>
-            </form>
-        </section>
-    </div>
-    
-    <!-- Affiliation Section -->
+        <div class="chart-grid">
+          <div class="chart-box">
+            <h3>WTP (A$) with Error Bars</h3>
+            <canvas id="wtpChartMain"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Programme Uptake Probability Tab -->
+    <section id="probTab" class="tabcontent">
+      <div class="card">
+        <h2>Programme Uptake Probability</h2>
+        <p>
+          Click “Show Probability Plot” to generate a chart based on your <strong>Inputs</strong>. Depending on the predicted uptake, you will receive suggestions for improving cost, accessibility, or frequency.
+        </p>
+        <div class="buttons-row">
+          <button onclick="renderProbChart()">Show Probability Plot</button>
+        </div>
+        <div class="chart-grid">
+          <div class="chart-box">
+            <h3>Programme Uptake Probability</h3>
+            <canvas id="probChartMain"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Costs & Benefits Tab -->
+    <section id="costsTab" class="tabcontent">
+      <div class="card">
+        <h2>Costs &amp; Benefits</h2>
+        <div id="costsBenefitsContainer">
+          <div class="qaly-selector">
+            <label for="qalySelect">Select QALY Gain Scenario:</label>
+            <select id="qalySelect" onchange="renderCostsBenefits()">
+              <option value="low">Low (0.02 QALYs per participant)</option>
+              <option value="moderate" selected>Moderate (0.05 QALYs per participant)</option>
+              <option value="high">High (0.1 QALYs per participant)</option>
+            </select>
+          </div>
+          <div id="costsBenefitsResults"><!-- Results injected here --></div>
+          <p class="reference">
+            <strong>Reference:</strong> Engel, L., Lee, Y. Y., Le, L. K. D., Lal, A., &amp; Mihalopoulos, C. (2021). Reducing loneliness to prevent depression in older adults in Australia: A modelled cost-effectiveness analysis. Mental Health and Prevention, 24. <a href="https://doi.org/10.1016/j.mhp.2021.200212" target="_blank">https://doi.org/10.1016/j.mhp.2021.200212</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scenarios Tab -->
+    <section id="scenariosTab" class="tabcontent">
+      <div class="card">
+        <h2>Saved Scenarios</h2>
+        <p>
+          Save your scenario from <strong>Inputs</strong> and then compare or export multiple configurations (including cost-benefit charts) to PDF.
+        </p>
+        <div class="buttons-row">
+          <button onclick="saveScenario()">Save Current Scenario</button>
+          <button onclick="openComparison()">Compare All Scenarios</button>
+          <button onclick="exportToPDF()">Export Comparison to PDF</button>
+        </div>
+        <table id="scenarioTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>State</th>
+              <th>Cost Adjust?</th>
+              <th>Cost (AUD)</th>
+              <th>Local?</th>
+              <th>Wider?</th>
+              <th>Weekly?</th>
+              <th>Monthly?</th>
+              <th>Virtual?</th>
+              <th>Hybrid?</th>
+              <th>2-Hour?</th>
+              <th>4-Hour?</th>
+              <th>Community?</th>
+              <th>Counselling?</th>
+              <th>VR?</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
     <footer>
-        <p>by Mesfin Genie, The University of Newcastle, Australia</p>
+      <p>
+        &copy; 2025 LonelyLessAustralia. All Rights Reserved. <br />
+        Author: Mesfin Genie, Newcastle Business School, The University of Newcastle, Australia
+      </p>
     </footer>
-    
-    <!-- Link to external JavaScript -->
-    <script src="script.js"></script>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
