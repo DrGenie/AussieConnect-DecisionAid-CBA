@@ -333,21 +333,24 @@ function openComparison() {
 let combinedChartInstance = null;
 const QALY_SCENARIOS_VALUES = { low: 0.02, moderate: 0.05, high: 0.1 };
 const VALUE_PER_QALY = 50000;
-const FIXED_COSTS = { advertisement: 2978.80, training: 26863.00 }; // advertisement value as provided (A$2978.80 for 2 units)
+// All cost components as provided:
+const FIXED_COSTS = { advertisement: 2978.80 }; // Advertisements in Local Press
 const VARIABLE_COSTS = { 
-  printing: 0.12, 
-  postage: 0.15, 
-  admin: 49.99, 
-  trainer: 223.86, 
-  oncosts: 44.77, 
-  facilitator: 100.00, 
-  materials: 50.00, 
-  venue: 15.00, 
-  sessionTime: 20.00, 
-  travel: 10.00 
+  printing: 0.12 * 10000, 
+  postage: 0.15 * 10000, 
+  admin: 49.99 * 10, 
+  trainer: 223.86 * 100, 
+  oncosts: 44.77 * 100, 
+  facilitator: 100.00 * 100, 
+  materials: 50.00 * 100, 
+  venue: 15.00 * 100, 
+  sessionTime: 20.00 * 250, 
+  travel: 10.00 * 250 
 };
-const FIXED_TOTAL = 2978.80 + 26863.00;
-const VARIABLE_TOTAL = (0.12 * 10000) + (0.15 * 10000) + (49.99 * 10) + (223.86 * 100) + (44.77 * 100) + (100.00 * 100) + (50.00 * 100) + (15.00 * 100) + (20.00 * 250) + (10.00 * 250);
+const FIXED_TOTAL = FIXED_COSTS.advertisement + 26863.00; // Adding training cost (A$26863.00)
+const VARIABLE_TOTAL = VARIABLE_COSTS.printing + VARIABLE_COSTS.postage + VARIABLE_COSTS.admin + VARIABLE_COSTS.trainer +
+                         VARIABLE_COSTS.oncosts + VARIABLE_COSTS.facilitator + VARIABLE_COSTS.materials +
+                         VARIABLE_COSTS.venue + VARIABLE_COSTS.sessionTime + VARIABLE_COSTS.travel;
 
 function renderCostsBenefits() {
   const scenario = buildScenarioFromInputs();
@@ -379,7 +382,7 @@ function renderCostsBenefits() {
     <p><strong>Total QALYs:</strong> ${totalQALY.toFixed(2)}</p>
     <p><strong>Monetised Benefits:</strong> A$${monetizedBenefits.toLocaleString()}</p>
     <p><strong>Net Benefit:</strong> A$${netBenefit.toLocaleString()}</p>
-    <p>This analysis combines fixed costs (advertisements in local press and training) and variable costs (printing, postage, administrative personnel, trainer cost, on-costs, facilitator salaries, material costs, venue hire, session time and travel). Benefits are calculated based on QALY gains multiplied by a conversion factor of A$50,000.</p>
+    <p>This analysis combines fixed costs (advertisements in local press and training) and variable costs (printing, postage, administrative personnel, trainer cost, on-costs, facilitator salaries, material costs, venue hire, session time and travel). Benefits are calculated based on QALY gains multiplied by A$50,000.</p>
   `;
   costsTab.appendChild(summaryDiv);
   
@@ -471,4 +474,61 @@ function renderProbChart() {
                        pVal < 70 ? "Moderate uptake. Consider increasing session frequency or optimising cost." :
                        "High uptake. The current configuration is effective.";
   alert(`Predicted uptake: ${pVal.toFixed(2)}%. ${interpretation}`);
+}
+
+/***************************************************************************
+ * Export to PDF Functionality using jsPDF
+ ***************************************************************************/
+function exportToPDF() {
+  if (savedScenarios.length === 0) {
+    alert("No scenarios saved to export.");
+    return;
+  }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  let currentY = 15;
+  
+  doc.setFontSize(16);
+  doc.text("LonelyLessAustralia - Scenarios Comparison", pageWidth / 2, currentY, { align: 'center' });
+  currentY += 10;
+  savedScenarios.forEach((scenario, index) => {
+    if (currentY > 260) {
+      doc.addPage();
+      currentY = 15;
+    }
+    doc.setFontSize(14);
+    doc.text(`Scenario ${index + 1}: ${scenario.name}`, 15, currentY);
+    currentY += 7;
+    doc.setFontSize(12);
+    doc.text(`State: ${scenario.state || 'None'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Cost Adjust: ${scenario.adjustCosts === 'yes' ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Cost per Session: A$${scenario.cost_val.toFixed(2)}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Local: ${scenario.localCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Wider: ${scenario.widerCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Weekly: ${scenario.weeklyCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Monthly: ${scenario.monthlyCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Virtual: ${scenario.virtualCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Hybrid: ${scenario.hybridCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`2-Hour: ${scenario.twoHCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`4-Hour: ${scenario.fourHCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Community: ${scenario.commCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Counselling: ${scenario.psychCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`VR: ${scenario.vrCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 10;
+  });
+  doc.save("Scenarios_Comparison.pdf");
 }
