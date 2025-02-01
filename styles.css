@@ -11,7 +11,6 @@ body {
   color: #333;
 }
 
-/* Container */
 .container {
   width: 95%;
   max-width: 1200px;
@@ -81,11 +80,9 @@ nav .tabs {
   padding: 15px;
   background-color: #eef2f7;
   border-left: 5px solid #2980b9;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin: 0 20px;
 }
 
-/* Bullet list in Intro Tab */
 .intro-box ul {
   margin-top: 15px;
   margin-left: 40px;
@@ -133,7 +130,7 @@ nav .tabs {
   border-radius: 6px;
   padding: 10px;
   position: absolute;
-  z-index: 1;
+  z-index: 10;
   bottom: 125%;
   left: 50%;
   transform: translateX(-50%);
@@ -203,7 +200,7 @@ nav .tabs {
   border-radius: 6px;
   padding: 10px;
   position: absolute;
-  z-index: 1;
+  z-index: 10;
   top: 100%;
   left: 0;
   opacity: 0;
@@ -297,6 +294,46 @@ nav .tabs {
   margin-top: 20px;
 }
 
+/* Cost Icons */
+.cost-icons {
+  display: flex;
+  gap: 30px;
+  margin: 15px 0;
+  justify-content: center;
+}
+
+.cost-icons .icon-item {
+  text-align: center;
+  color: #2980b9;
+  cursor: default;
+}
+
+.cost-icons .icon-item i {
+  font-size: 2em;
+  margin-bottom: 5px;
+}
+
+/* Filter Options in Scenarios Tab */
+.filter-options {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.filter-options label {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.filter-options select {
+  padding: 6px;
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
 /* Scenarios Table */
 #scenarioTable {
   width: 100%;
@@ -345,15 +382,15 @@ footer p {
   .form-grid {
     grid-template-columns: 1fr;
   }
-
+  
   .chart-box {
     flex: 1 1 100%;
   }
-
+  
   .tabs {
     flex-direction: column;
   }
-
+  
   .tablink {
     width: 100%;
     text-align: left;
