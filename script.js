@@ -1,8 +1,8 @@
 /****************************************************************************
  * SCRIPT.JS
  * Enhanced tabs with working icons and tooltips, detailed attributes,
- * updated tab names and improved interactive cost-benefit section with a 
- * combined bar chart for Total Intervention Cost, Monetised Benefits and Net Benefit.
+ * updated tab names, and an improved interactive cost-benefit section
+ * featuring a combined bar chart and educational summaries.
  ****************************************************************************/
 
 /** On page load, set default tab */
@@ -412,10 +412,10 @@ function openComparison() {
   comparisonWindow.document.close();
 }
 
-let combinedChartInstance = null;
 /***************************************************************************
- * Costs & Benefits Calculations & Rendering (Combined Bar Chart)
+ * Combined Costs & Benefits Rendering (Bar Chart)
  ***************************************************************************/
+let combinedChartInstance = null;
 const QALY_SCENARIOS_VALUES = { low: 0.02, moderate: 0.05, high: 0.1 };
 const VALUE_PER_QALY = 50000;
 const FIXED_COSTS = { advertisement: 8127.60, training: 26863.00 };
@@ -438,15 +438,14 @@ function renderCostsBenefits() {
   const costPerPerson = totalInterventionCost / numberOfParticipants;
   const netBenefit = monetizedBenefits - totalInterventionCost;
   
-  // Render a combined chart with three bars: Total Cost, Monetised Benefits, Net Benefit.
   const costsTab = document.getElementById("costsBenefitsResults");
-  costsTab.innerHTML = '';
+  costsTab.innerHTML = "";
   
-  // Summary Information
+  // Render summary information
   const summaryDiv = document.createElement("div");
-  summaryDiv.id = "summaryCalculations";
+  summaryDiv.className = "calculation-info";
   summaryDiv.innerHTML = `
-    <h3><i class="fa-solid fa-chart-line"></i> Cost &amp; Benefits Analysis</h3>
+    <h4>Cost &amp; Benefits Analysis</h4>
     <p><strong>Uptake:</strong> ${uptakePercentage.toFixed(2)}%</p>
     <p><strong>Participants:</strong> ${numberOfParticipants.toFixed(0)}</p>
     <p><strong>Total Intervention Cost:</strong> A$${totalInterventionCost.toFixed(2)}</p>
@@ -457,13 +456,12 @@ function renderCostsBenefits() {
   `;
   costsTab.appendChild(summaryDiv);
   
-  // Combined Chart Container
+  // Render combined cost-benefit bar chart
   const combinedChartContainer = document.createElement("div");
   combinedChartContainer.id = "combinedChartContainer";
   combinedChartContainer.innerHTML = `<canvas id="combinedChart"></canvas>`;
   costsTab.appendChild(combinedChartContainer);
   
-  // Create Combined Chart
   const ctxCombined = document.getElementById("combinedChart").getContext("2d");
   if (combinedChartInstance) combinedChartInstance.destroy();
   combinedChartInstance = new Chart(ctxCombined, {
@@ -501,7 +499,7 @@ function renderCostsBenefits() {
     }
   });
 }
-  
+
 /***************************************************************************
  * Integration: Calculate & View Results
  ***************************************************************************/
