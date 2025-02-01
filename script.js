@@ -1,8 +1,8 @@
 /****************************************************************************
  * SCRIPT.JS
- * Enhanced tabs with working icons and tooltips, improved Inputs layout,
- * interactive Cost-Benefits section with toggle buttons and a combined bar chart,
- * detailed educational summaries, and export to PDF functionality.
+ * Enhanced tabs with working icons and tooltips, improved Inputs layout
+ * using level cards, interactive Cost-Benefits section with toggle buttons
+ * and a combined bar chart, detailed educational summaries, and export to PDF functionality.
  ****************************************************************************/
 
 /** On page load, set default tab */
@@ -126,7 +126,26 @@ function buildScenarioFromInputs() {
     alert("Select a state when adjusting cost-of-living.");
     return null;
   }
-  return { state, adjustCosts, cost_val, localCheck, widerCheck, weeklyCheck, monthlyCheck, virtualCheck, hybridCheck, twoHCheck, fourHCheck, commCheck, psychCheck, vrCheck };
+  // Compute predicted uptake and net benefit for later use:
+  const uptake = computeProbability({ state, adjustCosts, cost_val, localCheck, widerCheck, weeklyCheck, monthlyCheck, virtualCheck, hybridCheck, twoHCheck, fourHCheck, commCheck, psychCheck, vrCheck }, mainCoefficients) * 100;
+  // For net benefit, compute the cost-benefit figures as in renderCostsBenefits:
+  const baseParticipants = 250;
+  const numberOfParticipants = baseParticipants * computeProbability({ state, adjustCosts, cost_val, localCheck, widerCheck, weeklyCheck, monthlyCheck, virtualCheck, hybridCheck, twoHCheck, fourHCheck, commCheck, psychCheck, vrCheck }, mainCoefficients);
+  const QALY_SCENARIO_VALUES = { low: 0.02, moderate: 0.05, high: 0.1 };
+  const qalyScenario = document.getElementById("qalySelect") ? document.getElementById("qalySelect").value : "moderate";
+  const qalyPerParticipant = QALY_SCENARIO_VALUES[qalyScenario];
+  const totalQALY = numberOfParticipants * qalyPerParticipant;
+  const VALUE_PER_QALY = 50000;
+  // Fixed and variable totals as defined:
+  const FIXED_TOTAL = 2978.80 + 26863.00;
+  const VARIABLE_TOTAL = (0.12 * 10000) + (0.15 * 10000) + (49.99 * 10) + (223.86 * 100) +
+                         (44.77 * 100) + (100.00 * 100) + (50.00 * 100) + (15.00 * 100) +
+                         (20.00 * 250) + (10.00 * 250);
+  const totalCost = FIXED_TOTAL + (VARIABLE_TOTAL * computeProbability({ state, adjustCosts, cost_val, localCheck, widerCheck, weeklyCheck, monthlyCheck, virtualCheck, hybridCheck, twoHCheck, fourHCheck, commCheck, psychCheck, vrCheck }, mainCoefficients));
+  const monetizedBenefits = totalQALY * VALUE_PER_QALY;
+  const netBenefit = monetizedBenefits - totalCost;
+  
+  return { state, adjustCosts, cost_val, localCheck, widerCheck, weeklyCheck, monthlyCheck, virtualCheck, hybridCheck, twoHCheck, fourHCheck, commCheck, psychCheck, vrCheck, predictedUptake: uptake.toFixed(2), netBenefit: netBenefit.toFixed(2) };
 }
 
 /***************************************************************************
@@ -254,11 +273,13 @@ let savedScenarios = [];
 function saveScenario() {
   const scenario = buildScenarioFromInputs();
   if (!scenario) return;
-  scenario.name = `Scenario ${savedScenarios.length + 1}`;
+  // Save computed predicted uptake and net benefit along with inputs
   savedScenarios.push(scenario);
   const tableBody = document.querySelector("#scenarioTable tbody");
   const row = document.createElement("tr");
-  const props = ["name", "state", "adjustCosts", "cost_val", "localCheck", "widerCheck", "weeklyCheck", "monthlyCheck", "virtualCheck", "hybridCheck", "twoHCheck", "fourHCheck", "commCheck", "psychCheck", "vrCheck"];
+  const props = ["name", "state", "adjustCosts", "cost_val", "localCheck", "widerCheck", "weeklyCheck", "monthlyCheck", "virtualCheck", "hybridCheck", "twoHCheck", "fourHCheck", "commCheck", "psychCheck", "vrCheck", "predictedUptake", "netBenefit"];
+  // Assign a scenario name based on saved length
+  scenario.name = `Scenario ${savedScenarios.length}`;
   props.forEach(prop => {
     const cell = document.createElement("td");
     if (prop === "cost_val") {
@@ -322,6 +343,10 @@ function openComparison() {
     doc.text(`Counselling: ${scenario.psychCheck ? 'Yes' : 'No'}`, 15, currentY);
     currentY += 5;
     doc.text(`VR: ${scenario.vrCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Predicted Uptake: ${scenario.predictedUptake}%`, 15, currentY);
+    currentY += 5;
+    doc.text(`Net Benefit: A$${scenario.netBenefit}`, 15, currentY);
     currentY += 10;
   });
   doc.save("Scenarios_Comparison.pdf");
@@ -333,7 +358,7 @@ function openComparison() {
 let combinedChartInstance = null;
 const QALY_SCENARIOS_VALUES = { low: 0.02, moderate: 0.05, high: 0.1 };
 const VALUE_PER_QALY = 50000;
-// All cost components as provided:
+// Cost components as provided:
 const FIXED_COSTS = { advertisement: 2978.80 }; // Advertisements in Local Press
 const VARIABLE_COSTS = { 
   printing: 0.12 * 10000, 
@@ -347,7 +372,7 @@ const VARIABLE_COSTS = {
   sessionTime: 20.00 * 250, 
   travel: 10.00 * 250 
 };
-const FIXED_TOTAL = FIXED_COSTS.advertisement + 26863.00; // Adding training cost (A$26863.00)
+const FIXED_TOTAL = FIXED_COSTS.advertisement + 26863.00; // Adding training cost
 const VARIABLE_TOTAL = VARIABLE_COSTS.printing + VARIABLE_COSTS.postage + VARIABLE_COSTS.admin + VARIABLE_COSTS.trainer +
                          VARIABLE_COSTS.oncosts + VARIABLE_COSTS.facilitator + VARIABLE_COSTS.materials +
                          VARIABLE_COSTS.venue + VARIABLE_COSTS.sessionTime + VARIABLE_COSTS.travel;
@@ -366,6 +391,10 @@ function renderCostsBenefits() {
   const totalInterventionCost = FIXED_TOTAL + (VARIABLE_TOTAL * pVal);
   const costPerPerson = totalInterventionCost / numberOfParticipants;
   const netBenefit = monetizedBenefits - totalInterventionCost;
+  
+  // Update scenario values if saving later:
+  scenario.predictedUptake = uptakePercentage.toFixed(2);
+  scenario.netBenefit = netBenefit.toFixed(2);
   
   const costsTab = document.getElementById("costsBenefitsResults");
   costsTab.innerHTML = "";
@@ -528,6 +557,10 @@ function exportToPDF() {
     doc.text(`Counselling: ${scenario.psychCheck ? 'Yes' : 'No'}`, 15, currentY);
     currentY += 5;
     doc.text(`VR: ${scenario.vrCheck ? 'Yes' : 'No'}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Predicted Uptake: ${scenario.predictedUptake}%`, 15, currentY);
+    currentY += 5;
+    doc.text(`Net Benefit: A$${scenario.netBenefit}`, 15, currentY);
     currentY += 10;
   });
   doc.save("Scenarios_Comparison.pdf");
