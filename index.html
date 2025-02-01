@@ -16,7 +16,7 @@
   <div class="container">
     <header>
       <h1>LonelyLessAustralia Decision Aid Tool</h1>
-      <p>This tool helps you evaluate programme configurations for reducing loneliness. It explains how costs and benefits are calculated so that users can understand the trade‐offs.</p>
+      <p>This tool helps you evaluate programme configurations for reducing loneliness. It explains how costs and benefits are calculated so that even lay users can understand the trade‐offs.</p>
     </header>
 
     <nav class="tabs" role="tablist">
@@ -58,7 +58,7 @@
           <li><strong>Inputs</strong> – Configure your scenario parameters using user-friendly controls.</li>
           <li><strong>WTP Results</strong> – View charts showing willingness-to-pay estimates.</li>
           <li><strong>Predicted Programme Uptake</strong> – See the predicted uptake percentage and suggestions for improvements.</li>
-          <li><strong>Costs &amp; Benefits</strong> – Analyse detailed cost components and QALY-based benefits, with interactive sliders, pop-up info boxes and educational summaries.</li>
+          <li><strong>Costs &amp; Benefits</strong> – Analyse detailed cost components and QALY-based benefits with interactive sliders, pop-up info boxes and educational summaries.</li>
           <li><strong>Scenarios</strong> – Save, compare and export various configurations.</li>
         </ul>
       </div>
@@ -188,7 +188,7 @@
       <div class="form-grid">
         <div class="form-item">
           <label for="state_select">State:
-            <button class="info-button" aria-label="Select your state."><i class="fa-solid fa-info-circle"></i></button>
+            <button class="info-button" aria-label="Choose your state to adjust for cost-of-living differences."><i class="fa-solid fa-info-circle"></i></button>
             <span class="tooltip-text">Choose your state to adjust for cost-of-living differences.</span>
           </label>
           <select id="state_select">
@@ -203,7 +203,7 @@
             <option value="NT">Northern Territory</option>
           </select>
           <label for="adjustCosts">Adjust for Cost of Living?
-            <button class="info-button" aria-label="Cost adjustment info."><i class="fa-solid fa-info-circle"></i></button>
+            <button class="info-button" aria-label="Select Yes to apply cost-of-living multipliers for the chosen state."><i class="fa-solid fa-info-circle"></i></button>
             <span class="tooltip-text">Select Yes to apply cost-of-living multipliers for the chosen state.</span>
           </label>
           <select id="adjustCosts">
@@ -213,7 +213,7 @@
         </div>
         <div class="form-item">
           <label for="costSlider">Cost per Session (AUD):
-            <button class="info-button" aria-label="Cost per session info."><i class="fa-solid fa-info-circle"></i></button>
+            <button class="info-button" aria-label="Use the slider to set the base cost per session."><i class="fa-solid fa-info-circle"></i></button>
             <span class="tooltip-text">Use the slider to set the base cost per session.</span>
           </label>
           <input type="range" id="costSlider" min="0" max="100" step="1" value="50" oninput="updateCostDisplay(this.value)" />
@@ -327,7 +327,7 @@
         <div class="modelling-assumptions">
           <h3><i class="fa-solid fa-lightbulb"></i> Modelling Assumptions</h3>
           <p>
-            Our analysis uses interactive cost sliders, pop-up info boxes and brief educational summaries to explain how costs and benefits are calculated. Hover over the info icon <i class="fa-solid fa-info-circle tooltip" data-tooltip="Fixed costs include advertisement and training; variable costs include delivery and participant travel. Benefits are calculated based on QALY gains multiplied by a monetary conversion factor."></i> for further details.
+            Our analysis uses interactive cost sliders, pop-up info boxes and brief educational summaries to explain how costs and benefits are calculated. Hover over the info icon <i class="fa-solid fa-info-circle tooltip" data-tooltip="Fixed costs include advertisement, printing, postage, personnel, training, on-costs, facilitator salaries, materials, venue hire, session time and travel. Benefits are calculated based on QALY gains multiplied by a conversion factor."></i> for further details.
           </p>
         </div>
         <div class="cost-icons">
@@ -335,39 +335,84 @@
           <button class="buttons-row" onclick="toggleBenefitsAnalysis()">Benefits Analysis</button>
         </div>
         <div id="detailedCostBreakdown" class="cost-cards" style="display:none;">
+          <!-- All cost components as cards -->
           <div class="cost-card">
-            <h4><i class="fa-solid fa-receipt"></i> Advertisements</h4>
-            <p>Cost: A$2,978.80</p>
-            <p>Quantity: 2</p>
+            <h4><i class="fa-solid fa-newspaper"></i> Advertisements in Local Press</h4>
+            <p><strong>Value:</strong> A$2978.80</p>
+            <p><strong>Quantity:</strong> 2</p>
+            <p><strong>Unit Cost:</strong> A$1489.40</p>
+            <p><strong>Total Cost:</strong> A$2978.80</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-print"></i> Leaflet Printing</h4>
-            <p>Cost: A$1,200.00</p>
-            <p>Quantity: 10,000</p>
+            <h4><i class="fa-solid fa-print"></i> Printing of Leaflets</h4>
+            <p><strong>Value:</strong> A$0.12</p>
+            <p><strong>Quantity:</strong> 10000</p>
+            <p><strong>Unit Cost:</strong> A$0.12</p>
+            <p><strong>Total Cost:</strong> A$1200.00</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-envelope"></i> Postage</h4>
-            <p>Cost: A$1,470.00</p>
-            <p>Quantity: 10,000</p>
+            <h4><i class="fa-solid fa-envelope"></i> Parcel and Postage of Leaflets</h4>
+            <p><strong>Value:</strong> A$0.15</p>
+            <p><strong>Quantity:</strong> 10000</p>
+            <p><strong>Unit Cost:</strong> A$0.15</p>
+            <p><strong>Total Cost:</strong> A$1470.00</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-user"></i> Admin Personnel</h4>
-            <p>Cost: A$499.90</p>
-            <p>Quantity: 10</p>
+            <h4><i class="fa-solid fa-user"></i> Administrative Personnel</h4>
+            <p><strong>Value:</strong> A$49.99</p>
+            <p><strong>Quantity:</strong> 10</p>
+            <p><strong>Unit Cost:</strong> A$49.99</p>
+            <p><strong>Total Cost:</strong> A$499.90</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-chalkboard-teacher"></i> Trainer Cost</h4>
-            <p>Cost: A$22,386.00</p>
-            <p>Quantity: 100</p>
+            <h4><i class="fa-solid fa-chalkboard-teacher"></i> Trainer Cost for 5-hour Training Sessions</h4>
+            <p><strong>Value:</strong> A$223.86</p>
+            <p><strong>Quantity:</strong> 100</p>
+            <p><strong>Unit Cost:</strong> A$223.86</p>
+            <p><strong>Total Cost:</strong> A$22386.00</p>
           </div>
-          <!-- Additional cost cards can be added here -->
-        </div>
-        <div id="detailedBenefitsAnalysis" class="cost-cards" style="display:none;">
           <div class="cost-card">
-            <h4><i class="fa-solid fa-hand-holding-dollar"></i> QALY Benefits</h4>
-            <p>Calculated as: (Number of Participants × QALY per Participant) × Monetary Value per QALY.</p>
+            <h4><i class="fa-solid fa-percent"></i> On-Costs (30%)</h4>
+            <p><strong>Value:</strong> A$44.77</p>
+            <p><strong>Quantity:</strong> 100</p>
+            <p><strong>Unit Cost:</strong> A$44.77</p>
+            <p><strong>Total Cost:</strong> A$4477.00</p>
           </div>
-          <!-- Additional benefits cards can be added here -->
+          <div class="cost-card">
+            <h4><i class="fa-solid fa-user-tie"></i> Facilitator Salaries (12 sessions x 2 h)</h4>
+            <p><strong>Value:</strong> A$100.00</p>
+            <p><strong>Quantity:</strong> 100</p>
+            <p><strong>Unit Cost:</strong> A$100.00</p>
+            <p><strong>Total Cost:</strong> A$10000.00</p>
+          </div>
+          <div class="cost-card">
+            <h4><i class="fa-solid fa-box"></i> Material Costs</h4>
+            <p><strong>Value:</strong> A$50.00</p>
+            <p><strong>Quantity:</strong> 100</p>
+            <p><strong>Unit Cost:</strong> A$50.00</p>
+            <p><strong>Total Cost:</strong> A$5000.00</p>
+          </div>
+          <div class="cost-card">
+            <h4><i class="fa-solid fa-building"></i> Venue Hire</h4>
+            <p><strong>Value:</strong> A$15.00</p>
+            <p><strong>Quantity:</strong> 100</p>
+            <p><strong>Unit Cost:</strong> A$15.00</p>
+            <p><strong>Total Cost:</strong> A$3000.00</p>
+          </div>
+          <div class="cost-card">
+            <h4><i class="fa-solid fa-clock"></i> Time Cost for Sessions</h4>
+            <p><strong>Value:</strong> A$20.00</p>
+            <p><strong>Quantity:</strong> 250</p>
+            <p><strong>Unit Cost:</strong> A$20.00</p>
+            <p><strong>Total Cost:</strong> A$5000.00</p>
+          </div>
+          <div class="cost-card">
+            <h4><i class="fa-solid fa-road"></i> Travel Costs</h4>
+            <p><strong>Value:</strong> A$10.00</p>
+            <p><strong>Quantity:</strong> 250</p>
+            <p><strong>Unit Cost:</strong> A$10.00</p>
+            <p><strong>Total Cost:</strong> A$2500.00</p>
+          </div>
         </div>
       </div>
     </section>
