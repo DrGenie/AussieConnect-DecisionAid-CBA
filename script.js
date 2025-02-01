@@ -333,10 +333,21 @@ function openComparison() {
 let combinedChartInstance = null;
 const QALY_SCENARIOS_VALUES = { low: 0.02, moderate: 0.05, high: 0.1 };
 const VALUE_PER_QALY = 50000;
-const FIXED_COSTS = { advertisement: 8127.60, training: 26863.00 };
-const VARIABLE_COSTS = { delivery: 18000.00, participantTimeTravel: 7500.00 };
-const TOTAL_FIXED_COST = FIXED_COSTS.advertisement + FIXED_COSTS.training;
-const TOTAL_VARIABLE_COST = VARIABLE_COSTS.delivery + VARIABLE_COSTS.participantTimeTravel;
+const FIXED_COSTS = { advertisement: 2978.80, training: 26863.00 }; // advertisement value as provided (A$2978.80 for 2 units)
+const VARIABLE_COSTS = { 
+  printing: 0.12, 
+  postage: 0.15, 
+  admin: 49.99, 
+  trainer: 223.86, 
+  oncosts: 44.77, 
+  facilitator: 100.00, 
+  materials: 50.00, 
+  venue: 15.00, 
+  sessionTime: 20.00, 
+  travel: 10.00 
+};
+const FIXED_TOTAL = 2978.80 + 26863.00;
+const VARIABLE_TOTAL = (0.12 * 10000) + (0.15 * 10000) + (49.99 * 10) + (223.86 * 100) + (44.77 * 100) + (100.00 * 100) + (50.00 * 100) + (15.00 * 100) + (20.00 * 250) + (10.00 * 250);
 
 function renderCostsBenefits() {
   const scenario = buildScenarioFromInputs();
@@ -349,7 +360,7 @@ function renderCostsBenefits() {
   const qalyPerParticipant = QALY_SCENARIOS_VALUES[qalyScenario];
   const totalQALY = numberOfParticipants * qalyPerParticipant;
   const monetizedBenefits = totalQALY * VALUE_PER_QALY;
-  const totalInterventionCost = TOTAL_FIXED_COST + (TOTAL_VARIABLE_COST * pVal);
+  const totalInterventionCost = FIXED_TOTAL + (VARIABLE_TOTAL * pVal);
   const costPerPerson = totalInterventionCost / numberOfParticipants;
   const netBenefit = monetizedBenefits - totalInterventionCost;
   
@@ -368,7 +379,7 @@ function renderCostsBenefits() {
     <p><strong>Total QALYs:</strong> ${totalQALY.toFixed(2)}</p>
     <p><strong>Monetised Benefits:</strong> A$${monetizedBenefits.toLocaleString()}</p>
     <p><strong>Net Benefit:</strong> A$${netBenefit.toLocaleString()}</p>
-    <p>This analysis combines fixed costs (e.g. advertisement, training) and variable costs (e.g. delivery, travel). Benefits are derived from QALY gains multiplied by a monetary conversion factor. Adjust the inputs to see how changes affect the outcomes.</p>
+    <p>This analysis combines fixed costs (advertisements in local press and training) and variable costs (printing, postage, administrative personnel, trainer cost, on-costs, facilitator salaries, material costs, venue hire, session time and travel). Benefits are calculated based on QALY gains multiplied by a conversion factor of A$50,000.</p>
   `;
   costsTab.appendChild(summaryDiv);
   
