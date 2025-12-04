@@ -1,772 +1,1382 @@
-<!-- =========================================================
-     LonelyLessAustralia Decision Aid – index.html (updated)
-     – Latent class references removed
-     – Cost-of-living adjustment card added to Configuration
-     – Advanced settings wired for future hfuuse
-   ========================================================= -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>LonelyLessAustralia Decision Aid – Older Adults Loneliness Support</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <title>LonelyLessAustralia Decision Aid</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Font Awesome for small inline icons in help text -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        integrity="sha512-yH6p+5Kq+Gd8cH4xg9gPpXv5b6pQ+Q5mB0t9y+1d1r8r4vGq+uZ1F6pJ1Vf+6rK5YkT8Z3o6l4F3C8A1F0aQw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Styles: premium, policy-facing theme -->
+    <link rel="stylesheet" href="styles.css">
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <!-- jsPDF -->
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <!-- SheetJS for Excel export -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- jsPDF -->
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
-
-<body>
-<header class="app-header">
-  <div class="app-header-left">
-    <div class="app-logo-circle">L</div>
-    <div class="app-header-text">
-      <h1>LonelyLessAustralia Decision Aid</h1>
-      <p>Exploring value for money of loneliness support programmes for older adults in Australia</p>
+<body data-theme="worldbank-light">
+<header class="app-header"
+        data-tour-step="header"
+        data-tour-title="LonelyLess header and branding"
+        data-tour-content="This header shows the LonelyLessAustralia decision aid branding, its focus on loneliness among older adults and the partnership context.">
+    <div class="app-header-left">
+        <div class="app-logo-circle">L</div>
+        <div class="app-title-block">
+            <h1 class="app-title">LonelyLessAustralia</h1>
+            <p class="app-subtitle">Decision Aid for Loneliness Support Programmes</p>
+        </div>
     </div>
-  </div>
-  <div class="app-header-right">
-    <button id="btn-start-tour" class="secondary-button">Guided tour</button>
-    <div class="pill-toggle-group" aria-label="Currency">
-      <button class="pill-toggle active" type="button" data-currency="AUD">AUD</button>
-      <button class="pill-toggle" type="button" data-currency="USD">USD (display)</button>
+    <div class="app-header-center">
+        <div class="app-header-line">Reducing loneliness among older adults in Australia</div>
+        <div class="app-header-line">Newcastle Business School · Partner agencies</div>
     </div>
-  </div>
+    <div class="app-header-right">
+        <span class="badge badge-primary">Policy decision aid</span>
+        <span class="badge badge-outline">Version 1.0</span>
+        <button id="btn-start-tour"
+                class="btn-ghost-small tour-trigger"
+                type="button"
+                aria-haspopup="dialog"
+                aria-controls="tour-popover"
+                aria-expanded="false"
+                data-tour-step="start-tour"
+                data-tour-title="Quick guided tour"
+                data-tour-content="Click here for a short guided tour of the LonelyLessAustralia interface, moving through the main tabs and panels, including the DCE benefit and sensitivity view.">
+            <span class="tour-icon">?</span>
+            Quick tour
+        </button>
+        <a href="technical-appendix.html"
+           target="_blank"
+           class="btn-link-small"
+           data-tour-step="tech-appendix-link"
+           data-tour-title="Technical appendix"
+           data-tour-content="Open the full technical appendix with detailed methods, numerical examples and model documentation for the loneliness programme decision aid.">
+            Technical appendix
+        </a>
+    </div>
 </header>
 
-<main class="app-main">
-  <aside class="app-sidebar">
-    <nav class="tab-nav" aria-label="Main sections">
-      <button class="tab-link active" data-tab="configure">1. Configure programme</button>
-      <button class="tab-link" data-tab="results">2. Results & economic value</button>
-      <button class="tab-link" data-tab="costing">3. Cost breakdown</button>
-      <button class="tab-link" data-tab="population">4. Population picture</button>
-      <button class="tab-link" data-tab="sensitivity">5. Sensitivity & scenarios</button>
-      <button class="tab-link" data-tab="advanced">6. Advanced settings</button>
+<main class="app-shell">
+    <!-- TAB BAR -->
+    <nav class="tab-bar"
+         data-tour-step="tabs"
+         data-tour-title="Navigation tabs"
+         data-tour-content="Use these tabs to move between introduction, attributes, configuration, results, costing, population simulation, DCE benefit sensitivity, saved scenarios, about and advanced methods.">
+        <button class="tab-link active" data-tab="intro" type="button">Introduction</button>
+        <button class="tab-link" data-tab="attributes" type="button">Attributes and levels</button>
+        <button class="tab-link" data-tab="config" type="button">Configuration</button>
+        <button class="tab-link" data-tab="results" type="button">Results</button>
+        <button class="tab-link" data-tab="costing" type="button">Costing details</button>
+        <button class="tab-link" data-tab="natsim" type="button">Population simulation</button>
+        <button class="tab-link" data-tab="sensitivity" type="button">Sensitivity / DCE benefits</button>
+        <button class="tab-link" data-tab="scenarios" type="button">Saved scenarios</button>
+        <button class="tab-link" data-tab="about" type="button">About LonelyLess</button>
+        <button class="tab-link" data-tab="technical" type="button">Advanced and methods</button>
     </nav>
 
-    <section class="sidebar-section">
-      <h2>How to use this tool</h2>
-      <ol class="sidebar-steps">
-        <li>Choose a loneliness support configuration for older adults (programme type, connection format, contact frequency, delivery mode).</li>
-        <li>Set the monthly cost per participant, numbers of participants and groups, and the programme horizon.</li>
-        <li>Optionally adjust for cost-of-living differences across Australian states and territories.</li>
-        <li>Review endorsement, preference-based benefits, and benefit–cost ratios in the “Results” tab.</li>
-        <li>Explore population-level implications and scenario comparisons for policy discussions.</li>
-      </ol>
-      <p class="sidebar-footnote">
-        The metrics are based on a mixed logit discrete choice model of older Australians’ preferences for loneliness support programmes. WTP and uptake are indicative and should be combined with local judgement and implementation evidence.
-      </p>
-    </section>
-  </aside>
-
-  <section class="app-content">
-    <!-- =========================================
-         Tab 1 – Configure programme
-         ========================================= -->
-    <section id="tab-configure" class="tab-panel active" aria-label="Configure programme">
-      <div class="panel-header">
-        <div>
-          <h2>1. Configure a loneliness support programme</h2>
-          <p>Specify the key features of the programme, the scale of delivery and how costs are adjusted for cost of living.</p>
-        </div>
-        <div class="status-pill status-neutral" id="headline-status-tag">Assessment pending</div>
-      </div>
-
-      <div class="layout-two-column">
-        <!-- Left column – configuration form -->
-        <div class="card card-main">
-          <h3>Programme configuration</h3>
-          <p class="card-intro">
-            Use this section to define a loneliness support programme for older adults. The model will translate these choices into expected uptake and willingness to pay.
-          </p>
-
-          <div class="form-grid">
-            <!-- Programme type / intensity -->
-            <div class="form-group">
-              <label for="program-tier">
-                Programme type / intensity
-                <span class="help-text">
-                  Higher intensity combines individual and group support with more structured activities.
-                </span>
-              </label>
-              <select id="program-tier">
-                <option value="frontline">Light-touch social support</option>
-                <option value="intermediate">Structured group programme</option>
-                <option value="advanced">Intensive individual and group package</option>
-              </select>
-            </div>
-
-            <!-- Social connection format -->
-            <div class="form-group">
-              <label for="career-track">
-                Social connection format
-                <span class="help-text">
-                  How older adults are engaged and connected to others.
-                </span>
-              </label>
-              <select id="career-track">
-                <option value="one_to_one">One-to-one support</option>
-                <option value="small_group">Small group sessions</option>
-                <option value="community_based">Community-based activities and clubs</option>
-              </select>
-            </div>
-
-            <!-- Contact frequency -->
-            <div class="form-group">
-              <label for="mentorship">
-                Contact frequency
-                <span class="help-text">
-                  More frequent contact tends to support stronger relationships but costs more.
-                </span>
-              </label>
-              <select id="mentorship">
-                <option value="low">Low contact (e.g. fortnightly)</option>
-                <option value="medium">Regular contact (weekly)</option>
-                <option value="high">Intensive contact (multiple times per week)</option>
-              </select>
-            </div>
-
-            <!-- Delivery mode -->
-            <div class="form-group">
-              <label for="delivery">
-                Delivery mode
-                <span class="help-text">
-                  Programmes can be delivered in person, online or through blended approaches.
-                </span>
-              </label>
-              <select id="delivery">
-                <option value="blended">Blended (in-person and online)</option>
-                <option value="inperson">In-person</option>
-                <option value="online">Online / virtual</option>
-              </select>
-            </div>
-
-            <!-- Expected improvement in loneliness -->
-            <div class="form-group">
-              <label for="response">
-                Expected improvement in loneliness
-                <span class="help-text">
-                  Approximate reduction in loneliness scores among participants who complete the programme.
-                </span>
-              </label>
-              <select id="response">
-                <option value="30">Meaningful improvement for most participants</option>
-                <option value="15">Moderate improvement for some participants</option>
-                <option value="7">Small improvement for a subset of participants</option>
-              </select>
-            </div>
-
-            <!-- Programme horizon -->
-            <div class="form-group">
-              <label for="programme-months">
-                Programme horizon (months)
-                <span class="help-text">
-                  Length of the intervention period modelled in costs and benefits.
-                </span>
-              </label>
-              <input id="programme-months" type="number" min="1" max="60" value="12" />
-            </div>
-          </div>
-
-          <hr class="section-divider" />
-
-          <!-- Cost, scale and cost-of-living block -->
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="cost-slider">
-                Cost per participant per month (base, before cost-of-living adjustment)
-                <span class="help-text">
-                  Use the slider to set the average monthly cost per older adult in the programme.
-                </span>
-              </label>
-              <input id="cost-slider" type="range" min="50" max="400" step="10" value="150" />
-              <div class="slider-value" id="cost-display">AUD 150 per participant per month</div>
-            </div>
-
-            <div class="form-group">
-              <label for="trainees">
-                Participants per group
-                <span class="help-text">
-                  Number of older adults in each group or cohort.
-                </span>
-              </label>
-              <input id="trainees" type="number" min="1" max="200" value="25" />
-            </div>
-
-            <div class="form-group">
-              <label for="cohorts">
-                Number of groups
-                <span class="help-text">
-                  How many separate groups or cohorts will be running.
-                </span>
-              </label>
-              <input id="cohorts" type="number" min="1" max="500" value="10" />
-            </div>
-          </div>
-
-          <!-- Cost-of-living adjustment card -->
-          <div class="form-grid form-grid-full-width">
-            <div class="input-level-card">
-              <h3>Cost-of-living adjustment</h3>
-              <p class="card-intro">
-                Costs of delivering programmes can differ across Australian states and territories. Use this section to optionally adjust costs for local price levels.
-              </p>
-              <div class="options">
-                <div class="form-group compact">
-                  <label for="state_select">
-                    <i class="fa-solid fa-map-marker-alt"></i> State or territory
-                    <span class="help-text">
-                      Choose the state or territory where the programme is implemented.
-                    </span>
-                  </label>
-                  <select id="state_select">
-                    <option value="">None (no adjustment)</option>
-                    <option value="NSW">New South Wales (NSW)</option>
-                    <option value="VIC">Victoria (VIC)</option>
-                    <option value="QLD">Queensland (QLD)</option>
-                    <option value="WA">Western Australia (WA)</option>
-                    <option value="SA">South Australia (SA)</option>
-                    <option value="TAS">Tasmania (TAS)</option>
-                    <option value="ACT">Australian Capital Territory (ACT)</option>
-                    <option value="NT">Northern Territory (NT)</option>
-                  </select>
-                </div>
-
-                <div class="form-group compact">
-                  <label for="adjustCosts">
-                    <i class="fa-solid fa-sync-alt"></i> Adjust for cost of living?
-                    <span class="help-text">
-                      If “Yes”, the base monthly cost is multiplied by a cost-of-living index for the selected state.
-                    </span>
-                  </label>
-                  <select id="adjustCosts">
-                    <option value="no">No – use base cost only</option>
-                    <option value="yes">Yes – apply state multiplier</option>
-                  </select>
-                </div>
-
-                <p class="help-text">
-                  The multipliers are based on indicative differences in prices and wages across Australian states and territories. They can be refined in future versions as new data become available.
+    <!-- INTRO TAB -->
+    <section id="tab-intro" class="tab-panel active">
+        <div class="grid-two"
+             data-tour-step="intro"
+             data-tour-title="Welcome to LonelyLessAustralia"
+             data-tour-content="This introduction explains the purpose of LonelyLessAustralia and how to use it in policy meetings, workshops and business case discussions.">
+            <div class="card">
+                <h2>What LonelyLessAustralia does</h2>
+                <p>
+                    LonelyLessAustralia helps policy makers, service providers and partners explore options for
+                    scaling up support programmes that reduce loneliness among older adults in Australia.
+                    It links three main inputs:
                 </p>
-              </div>
+                <ul class="plain-list">
+                    <li>Preferences and willingness-to-pay estimates from a discrete choice experiment with older adults and key stakeholders.</li>
+                    <li>Costing templates for different programme types, delivery methods and levels of intensity.</li>
+                    <li>Simple outcome multipliers that translate uptake into changes in loneliness, mental health and quality of life.</li>
+                </ul>
+                <p>
+                    Users can set a programme configuration, see expected uptake, willingness to pay, costs and benefit–cost ratios,
+                    and compare saved scenarios side by side for business case and commissioning discussions.
+                </p>
+                <p>
+                    The tool is designed to support transparent conversations with health services, aged care providers,
+                    local governments and community organisations. It keeps assumptions visible and connects preference
+                    evidence directly to programme design and economic and social summaries.
+                </p>
             </div>
-          </div>
-
-          <!-- Scenario naming -->
-          <div class="form-grid form-grid-full-width">
-            <div class="form-group">
-              <label for="scenario-name">
-                Scenario name (optional)
-                <span class="help-text">
-                  Give this configuration a label for later comparison.
-                </span>
-              </label>
-              <input id="scenario-name" type="text" placeholder="e.g. Intensive blended programme in NSW" />
+            <div class="card">
+                <h2>How to use the tool</h2>
+                <ol class="plain-list numbered">
+                    <li>Go to the <strong>Configuration</strong> tab and choose:
+                        type of support programme, method of engagement, frequency of interaction, duration of each
+                        interaction, accessibility/convenience and the out-of-pocket cost per session.</li>
+                    <li>Keep the cost slider within the cost range used in the discrete choice experiment (Free,
+                        AUD 5, AUD 20 and AUD 50 per session) so that uptake predictions remain valid.</li>
+                    <li>The tool uses the mixed logit preference model estimated from the loneliness DCE. There is a single
+                        preference model, so no model selection is required.</li>
+                    <li>Click <strong>Apply configuration</strong> to update all calculations, then use
+                        <strong>View results summary</strong> to open a scenario summary with headline recommendations.</li>
+                    <li>Save promising scenarios in the <strong>Saved scenarios</strong> tab and download them as
+                        Excel or a policy brief PDF for reporting and funding submissions.</li>
+                    <li>For workshops or sensitivity checks, use the <strong>Population simulation</strong> and
+                        <strong>Sensitivity / DCE benefits</strong> tabs to explore how results change with scale,
+                        uptake and different benefit definitions, and the <strong>Advanced and methods</strong> tab to adjust
+                        multipliers and open the full technical appendix.</li>
+                </ol>
+                <p class="note">
+                    LonelyLessAustralia is designed for laptops, desktops, tablets and mobiles.
+                </p>
             </div>
-            <div class="form-group">
-              <label for="scenario-notes">
-                Notes for this scenario
-                <span class="help-text">
-                  Short notes about implementation assumptions or target population.
-                </span>
-              </label>
-              <textarea id="scenario-notes" rows="2" placeholder="Notes about eligibility, outreach, and implementation partners."></textarea>
-            </div>
-          </div>
-
-          <!-- Action buttons -->
-          <div class="button-row button-row-main">
-            <button type="button" id="update-results" class="primary-button">
-              Apply configuration
-            </button>
-            <button type="button" id="open-snapshot" class="ghost-button">
-              View results summary
-            </button>
-            <button type="button" id="save-scenario" class="secondary-button">
-              Save scenario for comparison
-            </button>
-          </div>
-
-          <div class="inline-toggle">
-            <button id="opp-toggle" type="button" class="switch-button on">
-              <span class="switch-handle"></span>
-              <span class="switch-label">Opportunity cost included</span>
-            </button>
-            <span class="help-text">
-              Include an allowance for volunteer time, informal care, and other opportunity costs equal to around 20% of direct financial costs.
-            </span>
-          </div>
         </div>
-
-        <!-- Right column – configuration summary and headline -->
-        <div class="card card-side">
-          <h3>Headline assessment</h3>
-          <p id="headline-recommendation" class="headline-text">
-            Configure a programme and apply the settings to see whether the expected benefits of reducing loneliness are likely to justify the costs.
-          </p>
-          <p id="headline-briefing-text" class="headline-briefing">
-            This short briefing will update automatically and can be used in policy conversations and slides.
-          </p>
-
-          <div class="config-summary" id="config-summary"></div>
-
-          <div class="config-summary-footer">
-            <div>
-              <div class="config-summary-label">Estimated endorsement</div>
-              <div class="config-summary-value" id="config-endorsement-value">–</div>
-            </div>
-            <div>
-              <div class="config-summary-label">Model</div>
-              <div class="config-summary-value">Mixed logit – main sample</div>
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
 
-    <!-- =========================================
-         Tab 2 – Results & economic value
-         ========================================= -->
-    <section id="tab-results" class="tab-panel" aria-label="Results and economic value">
-      <div class="panel-header">
-        <div>
-          <h2>2. Results and value for money</h2>
-          <p>Preference-based uptake, willingness to pay and benefit–cost indicators for the configured programme.</p>
+    <!-- ATTRIBUTES TAB -->
+    <section id="tab-attributes" class="tab-panel">
+        <div class="card"
+             data-tour-step="attributes"
+             data-tour-title="Attributes and levels"
+             data-tour-content="This section explains how loneliness support options are described in the discrete choice experiment and how LonelyLessAustralia uses those attributes in the preference model.">
+            <h2>Attributes and levels in the loneliness preference study</h2>
+            <p>
+                The discrete choice experiment asked older adults and stakeholders to choose between alternative
+                loneliness support programmes and an opt-out option. Each programme was described by the attributes below.
+                LonelyLessAustralia keeps programme configurations inside the experimental range so that results remain consistent
+                with the underlying mixed logit model.
+            </p>
+
+            <h3>Programme design attributes</h3>
+            <div class="attributes-layout">
+                <div class="attr-table-card">
+                    <div class="attr-table-header">
+                        <span>Attribute</span>
+                        <span>Levels used in the experiment</span>
+                        <span>Explanation</span>
+                    </div>
+
+                    <div class="attr-table-row">
+                        <div class="attr-cell-title">Type of support programme</div>
+                        <div class="attr-cell-levels">
+                            Peer Support<br>
+                            Community Engagement<br>
+                            Psychological Counselling<br>
+                            Virtual Reality (VR)
+                        </div>
+                        <div class="attr-cell-expl">
+                            Refers to how older adults connect with others and what kinds of activities they might do together.
+                            Peer support groups, community engagement activities, psychological counselling and virtual reality sessions
+                            offer different mixes of social, emotional and experiential support.
+                        </div>
+                    </div>
+
+                    <div class="attr-table-row">
+                        <div class="attr-cell-title">Method of engagement or interaction</div>
+                        <div class="attr-cell-levels">
+                            In-person<br>
+                            Virtual<br>
+                            Hybrid (virtual and in-person)
+                        </div>
+                        <div class="attr-cell-expl">
+                            Describes how individuals take part in the programme and caters for people with mobility issues or a preference
+                            for digital communication. Hybrid options combine in-person and virtual contact to increase flexibility and reach.
+                        </div>
+                    </div>
+
+                    <div class="attr-table-row">
+                        <div class="attr-cell-title">Frequency of interaction / engagement</div>
+                        <div class="attr-cell-levels">
+                            Daily<br>
+                            Weekly<br>
+                            Monthly
+                        </div>
+                        <div class="attr-cell-expl">
+                            Describes how often participants engage in the programme. More frequent interactions can strengthen social ties
+                            but also require more time and resources from participants and providers.
+                        </div>
+                    </div>
+
+                    <div class="attr-table-row">
+                        <div class="attr-cell-title">Duration of each interaction</div>
+                        <div class="attr-cell-levels">
+                            30 minutes<br>
+                            2 hours<br>
+                            4 hours
+                        </div>
+                        <div class="attr-cell-expl">
+                            Refers to how long each interaction or activity lasts. Shorter sessions may be easier to attend regularly, while
+                            longer sessions may support more in-depth activities or counselling.
+                        </div>
+                    </div>
+
+                    <div class="attr-table-row">
+                        <div class="attr-cell-title">Accessibility / convenience</div>
+                        <div class="attr-cell-levels">
+                            At home<br>
+                            Local area (up to 12 km travel)<br>
+                            Wider community travel (50+ km)
+                        </div>
+                        <div class="attr-cell-expl">
+                            Indicates how easy it is for older adults to access the programme, considering physical mobility and transport.
+                            At-home options are most convenient, local options require moderate travel and wider community options involve
+                            longer trips to central hubs.
+                        </div>
+                    </div>
+
+                    <div class="attr-table-row">
+                        <div class="attr-cell-title">Costs of support programme</div>
+                        <div class="attr-cell-levels">
+                            Free<br>
+                            AUD 5 per session<br>
+                            AUD 20 per session<br>
+                            AUD 50 per session
+                        </div>
+                        <div class="attr-cell-expl">
+                            The out-of-pocket cost older adults incur each time they participate in the support programme.
+                            LonelyLessAustralia uses a slider that stays within this experimental range so that predicted uptake
+                            and willingness-to-pay estimates remain valid.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Opt-out and cost templates</h3>
+            <div class="attributes-layout attributes-layout-secondary">
+                <div class="attr-table-card">
+                    <div class="attr-table-header">
+                        <span>Element</span>
+                        <span>Definition</span>
+                        <span>How LonelyLessAustralia uses it</span>
+                    </div>
+                    <div class="attr-table-row">
+                        <div class="attr-cell-title">Opt-out alternative</div>
+                        <div class="attr-cell-levels">
+                            An opt-out option where the specific loneliness support programme under consideration is not funded.
+                        </div>
+                        <div class="attr-cell-expl">
+                            The discrete choice experiment included an explicit opt-out option. LonelyLessAustralia uses this as the
+                            benchmark when calculating uptake. Uptake is the predicted share choosing the programme configuration rather
+                            than opting out.
+                        </div>
+                    </div>
+                    <div class="attr-table-row">
+                        <div class="attr-cell-title">Cost templates</div>
+                        <div class="attr-cell-levels">
+                            Template budgets submitted by programme partners for different programme types and configurations.
+                        </div>
+                        <div class="attr-cell-expl">
+                            Templates are used as alternative settings rather than being combined. Policy makers can switch between templates
+                            to see how cost structure affects economic cost while holding programme design constant.
+                        </div>
+                    </div>
+                    <div class="attr-table-row">
+                        <div class="attr-cell-title">Opportunity cost of staff and volunteer time</div>
+                        <div class="attr-cell-levels">
+                            The value of staff and volunteer time spent on the programme instead of other activities, per participant per month.
+                        </div>
+                        <div class="attr-cell-expl">
+                            When the opportunity cost toggle is on, LonelyLessAustralia adds this to programme costs to yield total
+                            economic cost. When off, outputs focus on budgetary costs only.
+                        </div>
+                    </div>
+                    <div class="attr-table-row">
+                        <div class="attr-cell-title">Preference model</div>
+                        <div class="attr-cell-levels">
+                            Mixed logit model from the loneliness discrete choice experiment.
+                        </div>
+                        <div class="attr-cell-expl">
+                            All uptake and willingness-to-pay estimates are based on a single mixed logit model that uses the attributes
+                            and levels described above. There are no latent classes in the loneliness DCE; sensitivity analysis focuses
+                            on cost, uptake and benefit assumptions instead.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="note">
+                Reference attribute levels form the baseline. Alternative-specific constants capture layout effects and
+                the tendency to choose or reject programmes in general. LonelyLessAustralia uses the opt-out constant when predicting
+                overall uptake of any loneliness support option versus no funded programme.
+            </p>
         </div>
-      </div>
-
-      <div class="layout-two-column">
-        <div class="card card-main">
-          <h3>Preference-based results</h3>
-          <div class="metric-grid">
-            <div class="metric-card">
-              <div class="metric-label">Endorsement rate</div>
-              <div class="metric-value" id="endorsement-rate">–</div>
-              <p class="metric-caption">Share of older adults who would choose this programme over doing nothing.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Opt-out / status quo</div>
-              <div class="metric-value" id="optout-rate">–</div>
-              <p class="metric-caption">Share of older adults who would prefer not to enrol.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">WTP per participant per month</div>
-              <div class="metric-value" id="wtp-per-trainee">–</div>
-              <p class="metric-caption">Average willingness to pay for the bundle of attributes.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Total WTP per group</div>
-              <div class="metric-value" id="wtp-total-cohort">–</div>
-              <p class="metric-caption">Preference-based benefit for one group over the programme horizon.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Economic cost per group</div>
-              <div class="metric-value" id="prog-cost-per-cohort">–</div>
-              <p class="metric-caption">Direct programme cost only (excludes opportunity cost).</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Total economic cost (group + opportunity cost)</div>
-              <div class="metric-value" id="total-cost">–</div>
-              <p class="metric-caption">Direct cost plus estimated opportunity cost.</p>
-            </div>
-            <div class="metric-card metric-highlight">
-              <div class="metric-label">Net benefit (all groups)</div>
-              <div class="metric-value" id="net-benefit">–</div>
-              <p class="metric-caption">Preference-based benefits minus economic costs.</p>
-            </div>
-            <div class="metric-card metric-highlight">
-              <div class="metric-label">Benefit–cost ratio</div>
-              <div class="metric-value" id="bcr">–</div>
-              <p class="metric-caption">Values above 1 indicate benefits outweigh costs under current assumptions.</p>
-            </div>
-          </div>
-
-          <div class="chart-grid">
-            <div class="chart-card">
-              <h4>Programme uptake</h4>
-              <canvas id="chart-uptake" aria-label="Programme uptake chart"></canvas>
-            </div>
-            <div class="chart-card">
-              <h4>Costs and benefits per configuration</h4>
-              <canvas id="chart-bcr" aria-label="Cost–benefit chart"></canvas>
-            </div>
-          </div>
-        </div>
-
-        <div class="card card-side">
-          <h3>Social outcome implications</h3>
-          <p class="card-intro">
-            These indicative metrics convert endorsement and programme intensity into approximate social outcomes, using assumptions that can be updated in the “Advanced settings” tab.
-          </p>
-          <div class="metric-grid metric-grid-vertical">
-            <div class="metric-card">
-              <div class="metric-label">Participants completing programme (all groups)</div>
-              <div class="metric-value" id="epi-graduates">–</div>
-              <p class="metric-caption">Number of older adults who participate and complete, given endorsement and completion assumptions.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Meaningful connections supported per year</div>
-              <div class="metric-value" id="epi-outbreaks">–</div>
-              <p class="metric-caption">Indicative number of new or strengthened social connections for older adults.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Indicative social benefit per group</div>
-              <div class="metric-value" id="epi-benefit">–</div>
-              <p class="metric-caption">Monetised value of improved wellbeing and social participation (one group).</p>
-            </div>
-          </div>
-
-          <div class="chart-card">
-            <h4>Participants reached</h4>
-            <canvas id="chart-epi" aria-label="Participants reached chart"></canvas>
-          </div>
-        </div>
-      </div>
     </section>
 
-    <!-- =========================================
-         Tab 3 – Cost breakdown
-         ========================================= -->
-    <section id="tab-costing" class="tab-panel" aria-label="Cost breakdown">
-      <div class="panel-header">
-        <div>
-          <h2>3. Cost breakdown</h2>
-          <p>Illustrative breakdown of programme costs to support budgeting and implementation planning.</p>
-        </div>
-      </div>
+    <!-- CONFIG TAB -->
+    <section id="tab-config" class="tab-panel">
+        <div class="grid-two-stretch"
+             data-tour-step="config"
+             data-tour-title="Configure a scenario"
+             data-tour-content="Use these controls to set up a loneliness support programme configuration. After applying, the summary panel on the right updates with expected uptake and a headline recommendation.">
+            <div class="card card-config">
+                <h2>Configure a loneliness support option</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="program-tier">
+                            Type of support programme
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Select whether the programme is delivered as peer support, community engagement, psychological counselling or virtual reality sessions."
+                                    aria-label="Type of support programme information">i</button>
+                        </label>
+                        <select id="program-tier">
+                            <option value="peer">Peer Support</option>
+                            <option value="comm">Community Engagement</option>
+                            <option value="psych">Psychological Counselling</option>
+                            <option value="vr">Virtual Reality (VR)</option>
+                        </select>
+                    </div>
 
-      <div class="layout-two-column">
-        <div class="card card-main">
-          <h3>Summary of economic costs</h3>
-          <div id="cost-breakdown-summary" class="cost-summary-grid"></div>
-        </div>
+                    <div class="form-group">
+                        <label for="career-track">
+                            Method of engagement or interaction
+                            <button type="button" class="info-icon"
+                                    data-tooltip="How participants take part in the programme, including in-person, virtual and hybrid options."
+                                    aria-label="Method of engagement information">i</button>
+                        </label>
+                        <select id="career-track">
+                            <option value="inperson">In-person</option>
+                            <option value="virtual">Virtual</option>
+                            <option value="hybrid">Hybrid (virtual and in-person)</option>
+                        </select>
+                    </div>
 
-        <div class="card card-side">
-          <h3>Illustrative cost components</h3>
-          <p class="card-intro">
-            The table below allocates direct programme costs across typical components. These shares are illustrative and can be refined for specific programmes.
-          </p>
-          <div class="table-wrapper">
-            <table class="data-table">
-              <thead>
-              <tr>
-                <th>Component</th>
-                <th>Share of direct cost</th>
-                <th>Cost per group</th>
-                <th>Cost per participant per month</th>
-                <th>Notes</th>
-              </tr>
-              </thead>
-              <tbody id="cost-components-list"></tbody>
-            </table>
-          </div>
+                    <div class="form-group">
+                        <label for="mentorship">
+                            Frequency of interaction / engagement
+                            <button type="button" class="info-icon"
+                                    data-tooltip="How regularly participants engage with the programme: daily, weekly or monthly."
+                                    aria-label="Frequency of interaction information">i</button>
+                        </label>
+                        <select id="mentorship">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="delivery">
+                            Duration of each interaction
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Length of each session or activity. Longer sessions may allow deeper engagement but require more time."
+                                    aria-label="Duration of interaction information">i</button>
+                        </label>
+                        <select id="delivery">
+                            <option value="30min">30 minutes</option>
+                            <option value="2hrs">2 hours</option>
+                            <option value="4hrs">4 hours</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="response">
+                            Accessibility / convenience
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Ease of accessing the programme, including at-home options, local programmes and wider community travel."
+                                    aria-label="Accessibility information">i</button>
+                        </label>
+                        <select id="response">
+                            <option value="home">At home</option>
+                            <option value="local">Local area (up to 12 km travel)</option>
+                            <option value="wider">Wider community travel (50+ km)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cost-slider">
+                            Cost per session (<span id="currency-label">AUD</span>)
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Out-of-pocket cost for each session. The slider stays within the levels used in the discrete choice experiment (Free, AUD 5, AUD 20, AUD 50)."
+                                    aria-label="Cost per session information">i</button>
+                        </label>
+                        <input type="range" id="cost-slider" min="0" max="50" step="5" value="20">
+                        <div class="slider-value">
+                            <span id="cost-display">AUD 20 per session</span>
+                            <span class="slider-hint">
+                                Within the range used in the discrete choice experiment (0, 5, 20, 50 AUD per session).
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="region-select">
+                            Region and cost-of-living adjustment
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Select the Australian state or territory where the programme runs. Costs per participant per month are multiplied by a cost-of-living factor (for example, NSW ≈ 1.10, QLD ≈ 1.00, ACT ≈ 1.15)."
+                                    aria-label="Region and cost-of-living information">i</button>
+                        </label>
+                        <select id="region-select">
+                            <option value="NSW">New South Wales (multiplier 1.10)</option>
+                            <option value="VIC">Victoria (multiplier 1.05)</option>
+                            <option value="QLD">Queensland (multiplier 1.00)</option>
+                            <option value="WA">Western Australia (multiplier 1.08)</option>
+                            <option value="SA">South Australia (multiplier 1.02)</option>
+                            <option value="TAS">Tasmania (multiplier 1.03)</option>
+                            <option value="ACT">Australian Capital Territory (multiplier 1.15)</option>
+                            <option value="NT">Northern Territory (multiplier 1.07)</option>
+                        </select>
+                        <p class="hint">
+                            These multipliers adjust the base session cost to reflect regional differences in the cost of living when computing programme costs.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="trainees">
+                            Participants per group
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Number of older adults in one programme group. This drives total reach and cost per group."
+                                    aria-label="Participants per group information">i</button>
+                        </label>
+                        <input type="number" id="trainees" min="5" max="40" value="15">
+                        <p class="hint">
+                            Use this to test smaller or larger groups. For example, moving from 10 to 20 participants
+                            per group increases both costs and social reach.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cohorts">
+                            Number of groups
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Number of groups you plan to run under this configuration. This scales up costs and benefits from one group to a whole programme or region."
+                                    aria-label="Number of groups information">i</button>
+                        </label>
+                        <input type="number" id="cohorts" min="1" max="200" value="20">
+                        <p class="hint">
+                            Increase this to explore regional or state-wide scale-up. The Population simulation tab shows
+                            how total costs and benefits change as you adjust this number.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="programme-months">
+                            Programme duration (months)
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Number of months that each group runs. This converts per-month costs and willingness-to-pay into total costs and benefits over the programme horizon."
+                                    aria-label="Programme duration information">i</button>
+                        </label>
+                        <input type="number" id="programme-months" min="1" max="36" value="12">
+                        <p class="hint">
+                            For example, a weekly programme running for 12 months will have higher total cost and benefit than the same configuration over 6 months.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Currency display</label>
+                        <div class="pill-toggle-group">
+                            <button type="button" class="pill-toggle active" data-currency="AUD">
+                                AUD (calculations)
+                            </button>
+                            <button type="button" class="pill-toggle" data-currency="USD">
+                                Approximate USD
+                            </button>
+                        </div>
+                        <p class="hint">
+                            All calculations are in AUD. USD values use a simple exchange rate for display only and can
+                            be adjusted in the Advanced and methods tab.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Include opportunity cost of staff and volunteer time
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Adds the value of staff and volunteer time to costs when templates include opportunity cost entries. Switching this off shows only direct financial costs."
+                                    aria-label="Opportunity cost information">i</button>
+                        </label>
+                        <button type="button" id="opp-toggle" class="switch-pill on">
+                            <span class="switch-knob"></span>
+                            <span class="switch-label">Opportunity cost included</span>
+                        </button>
+                        <p class="hint">
+                            Where the cost template has opportunity cost, this adds it to economic costs.
+                        </p>
+                    </div>
+
+                    <div class="form-group form-group-wide">
+                        <label for="scenario-name">Scenario name</label>
+                        <input type="text" id="scenario-name" placeholder="For example: Weekly peer support, local venue">
+                    </div>
+
+                    <div class="form-group form-group-wide">
+                        <label for="scenario-notes">Scenario notes</label>
+                        <textarea id="scenario-notes" rows="3"
+                                  placeholder="Optional notes for government reporting and discussions with commissioners."></textarea>
+                    </div>
+                </div>
+
+                <div class="button-row button-row-main">
+                    <button id="update-results"
+                            class="btn-primary"
+                            type="button"
+                            data-tour-step="apply"
+                            data-tour-title="Apply configuration"
+                            data-tour-content="Click here after you set the configuration. This updates uptake, costs, benefits and population results.">
+                        Apply configuration
+                    </button>
+                    <button id="open-snapshot" class="btn-secondary" type="button">
+                        View results summary
+                    </button>
+                    <button id="save-scenario" class="btn-ghost" type="button">
+                        Save scenario
+                    </button>
+                </div>
+            </div>
+
+            <div class="card card-secondary config-summary-card"
+                 data-tour-step="config-summary"
+                 data-tour-title="Configuration summary"
+                 data-tour-content="This summary shows the current configuration, expected uptake and a headline recommendation once you apply the configuration.">
+                <div class="config-summary-header">
+                    <h2>Current configuration at a glance</h2>
+                    <button type="button" class="info-icon"
+                            data-tooltip="Snapshot of the configuration you have selected. Use this when presenting to summarise the scenario in words."
+                            aria-label="Current configuration information">i</button>
+                </div>
+                <div id="config-summary" class="config-summary">
+                    <!-- Filled dynamically -->
+                </div>
+                <hr class="divider">
+                <div class="config-endorsement-row">
+                    <div class="config-endorsement-label">
+                        <span class="metric-label">Expected uptake (mixed logit model)</span>
+                        <button type="button" class="info-icon"
+                                data-tooltip="Predicted share of older adults and stakeholders who would support this programme rather than opting out, based on the loneliness mixed logit model."
+                                aria-label="Uptake information">i</button>
+                    </div>
+                    <span class="metric-value config-endorsement-value" id="config-endorsement-value">Apply configuration</span>
+                </div>
+                <div class="headline-status">
+                    <span id="headline-status-tag" class="status-pill status-neutral">No assessment yet</span>
+                </div>
+                <h3>Headline recommendation</h3>
+                <p id="headline-recommendation" class="headline-text">
+                    Apply a configuration to see a concise recommendation that combines uptake, willingness to pay, costs and indicative social benefits.
+                </p>
+                <div class="headline-briefing">
+                    <h4>Briefing text (copy into emails or reports)</h4>
+                    <p id="headline-briefing-text">
+                        Once a configuration is applied, this box will provide a short narrative summary that you can copy
+                        into briefing notes, funding applications or meeting minutes.
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
     </section>
 
-    <!-- =========================================
-         Tab 4 – Population picture
-         ========================================= -->
-    <section id="tab-population" class="tab-panel" aria-label="Population picture">
-      <div class="panel-header">
-        <div>
-          <h2>4. Population economic picture</h2>
-          <p>Scaling up the selected configuration to explore total costs, benefits and reach.</p>
-        </div>
-      </div>
+    <!-- RESULTS TAB -->
+    <section id="tab-results" class="tab-panel">
+        <div class="results-grid"
+             data-tour-step="results"
+             data-tour-title="Results and interpretation"
+             data-tour-content="This view brings together uptake, willingness to pay, costs, benefits and social outcome implications for the current configuration.">
+            <div class="card">
+                <div class="card-header-with-info">
+                    <h2>Uptake and opt-out</h2>
+                    <button type="button" class="info-icon"
+                            data-tooltip="Shows the predicted share of respondents who would support the loneliness programme and the share who would choose not to invest, based on the discrete choice experiment."
+                            aria-label="Uptake and opt-out information">i</button>
+                </div>
+                <p class="hint">
+                    These percentages are obtained by plugging the chosen configuration into the mixed logit model and
+                    comparing the utility of the programme with the utility of opting out. They summarise how
+                    attractive the configuration is to respondents in the preference study.
+                </p>
+                <div class="metric-pair metric-pair-tight">
+                    <div class="metric-block">
+                        <span class="metric-label">Support loneliness programme</span>
+                        <span class="metric-value" id="endorsement-rate">-</span>
+                        <p class="metric-caption">
+                            Estimated share of respondents who would support funding this programme rather than keeping the status quo.
+                        </p>
+                    </div>
+                    <div class="metric-block">
+                        <span class="metric-label">Choose opt-out</span>
+                        <span class="metric-value" id="optout-rate">-</span>
+                        <p class="metric-caption">
+                            Estimated share who would prefer not to invest in this option under the assumptions in the study.
+                        </p>
+                    </div>
+                </div>
+                <div class="chart-block">
+                    <canvas id="chart-uptake" aria-label="Uptake and opt-out chart"></canvas>
+                </div>
+            </div>
 
-      <div class="layout-two-column">
-        <div class="card card-main">
-          <h3>Totals for all groups (current configuration)</h3>
-          <div class="metric-grid">
-            <div class="metric-card">
-              <div class="metric-label">Total economic cost</div>
-              <div class="metric-value" id="nat-total-cost">–</div>
+            <div class="card">
+                <div class="card-header-with-info">
+                    <h2>Willingness to pay and economic outcomes</h2>
+                    <button type="button" class="info-icon"
+                            data-tooltip="Summarises how much value respondents place on the configuration per participant per month (mapped to group and population totals), and how this compares with estimated programme costs and benefits."
+                            aria-label="Willingness to pay and economic outcomes information">i</button>
+                </div>
+                <p class="hint">
+                    Willingness to pay (WTP) per participant per month is derived from the preference model by dividing attribute
+                    coefficients by the cost coefficient. It indicates how much value respondents attach to the bundle of
+                    attributes in this configuration relative to a baseline. Total WTP aggregates this value across all
+                    participants and months for each group and at population scale.
+                </p>
+                <div class="metric-pair metric-pair-tight">
+                    <div class="metric-block">
+                        <span class="metric-label">WTP per participant per month</span>
+                        <span class="metric-value" id="wtp-per-trainee">-</span>
+                        <p class="metric-caption">
+                            Indicative value respondents place on this configuration per participant per month, relative to the baseline design.
+                        </p>
+                    </div>
+                    <div class="metric-block">
+                        <span class="metric-label">Total WTP per group</span>
+                        <span class="metric-value" id="wtp-total-cohort">-</span>
+                        <p class="metric-caption">
+                            WTP per participant per month multiplied by participants per group and programme duration,
+                            treating preference evidence as a benefit measure.
+                        </p>
+                    </div>
+                </div>
+                <div class="metric-pair metric-pair-tight">
+                    <div class="metric-block">
+                        <span class="metric-label">Programme cost per group</span>
+                        <span class="metric-value" id="prog-cost-per-cohort">-</span>
+                        <p class="metric-caption">
+                            Direct programme cost per group before adding any opportunity cost of staff or volunteer time.
+                        </p>
+                    </div>
+                    <div class="metric-block">
+                        <span class="metric-label">Total economic cost per group</span>
+                        <span class="metric-value" id="total-cost">-</span>
+                        <p class="metric-caption">
+                            Programme cost plus opportunity cost where applicable. This is the main cost figure used in benefit–cost ratios.
+                        </p>
+                    </div>
+                </div>
+                <div class="metric-single">
+                    <span class="metric-label">Net benefit per group (preference-based)</span>
+                    <span class="metric-value" id="net-benefit">-</span>
+                    <p class="metric-caption">
+                        Preference-based benefit per group minus total economic cost per group, based on WTP from the discrete choice experiment.
+                    </p>
+                </div>
+                <div class="metric-single">
+                    <span class="metric-label">Benefit–cost ratio (per group)</span>
+                    <span class="metric-value" id="bcr">-</span>
+                    <p class="metric-caption">
+                        Total preference-based benefit per group divided by total economic cost per group. Values above one suggest
+                        that benefits exceed costs on the assumptions used.
+                    </p>
+                </div>
+                <div class="chart-block">
+                    <canvas id="chart-bcr" aria-label="Cost and benefit chart"></canvas>
+                </div>
             </div>
-            <div class="metric-card">
-              <div class="metric-label">Total indicative social benefit</div>
-              <div class="metric-value" id="nat-total-benefit">–</div>
-            </div>
-            <div class="metric-card metric-highlight">
-              <div class="metric-label">Net benefit (social benefit – economic cost)</div>
-              <div class="metric-value" id="nat-net-benefit">–</div>
-            </div>
-            <div class="metric-card metric-highlight">
-              <div class="metric-label">Benefit–cost ratio (social benefit only)</div>
-              <div class="metric-value" id="nat-bcr">–</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Total WTP (preference-based benefit, all groups)</div>
-              <div class="metric-value" id="nat-total-wtp">–</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Participants completing programme</div>
-              <div class="metric-value" id="nat-graduates">–</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Total participants reached</div>
-              <div class="metric-value" id="nat-outbreaks">–</div>
-            </div>
-          </div>
 
-          <p id="natsim-summary-text" class="card-intro">
-            Configure a programme and apply the settings to see a population-level summary.
-          </p>
+            <div class="card">
+                <div class="card-header-with-info">
+                    <h2>Social outcome implications</h2>
+                    <button type="button" class="info-icon"
+                            data-tooltip="Shows approximate social outcomes such as participants reached and meaningful connections, based on uptake and group numbers."
+                            aria-label="Social outcomes information">i</button>
+                </div>
+                <p class="hint">
+                    Participants reached and social outcomes are obtained by combining uptake with group size and
+                    number of groups. Preference-based benefits are reported in monetary terms using WTP. Future versions
+                    may add additional outcome-based valuation using the multipliers in the Advanced and methods tab.
+                </p>
+                <div class="metric-pair metric-pair-tight">
+                    <div class="metric-block">
+                        <span class="metric-label">Participants reached (all groups)</span>
+                        <span class="metric-value" id="epi-graduates">-</span>
+                        <p class="metric-caption">
+                            Estimated number of participants who take up and complete the programme across all planned groups, adjusting for uptake.
+                        </p>
+                    </div>
+                    <div class="metric-block">
+                        <span class="metric-label">Meaningful connections supported per year</span>
+                        <span class="metric-value" id="epi-outbreaks">-</span>
+                        <p class="metric-caption">
+                            Approximate number of sustained social connection episodes or equivalent outcome units per year once programmes are running at scale.
+                        </p>
+                    </div>
+                </div>
+                <div class="metric-single">
+                    <span class="metric-label">Indicative preference-based benefit (all groups)</span>
+                    <span class="metric-value" id="epi-benefit">-</span>
+                    <p class="metric-caption">
+                        Monetary value of improved loneliness, mental health and quality of life using WTP from the DCE, aggregated across all groups.
+                    </p>
+                </div>
+                <div class="chart-block">
+                    <canvas id="chart-epi" aria-label="Social outcome results chart"></canvas>
+                </div>
+            </div>
         </div>
-
-        <div class="card card-side">
-          <h3>Visualising total costs and benefits</h3>
-          <div class="chart-card">
-            <h4>Economic cost vs social benefits</h4>
-            <canvas id="chart-nat-cost-benefit"></canvas>
-          </div>
-          <div class="chart-card">
-            <h4>Participants reached and completing</h4>
-            <canvas id="chart-nat-epi"></canvas>
-          </div>
-        </div>
-      </div>
     </section>
 
-    <!-- =========================================
-         Tab 5 – Sensitivity & scenarios
-         ========================================= -->
-    <section id="tab-sensitivity" class="tab-panel" aria-label="Sensitivity and scenarios">
-      <div class="panel-header">
-        <div>
-          <h2>5. Sensitivity and scenario comparisons</h2>
-          <p>Compare configurations and explore how changes in assumptions affect costs and benefits.</p>
-        </div>
-        <div class="button-row">
-          <button id="refresh-sensitivity-benefits" type="button" class="secondary-button">
-            Refresh tables
-          </button>
-          <button id="export-sensitivity-benefits-excel" type="button" class="ghost-button">
-            Export to Excel
-          </button>
-          <button id="export-sensitivity-benefits-pdf" type="button" class="ghost-button">
-            Export to PDF
-          </button>
-        </div>
-      </div>
+    <!-- COSTING TAB -->
+    <section id="tab-costing" class="tab-panel">
+        <div class="grid-two-stretch"
+             data-tour-step="costing"
+             data-tour-title="Costing details"
+             data-tour-content="This view shows how programme and economic costs are constructed from the chosen cost template, including opportunity cost where relevant.">
+            <div class="card">
+                <div class="card-header-with-info">
+                    <h2>Cost templates and sources</h2>
+                    <button type="button" class="info-icon"
+                            data-tooltip="Select cost templates submitted by partners. These control cost structure and the opportunity cost entries used in economic cost calculations."
+                            aria-label="Cost templates and sources information">i</button>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="cost-source">
+                            Cost template source
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Choose whether to use cost templates from different organisations or delivery partners. This affects how costs are allocated across categories."
+                                    aria-label="Cost template source information">i</button>
+                        </label>
+                        <select id="cost-source"></select>
+                    </div>
+                </div>
+                <p>
+                    Cost templates are based on submissions from programme partners and service providers for different
+                    types and configurations of loneliness support. Templates are used as alternative settings rather than
+                    being combined.
+                </p>
+                <p>
+                    Policy makers can switch between templates to see how cost structure affects economic cost while holding
+                    programme design constant. Templates that include the opportunity cost of staff or volunteer time feed into
+                    total economic cost when the opportunity cost switch is on.
+                </p>
+                <p class="note">
+                    When the opportunity cost switch is off, results focus on direct budgetary costs only.
+                </p>
+            </div>
 
-      <div class="card card-main">
-        <h3>Summary of economic and social benefits</h3>
-        <p class="card-intro">
-          This summary table shows how costs, preference-based benefits and outcome-based social benefits compare across the current configuration and saved scenarios.
-        </p>
-        <div class="table-wrapper">
-          <table class="data-table" id="dce-benefits-table">
-            <thead>
-            <tr>
-              <th>Scenario</th>
-              <th>Total economic cost (all groups)</th>
-              <th>Preference-based benefit (WTP, all groups)</th>
-              <th>Outcome-based social benefit (all groups)</th>
-              <th>Total benefit (WTP + social)</th>
-              <th>Endorsement rate</th>
-              <th>Effective WTP benefit (endorsers only)</th>
-              <th>BCR (WTP only)</th>
-              <th>BCR (WTP + social benefit)</th>
-              <th>Net benefit (WTP only)</th>
-              <th>Net benefit (WTP + social benefit)</th>
-            </tr>
-            </thead>
-            <tbody id="dce-benefits-table-body"></tbody>
-          </table>
+            <div class="card card-secondary">
+                <div class="card-header-with-info">
+                    <h2>Cost components for this configuration</h2>
+                    <button type="button" class="info-icon"
+                            data-tooltip="Breakdown of programme and economic costs across staff, venue, transport, materials, management and other categories in the selected template."
+                            aria-label="Cost components information">i</button>
+                </div>
+                <div id="cost-breakdown-summary" class="cost-summary">
+                    <!-- Filled dynamically -->
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table" id="cost-components-table">
+                        <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Share of programme cost</th>
+                            <th>Amount per group</th>
+                            <th>Amount per participant per month</th>
+                            <th>Notes</th>
+                        </tr>
+                        </thead>
+                        <tbody id="cost-components-list">
+                        <!-- Filled dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-      </div>
-
-      <div class="card card-main">
-        <h3>Detailed sensitivity log</h3>
-        <p class="card-intro">
-          The detailed log records key assumptions and outcomes for each scenario, including endorsement, costs, benefits and effective benefits among those who enrol.
-        </p>
-        <div class="table-wrapper">
-          <table class="data-table" id="sensitivity-table">
-            <thead>
-            <tr>
-              <th>Scenario</th>
-              <th>Model</th>
-              <th>Endorsement rate</th>
-              <th>Economic cost per group</th>
-              <th>Total WTP benefit (all groups)</th>
-              <th>Outcome-based social benefit (all groups)</th>
-              <th>Benefit–cost ratio (WTP only)</th>
-              <th>Benefit–cost ratio (WTP + social)</th>
-              <th>Net benefit (WTP only)</th>
-              <th>Net benefit (WTP + social)</th>
-              <th>Effective WTP benefit (endorsers only)</th>
-            </tr>
-            </thead>
-            <tbody id="sensitivity-table-body"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="card card-main" id="tab-scenarios">
-        <div class="card-header-row">
-          <h3>Saved programme configurations</h3>
-          <div class="button-row">
-            <button id="export-excel" type="button" class="ghost-button">Export table</button>
-            <button id="export-pdf" type="button" class="ghost-button">Export PDF snapshot</button>
-          </div>
-        </div>
-        <p class="card-intro">
-          Saved scenarios allow quick comparison of different combinations of programme type, connection format, cost and scale.
-        </p>
-        <div class="table-wrapper">
-          <table class="data-table" id="scenario-table">
-            <thead>
-            <tr>
-              <th>Select</th>
-              <th>Scenario</th>
-              <th>Key features</th>
-              <th>Programme type</th>
-              <th>Delivery</th>
-              <th>Contact frequency</th>
-              <th>Expected improvement</th>
-              <th>Participants per group</th>
-              <th>Groups</th>
-              <th>Cost per participant / month (adjusted)</th>
-              <th>Model</th>
-              <th>Endorsement</th>
-              <th>WTP per participant / month</th>
-              <th>Total WTP (all groups)</th>
-              <th>BCR (WTP only)</th>
-              <th>Total economic cost (all groups)</th>
-              <th>Net benefit (WTP only)</th>
-              <th>Total participants</th>
-              <th>Notes</th>
-            </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
     </section>
 
-    <!-- =========================================
-         Tab 6 – Advanced settings
-         ========================================= -->
-    <section id="tab-advanced" class="tab-panel" aria-label="Advanced settings and assumptions">
-      <div class="panel-header">
-        <div>
-          <h2>6. Advanced settings and assumptions</h2>
-          <p>View and adjust key modelling assumptions used in the outcome metrics and currency conversion.</p>
+    <!-- POPULATION SIMULATION TAB -->
+    <section id="tab-natsim" class="tab-panel">
+        <div class="card"
+             data-tour-step="natsim"
+             data-tour-title="Population simulation"
+             data-tour-content="Here you can see how the configuration scales up to a population level: total cost, total benefit, net benefit, participants and social outcomes.">
+            <div class="card-header-with-info">
+                <h2>Population simulation and sensitivity</h2>
+                <button type="button" class="info-icon"
+                        data-tooltip="Scales the current configuration up using the number of groups. Useful for high level business case discussions."
+                        aria-label="Population simulation information">i</button>
+            </div>
+            <p>
+                This view scales the current configuration to a larger population using the number of groups you
+                have selected. It is intended for business case discussions and high level sensitivity checks.
+                To see how results change, adjust cost, group size, number of groups or the social outcome
+                assumptions in the Advanced and methods tab and explore the DCE benefit definitions in the
+                Sensitivity / DCE benefits tab.
+            </p>
+            <div class="grid-two">
+                <div class="natsim-column">
+                    <h3>Population economic picture</h3>
+                    <div class="metric-pair metric-pair-tight">
+                        <div class="metric-block">
+                            <span class="metric-label">Total economic cost (all groups)</span>
+                            <span class="metric-value" id="nat-total-cost">-</span>
+                        </div>
+                        <div class="metric-block">
+                            <span class="metric-label">Total preference-based benefit (all groups)</span>
+                            <span class="metric-value" id="nat-total-benefit">-</span>
+                        </div>
+                    </div>
+                    <div class="metric-pair metric-pair-tight">
+                        <div class="metric-block">
+                            <span class="metric-label">Population net benefit (preference-based)</span>
+                            <span class="metric-value" id="nat-net-benefit">-</span>
+                        </div>
+                        <div class="metric-block">
+                            <span class="metric-label">Population benefit–cost ratio</span>
+                            <span class="metric-value" id="nat-bcr">-</span>
+                        </div>
+                    </div>
+                    <div class="metric-single">
+                        <span class="metric-label">Total WTP (all groups)</span>
+                        <span class="metric-value" id="nat-total-wtp">-</span>
+                        <p class="metric-caption">
+                            Aggregated willingness to pay across all participants and groups, reflecting stakeholder valuation of the chosen configuration.
+                        </p>
+                    </div>
+                    <p class="hint">
+                        These values multiply the per group costs and benefits by the number of groups. The benefit–cost ratio
+                        stays the same, but the absolute costs, preference-based benefits and total WTP grow with scale.
+                    </p>
+                    <div class="chart-block">
+                        <canvas id="chart-nat-cost-benefit" aria-label="Population cost versus benefit chart"></canvas>
+                    </div>
+                </div>
+                <div class="natsim-column">
+                    <h3>Population social impact</h3>
+                    <div class="metric-pair metric-pair-tight">
+                        <div class="metric-block">
+                            <span class="metric-label">Total participants reached</span>
+                            <span class="metric-value" id="nat-graduates">-</span>
+                        </div>
+                        <div class="metric-block">
+                            <span class="metric-label">Meaningful connections per year</span>
+                            <span class="metric-value" id="nat-outbreaks">-</span>
+                        </div>
+                    </div>
+                    <p class="hint">
+                        Participants and meaningful connections here are population-level figures, combining uptake,
+                        group size and number of groups. To explore sensitivity,
+                        try increasing groups, testing different programme types or updating assumptions in
+                        Advanced and methods.
+                    </p>
+                    <div class="chart-block">
+                        <canvas id="chart-nat-epi" aria-label="Population social outcome chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="natsim-summary">
+                <h3>Text summary for business cases</h3>
+                <p id="natsim-summary-text">
+                    Once a configuration is applied, this section will summarise total participants, total economic cost,
+                    total preference-based benefit, net benefit, total WTP and annual social outcomes in plain language
+                    that can be dropped directly into concept notes or project documents.
+                </p>
+            </div>
         </div>
-      </div>
-
-      <div class="card card-main">
-        <h3>Outcome assumptions by programme intensity</h3>
-        <p class="card-intro">
-          These values underpin the “social outcome” metrics in the Results and Population tabs. They can be adjusted to reflect local evidence or expert judgement.
-        </p>
-
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead>
-            <tr>
-              <th>Programme intensity</th>
-              <th>Completion rate (share of enrolled)</th>
-              <th>Meaningful connections per group per year</th>
-              <th>Value per completer (AUD)</th>
-              <th>Value per meaningful connection (AUD)</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td>Light-touch social support</td>
-              <td><input id="adv-frontline-grads" type="number" min="0" max="1" step="0.01" /></td>
-              <td><input id="adv-frontline-outbreaks" type="number" min="0" step="1" /></td>
-              <td><input id="adv-frontline-vgrad" type="number" min="0" step="10" /></td>
-              <td><input id="adv-frontline-voutbreak" type="number" min="0" step="10" /></td>
-            </tr>
-            <tr>
-              <td>Structured group programme</td>
-              <td><input id="adv-intermediate-grads" type="number" min="0" max="1" step="0.01" /></td>
-              <td><input id="adv-intermediate-outbreaks" type="number" min="0" step="1" /></td>
-              <td><input id="adv-intermediate-vgrad" type="number" min="0" step="10" /></td>
-              <td><input id="adv-intermediate-voutbreak" type="number" min="0" step="10" /></td>
-            </tr>
-            <tr>
-              <td>Intensive individual and group package</td>
-              <td><input id="adv-advanced-grads" type="number" min="0" max="1" step="0.01" /></td>
-              <td><input id="adv-advanced-outbreaks" type="number" min="0" step="1" /></td>
-              <td><input id="adv-advanced-vgrad" type="number" min="0" step="10" /></td>
-              <td><input id="adv-advanced-voutbreak" type="number" min="0" step="10" /></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3>Currency display</h3>
-        <p class="card-intro">
-          The model is calibrated in Australian dollars (AUD). You can change the rate used when toggling to USD in the header.
-        </p>
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="adv-inr-per-usd">
-              AUD per USD for display
-              <span class="help-text">
-                For example, a value of 1.50 means 1 USD = 1.50 AUD.
-              </span>
-            </label>
-            <input id="adv-inr-per-usd" type="number" step="0.01" min="0.1" />
-          </div>
-        </div>
-
-        <div class="button-row">
-          <button type="button" id="advanced-apply" class="primary-button">Apply advanced settings</button>
-          <button type="button" id="advanced-reset" class="ghost-button">Reset to default assumptions</button>
-        </div>
-      </div>
     </section>
-  </section>
+
+    <!-- SENSITIVITY / DCE BENEFITS TAB -->
+    <section id="tab-sensitivity" class="tab-panel">
+        <div class="card"
+             data-tour-step="sensitivity"
+             data-tour-title="Sensitivity and DCE benefit definitions"
+             data-tour-content="This tab summarises how programme costs and different benefit definitions compare across the current configuration and any saved scenarios, using the discrete choice experiment, cost templates and social outcome multipliers.">
+            <div class="card-header-with-info">
+                <h2>Sensitivity and DCE benefit summary</h2>
+                <button type="button"
+                        class="info-icon"
+                        aria-label="Sensitivity and DCE benefit summary information"
+                        data-tooltip="This table shows cost, willingness-to-pay and (where implemented) outcome-based benefit measures for the current configuration and each saved scenario, including benefit–cost ratios and uptake-adjusted effective benefits.">
+                    i
+                </button>
+            </div>
+
+            <p class="hint">
+                This tab brings together preference-based benefits from the discrete choice experiment and the cost
+                module. It shows the total willingness-to-pay benefit associated with each configuration
+                and summary cost–benefit indicators such as the benefit–cost ratio and net present value.
+                Columns for outcome-based benefits are included for completeness and can be populated in later versions.
+            </p>
+
+            <p>
+                Each row in the table represents a scenario, starting with the current configuration and followed by saved scenarios.
+                For each scenario, LonelyLessAustralia recomputes uptake, economic cost per group, willingness-to-pay based benefits
+                and combined cost–benefit metrics using the mixed logit preference model and the opportunity cost setting.
+            </p>
+            <p class="note">
+                The technical appendix sets out full formulas and worked numerical examples for WTP and cost–benefit calculations.
+                <a href="technical-appendix.html" target="_blank">See the technical appendix for full formulas and worked examples.</a>
+            </p>
+
+            <div class="card card-secondary sensitivity-controls-panel">
+                <h3>Benefit definition and stakeholder view</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="benefit-definition-select">
+                            Benefit definition
+                            <button type="button" class="info-icon" aria-label="Benefit definition information"
+                                    data-tooltip="Choose whether to view results based only on DCE willingness-to-pay, to add outcome-based benefits (future extension), or to focus on uptake-adjusted willingness-to-pay for sensitivity analysis.">
+                                i
+                            </button>
+                        </label>
+                        <select id="benefit-definition-select">
+                            <option value="wtp_only">DCE WTP only</option>
+                            <option value="wtp_plus_epi">DCE WTP + outcome benefit (placeholder)</option>
+                            <option value="endorsement_adjusted">Uptake-adjusted WTP</option>
+                        </select>
+                        <p class="hint">
+                            The current implementation focuses on WTP-based benefits. Outcome-based benefits are left as placeholders
+                            but can be activated once outcome valuation parameters are finalised.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Include social outcome benefits
+                            <button type="button" class="info-icon" aria-label="Include social outcome benefits information"
+                                    data-tooltip="Turn this on to add outcome-based benefits from the outcome module to DCE willingness-to-pay benefits in combined indicators (for future versions).">
+                                i
+                            </button>
+                        </label>
+                        <button type="button" id="sensitivity-epi-toggle" class="switch-pill on">
+                            <span class="switch-knob"></span>
+                            <span class="switch-label">Outcome benefits included (placeholder)</span>
+                        </button>
+                        <p class="hint">
+                            At present, the outcome benefit columns remain placeholders. The switch can be used once outcome valuation parameters are implemented.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="benefit-class-scenario">
+                            Stakeholder perspective
+                            <button type="button" class="info-icon" aria-label="Stakeholder view information"
+                                    data-tooltip="View results for the overall sample in the loneliness mixed logit model. Additional stakeholder perspectives can be added as subgroup models in future versions.">
+                                i
+                            </button>
+                        </label>
+                        <select id="benefit-class-scenario">
+                            <option value="overall">Overall sample (mixed logit)</option>
+                        </select>
+                        <p class="hint">
+                            The loneliness DCE uses a single mixed logit model. At present, results are shown for the overall
+                            sample; there are no latent classes in this decision aid.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endorsement-override">
+                            Uptake rate for sensitivity (%)
+                            <button type="button" class="info-icon" aria-label="Uptake rate override information"
+                                    data-tooltip="Optional override of the model-predicted uptake. When a value is entered and the uptake-adjusted view is selected, the tool uses this rate to scale willingness-to-pay benefits in sensitivity calculations.">
+                                i
+                            </button>
+                        </label>
+                        <input type="number" id="endorsement-override" min="0" max="100" step="1" placeholder="Leave blank to use modelled uptake">
+                        <p class="hint">
+                            Leave this empty to rely on the uptake rate from the preference model. Enter a value to test
+                            alternative assumptions for different commissioning or funding scenarios.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <button id="refresh-sensitivity-benefits" type="button" class="btn-primary">
+                        Update sensitivity summary
+                    </button>
+                    <button id="export-sensitivity-benefits-excel" type="button" class="btn-secondary">
+                        Download sensitivity table (Excel)
+                    </button>
+                    <button id="export-sensitivity-benefits-pdf" type="button" class="btn-secondary">
+                        Download sensitivity table (PDF)
+                    </button>
+                </div>
+                <p class="hint">
+                    The export buttons download the sensitivity table exactly as displayed on screen so that results can be pasted
+                    directly into concept notes, annexes or briefing materials.
+                </p>
+            </div>
+
+            <h3>Headline WTP-based benefits and cost–benefit metrics</h3>
+            <p class="hint">
+                The table below summarises programme costs, DCE willingness-to-pay benefits, uptake-adjusted effective benefits
+                and cost–benefit indicators for each scenario over the chosen time horizon. Outcome-based columns are included as
+                placeholders for future extensions.
+            </p>
+
+            <div class="table-wrapper">
+                <table class="data-table" id="dce-benefits-table">
+                    <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Cost (AUD, chosen horizon)</th>
+                        <th>Total WTP benefit (AUD)</th>
+                        <th>WTP from loneliness improvement (AUD)</th>
+                        <th>Outcome-based social benefit (AUD)</th>
+                        <th>Uptake rate used (%)</th>
+                        <th>Effective WTP benefit (AUD)</th>
+                        <th>BCR (DCE WTP only)</th>
+                        <th>NPV (DCE WTP only, AUD)</th>
+                        <th>BCR (DCE + outcomes)</th>
+                        <th>NPV (DCE + outcomes, AUD)</th>
+                    </tr>
+                    </thead>
+                    <tbody id="dce-benefits-table-body">
+                    <!-- Filled dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Detailed sensitivity matrix</h3>
+            <p>
+                For users who wish to see a more granular breakdown, the detailed matrix below retains the main set of columns
+                originally defined for the sensitivity view. It can be used alongside the headline table above to cross-check
+                results and document alternative model specifications or stakeholder assumptions.
+            </p>
+
+            <div class="table-wrapper">
+                <table class="data-table" id="sensitivity-table">
+                    <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Model</th>
+                        <th>Uptake rate</th>
+                        <th>Cost per group (AUD)</th>
+                        <th>Total WTP benefit per group (overall, AUD)</th>
+                        <th>WTP benefit from loneliness improvement (AUD)</th>
+                        <th>Outcome-based social benefit per group (AUD)</th>
+                        <th>BCR (DCE WTP only)</th>
+                        <th>NPV (DCE WTP only, AUD)</th>
+                        <th>BCR (DCE + outcomes)</th>
+                        <th>NPV (DCE + outcomes, AUD)</th>
+                        <th>Effective WTP benefit per group (overall, AUD)</th>
+                        <th>Effective combined benefit per group (overall, AUD)</th>
+                    </tr>
+                    </thead>
+                    <tbody id="sensitivity-table-body">
+                    <!-- Filled dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCENARIOS TAB -->
+    <section id="tab-scenarios" class="tab-panel">
+        <div class="card"
+             data-tour-step="scenarios"
+             data-tour-title="Saved scenarios"
+             data-tour-content="Save and compare scenarios here, then export them to Excel or a PDF policy brief for external reporting.">
+            <div class="card-header-with-info">
+                <h2>Saved scenarios for comparison</h2>
+                <button type="button" class="info-icon"
+                        data-tooltip="Use this table to compare configurations that look promising and to export them for external reporting."
+                        aria-label="Saved scenarios information">i</button>
+            </div>
+            <p>
+                Use this table to compare loneliness support options and support business cases for government and
+                partner organisations. Saved scenarios are also used for downloads.
+            </p>
+            <div class="button-row">
+                <button id="export-excel" class="btn-secondary" type="button">Download scenarios to Excel</button>
+                <button id="export-pdf" class="btn-secondary" type="button">Download policy brief PDF</button>
+            </div>
+            <div class="table-wrapper">
+                <table id="scenario-table" class="data-table">
+                    <thead>
+                    <tr>
+                        <th>Shortlist</th>
+                        <th>Name</th>
+                        <th>Tags</th>
+                        <th>Type of support programme</th>
+                        <th>Method of engagement</th>
+                        <th>Frequency</th>
+                        <th>Duration</th>
+                        <th>Accessibility</th>
+                        <th>Groups</th>
+                        <th>Participants per group</th>
+                        <th>Cost per month (AUD, adjusted)</th>
+                        <th>Preference model</th>
+                        <th>Uptake</th>
+                        <th>WTP per participant per month</th>
+                        <th>Total WTP (all groups)</th>
+                        <th>Benefit–cost ratio</th>
+                        <th>Total economic cost (all groups)</th>
+                        <th>Total preference-based benefit (all groups)</th>
+                        <th>Net preference-based benefit (all groups)</th>
+                        <th>Meaningful connections per year</th>
+                        <th>Notes</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Filled dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT TAB -->
+    <section id="tab-about" class="tab-panel">
+        <div class="card"
+             data-tour-step="about"
+             data-tour-title="About LonelyLessAustralia"
+             data-tour-content="Background on how LonelyLessAustralia fits into a broader policy agenda on loneliness among older adults.">
+            <h2>About LonelyLessAustralia</h2>
+            <p>
+                LonelyLessAustralia is part of a broader programme of work on loneliness and social isolation among
+                older adults in Australia. The tool provides a structured way to test programme options and explain cost,
+                benefit and willingness-to-pay implications in policy discussions.
+            </p>
+            <p>
+                The tool is designed to support health and aged-care departments, local governments, primary health
+                networks and community organisations as they plan investments in loneliness support. It helps answer
+                questions such as:
+            </p>
+            <ul class="plain-list">
+                <li>How do costs, willingness to pay and preference-based benefits change when moving across different types of support programmes?</li>
+                <li>What happens to uptake when the method of engagement, frequency, duration or accessibility changes?</li>
+                <li>How many groups and participants are needed to reach population targets for reducing loneliness?</li>
+            </ul>
+            <p class="note">
+                Prepared by <strong>Mesfin Genie, PhD</strong>, Newcastle Business School, The University of
+                Newcastle, Australia, with partners. For questions or clarifications please contact
+                <a href="mailto:mesfin.genie@newcastle.edu.au">mesfin.genie@newcastle.edu.au</a>.
+            </p>
+        </div>
+    </section>
+
+    <!-- TECHNICAL / ADVANCED TAB -->
+    <section id="tab-technical" class="tab-panel">
+        <div class="grid-two-stretch"
+             data-tour-step="advanced"
+             data-tour-title="Advanced settings and methods"
+             data-tour-content="Use these settings to align LonelyLessAustralia assumptions with local estimates and to access the detailed technical appendix. Changes apply within this browser session.">
+            <div class="card">
+                <h2>Advanced settings and assumptions</h2>
+                <p>
+                    This panel allows technical users to adjust key multipliers for workshops without editing code.
+                    Changes affect calculations immediately in this browser session and are reflected in the Results,
+                    Population simulation and Sensitivity / DCE benefits tabs where relevant.
+                </p>
+                <p class="note">
+                    Use these settings when you want to align assumptions with updated evidence or
+                    discussions with partner organisations. For example, you can change the indicative value per participant
+                    or per meaningful connection, or match the AUD to USD display rate to current exchange rates.
+                </p>
+                <form id="advanced-settings-form" class="form-grid">
+                    <div class="form-group form-group-wide">
+                        <label for="adv-inr-per-usd">
+                            Exchange rate for display (AUD per USD)
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Used only to convert AUD values into USD for display. Changing this does not affect underlying calculations, only the USD labels shown in the interface."
+                                    aria-label="Exchange rate information">i</button>
+                        </label>
+                        <input type="number" id="adv-inr-per-usd" step="0.1" min="0.1" max="10">
+                        <p class="hint">All calculations are in AUD. This rate is used only for display when USD is selected.</p>
+                    </div>
+
+                    <!-- Low-intensity support (mapping from earlier light-touch inputs) -->
+                    <div class="form-group">
+                        <label for="adv-frontline-grads">
+                            Low-intensity completion rate (share of participants)
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Share of participants that complete a low-intensity support programme. For example 0.8 means 80 percent complete."
+                                    aria-label="Completion rate information">i</button>
+                        </label>
+                        <input type="number" id="adv-frontline-grads" step="0.01" min="0" max="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="adv-frontline-outbreaks">
+                            Low-intensity meaningful connections per group per year
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Approximate number of meaningful connections supported by a low-intensity group each year once running at steady state."
+                                    aria-label="Connections information">i</button>
+                        </label>
+                        <input type="number" id="adv-frontline-outbreaks" step="0.1" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="adv-frontline-vgrad">
+                            Value per low-intensity completer (AUD)
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Indicative monetary value placed on one additional completer of a low-intensity programme, capturing improvements in loneliness and related outcomes."
+                                    aria-label="Value per completer information">i</button>
+                        </label>
+                        <input type="number" id="adv-frontline-vgrad" step="50" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="adv-frontline-voutbreak">
+                            Value per low-intensity meaningful connection (AUD)
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Indicative value per meaningful connection supported by low-intensity programmes."
+                                    aria-label="Value per connection information">i</button>
+                        </label>
+                        <input type="number" id="adv-frontline-voutbreak" step="100" min="0">
+                    </div>
+
+                    <!-- Structured group support (mapping from earlier structured group inputs) -->
+                    <div class="form-group">
+                        <label for="adv-intermediate-grads">
+                            Structured group completion rate (share of participants)
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Share of participants that complete a structured group programme."
+                                    aria-label="Completion rate information">i</button>
+                        </label>
+                        <input type="number" id="adv-intermediate-grads" step="0.01" min="0" max="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="adv-intermediate-outbreaks">
+                            Structured group meaningful connections per group per year
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Approximate number of meaningful connections supported by a structured group each year."
+                                    aria-label="Connections information">i</button>
+                        </label>
+                        <input type="number" id="adv-intermediate-outbreaks" step="0.1" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="adv-intermediate-vgrad">
+                            Value per structured group completer (AUD)
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Indicative value per additional completer of a structured group programme."
+                                    aria-label="Value per completer information">i</button>
+                        </label>
+                        <input type="number" id="adv-intermediate-vgrad" step="50" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="adv-intermediate-voutbreak">
+                            Value per structured group meaningful connection (AUD)
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Indicative value per meaningful connection supported by structured programmes."
+                                    aria-label="Value per connection information">i</button>
+                        </label>
+                        <input type="number" id="adv-intermediate-voutbreak" step="100" min="0">
+                    </div>
+
+                    <!-- High-intensity support (mapping from earlier intensive inputs) -->
+                    <div class="form-group">
+                        <label for="adv-advanced-grads">
+                            High-intensity completion rate (share of participants)
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Share of participants that complete a high-intensity programme."
+                                    aria-label="Completion rate information">i</button>
+                        </label>
+                        <input type="number" id="adv-advanced-grads" step="0.01" min="0" max="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="adv-advanced-outbreaks">
+                            High-intensity meaningful connections per group per year
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Approximate number of meaningful connections that a high-intensity programme supports per year."
+                                    aria-label="Connections information">i</button>
+                        </label>
+                        <input type="number" id="adv-advanced-outbreaks" step="0.1" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="adv-advanced-vgrad">
+                            Value per high-intensity completer (AUD)
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Indicative value per high-intensity programme completer, capturing larger expected outcome changes."
+                                    aria-label="Value per completer information">i</button>
+                        </label>
+                        <input type="number" id="adv-advanced-vgrad" step="50" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="adv-advanced-voutbreak">
+                            Value per high-intensity meaningful connection (AUD)
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Indicative value per meaningful connection supported by high-intensity programmes."
+                                    aria-label="Value per connection information">i</button>
+                        </label>
+                        <input type="number" id="adv-advanced-voutbreak" step="100" min="0">
+                    </div>
+
+                    <div class="form-group form-group-wide">
+                        <div class="button-row">
+                            <button type="button" id="advanced-apply" class="btn-primary">Apply advanced settings</button>
+                            <button type="button" id="advanced-reset" class="btn-ghost">Reset to defaults</button>
+                        </div>
+                    </div>
+                </form>
+                <p class="note">
+                    Country or regional teams can also supply a configuration file with multipliers and indicative values that
+                    the tool can load in later versions. This keeps social outcome and benefit assumptions separate from the main code base.
+                </p>
+                <div class="assumption-log">
+                    <h3>Assumption log</h3>
+                    <p>
+                        This box summarises the current key assumptions. Copy and paste it directly into meeting minutes
+                        or technical annexes so it is clear which parameters were used.
+                    </p>
+                    <pre id="assumption-log-text" class="assumption-log-text">
+LonelyLessAustralia assumption log will appear here after advanced settings and a configuration are applied.
+                    </pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Technical appendix and model description</h2>
+                <p>
+                    The technical appendix explains how LonelyLessAustralia uses discrete choice experiment estimates, cost
+                    templates, willingness-to-pay measures and social outcome multipliers. It includes numerical
+                    examples based on the final mixed logit model and the willingness-to-pay results.
+                </p>
+                <p>
+                    Open the full appendix in a separate window for easier reading or printing. The appendix is written
+                    for policy audiences but also contains enough detail for technical reviewers.
+                </p>
+                <div class="button-row">
+                    <a id="open-technical-window" href="technical-appendix.html" target="_blank" class="btn-secondary">
+                        Open full technical appendix
+                    </a>
+                </div>
+                <div id="technical-preview" class="technical-preview">
+                    <p>
+                        The appendix covers the preference model, uptake probabilities, willingness to pay,
+                        cost templates, social outcome multipliers and population simulation logic. It includes step-by-step
+                        worked examples that match typical configurations such as weekly community engagement groups,
+                        and shows how total WTP sits alongside social outcomes in business case discussions.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 
-<!-- Toast -->
+<!-- SNAPSHOT MODAL -->
+<div id="results-modal" class="modal hidden" aria-hidden="true" role="dialog" aria-labelledby="results-modal-title">
+    <div class="modal-content">
+        <button class="modal-close" id="close-modal" aria-label="Close scenario summary">&times;</button>
+        <h2 id="results-modal-title">Scenario summary</h2>
+        <div id="modal-body">
+            <!-- Filled dynamically -->
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
 <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-<!-- Guided tour overlay -->
+<!-- GUIDED TOUR OVERLAY -->
 <div id="tour-overlay" class="tour-overlay hidden" aria-hidden="true"></div>
-<div id="tour-popover" class="tour-popover hidden" role="dialog" aria-modal="true" aria-labelledby="tour-title">
-  <div class="tour-header">
-    <h3 id="tour-title">Welcome to the LonelyLessAustralia Decision Aid</h3>
-    <button id="tour-close" class="icon-button" aria-label="Close tour">×</button>
-  </div>
-  <div id="tour-content" class="tour-content"></div>
-  <div class="tour-footer">
-    <span id="tour-step-indicator"></span>
-    <div class="tour-buttons">
-      <button id="tour-prev" type="button" class="ghost-button">Back</button>
-      <button id="tour-next" type="button" class="primary-button">Next</button>
+<div id="tour-popover"
+     class="tour-popover hidden"
+     role="dialog"
+     aria-modal="false"
+     aria-labelledby="tour-title">
+    <div class="tour-popover-header">
+        <h3 id="tour-title">Tour step</h3>
+        <button type="button" id="tour-close" class="tour-close-btn" aria-label="Close tour">&times;</button>
     </div>
-  </div>
+    <div id="tour-content" class="tour-popover-body">
+        <!-- Filled dynamically -->
+    </div>
+    <div class="tour-popover-footer">
+        <span id="tour-step-indicator" class="tour-step-indicator"></span>
+        <div class="tour-buttons">
+            <button type="button" id="tour-prev" class="btn-ghost-small">Back</button>
+            <button type="button" id="tour-next" class="btn-primary-small">Next</button>
+        </div>
+    </div>
 </div>
 
-<!-- Results modal -->
-<div id="results-modal" class="modal hidden" aria-hidden="true">
-  <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="results-modal-title">
-    <div class="modal-header">
-      <h3 id="results-modal-title">Programme summary</h3>
-      <button id="close-modal" class="icon-button" aria-label="Close summary">×</button>
-    </div>
-    <div id="modal-body" class="modal-body"></div>
-  </div>
-</div>
+<!-- Hidden inline template for technical appendix window (legacy, kept for completeness but main link uses separate file) -->
+<script type="text/plain" id="technical-appendix-template">
+<!-- This template is retained for backward compatibility. The main technical appendix now lives in technical-appendix.html. -->
+</script>
 
+<!-- MAIN SCRIPT -->
 <script src="script.js"></script>
 </body>
 </html>
