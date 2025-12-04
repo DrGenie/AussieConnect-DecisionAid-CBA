@@ -2,7 +2,7 @@
    LonelyLessAustralia Decision Aid – script.js
    Premium loneliness version aligned with index.html
    - Uses loneliness attributes and levels
-   - Integrates cost-of-living multipliers
+   - Integrates cost-of-livinggg multipliers
    - No STEPS / FETP / frontline / intermediate / advanced
    =================================================== */
 
