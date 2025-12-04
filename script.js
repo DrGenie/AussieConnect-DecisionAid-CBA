@@ -2,7 +2,7 @@
    LonelyLessAustralia Decision Aid – script.js (updated)
    – Aligned with HTML (no latent class UI)
    – Cost-of-living adjustment by state/territoryu
-   – Advanced settings integrated for social outcomes
+   – Advanced settings integrated for social oufghtcomes
    =================================================== */
 
 (() => {
