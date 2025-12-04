@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,7 @@
     <title>LonelyLessAustralia Decision Aid</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Styles: premium policy-facing theme -->
+    <!-- Styles: LonelyLessAustralia premium theme -->
     <link rel="stylesheet" href="styles.css">
 
     <!-- Chart.js -->
@@ -395,41 +396,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="region-select">
-                            Region / cost-of-living profile
-                            <button type="button" class="info-icon"
-                                    data-tooltip="Select the state or territory whose cost-of-living profile you wish to apply. This scales costs per participant per month using a simple multiplier."
-                                    aria-label="Region and cost-of-living information">i</button>
-                        </label>
-                        <select id="region-select">
-                            <option value="NSW">New South Wales (×1.10)</option>
-                            <option value="VIC">Victoria (×1.05)</option>
-                            <option value="QLD">Queensland (×1.00)</option>
-                            <option value="WA">Western Australia (×1.08)</option>
-                            <option value="SA">South Australia (×1.02)</option>
-                            <option value="TAS">Tasmania (×1.03)</option>
-                            <option value="ACT">Australian Capital Territory (×1.15)</option>
-                            <option value="NT">Northern Territory (×1.07)</option>
-                        </select>
-                        <p class="hint">
-                            Multipliers are applied to the cost per participant per month for illustration and can be refined as better local estimates become available.
-                        </p>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="programme-months">
-                            Programme horizon (months)
-                            <button type="button" class="info-icon"
-                                    data-tooltip="Number of months for which the programme runs in this scenario. This determines the total cost and total willingness-to-pay per group."
-                                    aria-label="Programme horizon information">i</button>
-                        </label>
-                        <input type="number" id="programme-months" min="1" max="60" value="12">
-                        <p class="hint">
-                            For example, set 12 months for a year-long programme or 6 months for a shorter pilot.
-                        </p>
-                    </div>
-
-                    <div class="form-group">
                         <label for="trainees">
                             Participants per group
                             <button type="button" class="info-icon"
@@ -458,6 +424,19 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="programme-months">
+                            Programme horizon (months)
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Number of months that participants are expected to stay in the programme. This horizon is used when aggregating costs and willingness-to-pay."
+                                    aria-label="Programme horizon information">i</button>
+                        </label>
+                        <input type="number" id="programme-months" min="1" max="60" value="12">
+                        <p class="hint">
+                            Twelve months is a common planning horizon. Adjust this if the programme is shorter or longer.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
                         <label>Currency display</label>
                         <div class="pill-toggle-group">
                             <button type="button" class="pill-toggle active" data-currency="AUD">
@@ -470,6 +449,28 @@
                         <p class="hint">
                             All calculations are in AUD. USD values use a simple exchange rate for display only and can
                             be adjusted in the Advanced and methods tab.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="region-select">
+                            Cost-of-living region
+                            <button type="button" class="info-icon"
+                                    data-tooltip="Select the Australian state or territory whose cost-of-living pattern best fits the programme setting. The tool multiplies the base cost per session by a regional cost-of-living factor."
+                                    aria-label="Cost of living region information">i</button>
+                        </label>
+                        <select id="region-select">
+                            <option value="NSW">New South Wales (NSW)</option>
+                            <option value="VIC">Victoria (VIC)</option>
+                            <option value="QLD">Queensland (QLD)</option>
+                            <option value="WA">Western Australia (WA)</option>
+                            <option value="SA">South Australia (SA)</option>
+                            <option value="TAS">Tasmania (TAS)</option>
+                            <option value="ACT">Australian Capital Territory (ACT)</option>
+                            <option value="NT">Northern Territory (NT)</option>
+                        </select>
+                        <p class="hint">
+                            Regional cost-of-living multipliers are applied directly to the cost slider. ACT and NSW have the highest multipliers, while QLD is the baseline.
                         </p>
                     </div>
 
@@ -649,7 +650,7 @@
                     <span class="metric-label">Net benefit per group (social outcomes)</span>
                     <span class="metric-value" id="net-benefit">-</span>
                     <p class="metric-caption">
-                        Indicative benefit per group minus total economic cost per group, combining improvements in loneliness
+                        Indicative social benefit per group minus total economic cost per group, combining improvements in loneliness
                         and related outcomes. WTP is reported separately as a preference-based benefit metric.
                     </p>
                 </div>
@@ -657,7 +658,7 @@
                     <span class="metric-label">Benefit–cost ratio (per group)</span>
                     <span class="metric-value" id="bcr">-</span>
                     <p class="metric-caption">
-                        Total indicative benefit per group divided by total economic cost per group. Values above one suggest
+                        Total indicative social benefit per group divided by total economic cost per group. Values above one suggest
                         that benefits exceed costs on the assumptions used.
                     </p>
                 </div>
@@ -729,9 +730,7 @@
                                     data-tooltip="Choose whether to use cost templates from different organisations or delivery partners. This affects how costs are allocated across categories."
                                     aria-label="Cost template source information">i</button>
                         </label>
-                        <select id="cost-source">
-                            <option value="default">Default loneliness support template</option>
-                        </select>
+                        <select id="cost-source"></select>
                     </div>
                 </div>
                 <p>
@@ -753,7 +752,7 @@
                 <div class="card-header-with-info">
                     <h2>Cost components for this configuration</h2>
                     <button type="button" class="info-icon"
-                            data-tooltip="Breakdown of programme and economic costs across staff, venue, transport, materials, management and other categories in the selected template."
+                            data-tooltip="Breakdown of programme and economic costs across staff, venue, transport, materials, coordination and related categories in the selected template."
                             aria-label="Cost components information">i</button>
                 </div>
                 <div id="cost-breakdown-summary" class="cost-summary">
@@ -807,7 +806,7 @@
                             <span class="metric-value" id="nat-total-cost">-</span>
                         </div>
                         <div class="metric-block">
-                            <span class="metric-label">Total indicative benefit (all groups)</span>
+                            <span class="metric-label">Total indicative social benefit (all groups)</span>
                             <span class="metric-value" id="nat-total-benefit">-</span>
                         </div>
                     </div>
@@ -863,7 +862,7 @@
                 <h3>Text summary for business cases</h3>
                 <p id="natsim-summary-text">
                     Once a configuration is applied, this section will summarise total participants, total economic cost,
-                    total indicative benefit, net benefit, total WTP and annual social outcomes in plain language
+                    total indicative social benefit, net benefit, total WTP and annual social outcomes in plain language
                     that can be dropped directly into concept notes or project documents.
                 </p>
             </div>
@@ -881,7 +880,7 @@
                 <button type="button"
                         class="info-icon"
                         aria-label="Sensitivity and DCE benefit summary information"
-                        data-tooltip="This table shows cost, willingness-to-pay and benefit measures for the current configuration and each saved scenario, including benefit–cost ratios and uptake-adjusted effective benefits.">
+                        data-tooltip="This table shows cost, willingness-to-pay and social benefit measures for the current configuration and each saved scenario, including benefit–cost ratios and uptake-adjusted effective benefits.">
                     i
                 </button>
             </div>
@@ -895,8 +894,8 @@
 
             <p>
                 Each row in the table represents a scenario, starting with the current configuration and followed by saved scenarios.
-                For each scenario, LonelyLessAustralia recomputes uptake, economic cost per group, willingness-to-pay-based benefits
-                and combined benefit–cost metrics using the mixed logit preference model and the opportunity cost setting.
+                For each scenario, LonelyLessAustralia recomputes uptake, economic cost per group, willingness-to-pay based benefits,
+                social outcome benefits and combined benefit–cost metrics using the mixed logit preference model and the opportunity cost setting.
             </p>
             <p class="note">
                 Full formulas and worked numerical examples are set out in the technical appendix, including how
@@ -931,7 +930,7 @@
                         <label>
                             Include social outcome benefits
                             <button type="button" class="info-icon" aria-label="Include social outcome benefits information"
-                                    data-tooltip="Turn this on to add outcome benefits from the outcome module to DCE willingness-to-pay benefits in the combined benefit–cost indicators.">
+                                    data-tooltip="Turn this on to add social outcome benefits from the outcome module to DCE willingness-to-pay benefits in the combined benefit–cost indicators.">
                                 i
                             </button>
                         </label>
@@ -1002,7 +1001,7 @@
             </p>
 
             <div class="table-wrapper">
-                <table class="data-table table-small-text" id="dce-benefits-table">
+                <table class="data-table" id="dce-benefits-table">
                     <thead>
                     <tr>
                         <th>Scenario</th>
@@ -1092,15 +1091,15 @@
                         <th>Accessibility</th>
                         <th>Groups</th>
                         <th>Participants per group</th>
-                        <th>Cost per participant per month (AUD)</th>
+                        <th>Cost per session (AUD)</th>
                         <th>Preference model</th>
                         <th>Uptake</th>
                         <th>WTP per participant per month</th>
                         <th>Total WTP (all groups)</th>
                         <th>Benefit–cost ratio</th>
                         <th>Total economic cost (all groups)</th>
-                        <th>Total indicative benefit (all groups)</th>
-                        <th>Net benefit (all groups)</th>
+                        <th>Total indicative social benefit (all groups)</th>
+                        <th>Net social benefit (all groups)</th>
                         <th>Meaningful connections per year</th>
                         <th>Notes</th>
                     </tr>
@@ -1173,45 +1172,45 @@
                         <p class="hint">Used only for currency display. All calculations are in AUD.</p>
                     </div>
 
-                    <!-- Lower-intensity support -->
+                    <!-- Light-touch programmes -->
                     <div class="form-group">
                         <label for="adv-frontline-grads">
-                            Lower-intensity completion rate (share of participants)
+                            Light-touch completion rate (share of participants)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Share of participants that complete a lower-intensity programme. For example 0.8 means 80 percent complete."
+                                    data-tooltip="Share of participants that complete a light-touch programme. For example 0.8 means 80 percent complete."
                                     aria-label="Completion rate information">i</button>
                         </label>
                         <input type="number" id="adv-frontline-grads" step="0.01" min="0" max="1">
                     </div>
                     <div class="form-group">
                         <label for="adv-frontline-outbreaks">
-                            Lower-intensity meaningful connections per group per year
+                            Light-touch meaningful connections per group per year
                             <button type="button" class="info-icon"
-                                    data-tooltip="Approximate number of meaningful connections supported by a lower-intensity group each year once running at steady state."
+                                    data-tooltip="Approximate number of meaningful connections supported by a light-touch group each year once running at steady state."
                                     aria-label="Connections information">i</button>
                         </label>
                         <input type="number" id="adv-frontline-outbreaks" step="0.1" min="0">
                     </div>
                     <div class="form-group">
                         <label for="adv-frontline-vgrad">
-                            Value per lower-intensity completer (AUD)
+                            Value per light-touch completer (AUD)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Indicative monetary value placed on one additional completer of a lower-intensity programme, capturing improvements in loneliness and related outcomes."
+                                    data-tooltip="Indicative monetary value placed on one additional completer of a light-touch programme, capturing improvements in loneliness and related outcomes."
                                     aria-label="Value per completer information">i</button>
                         </label>
                         <input type="number" id="adv-frontline-vgrad" step="50" min="0">
                     </div>
                     <div class="form-group">
                         <label for="adv-frontline-voutbreak">
-                            Value per lower-intensity meaningful connection (AUD)
+                            Value per light-touch meaningful connection (AUD)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Indicative value per meaningful connection supported by lower-intensity programmes."
+                                    data-tooltip="Indicative value per meaningful connection supported by light-touch programmes."
                                     aria-label="Value per connection information">i</button>
                         </label>
                         <input type="number" id="adv-frontline-voutbreak" step="100" min="0">
                     </div>
 
-                    <!-- Structured group support -->
+                    <!-- Structured group programmes -->
                     <div class="form-group">
                         <label for="adv-intermediate-grads">
                             Structured group completion rate (share of participants)
@@ -1249,12 +1248,12 @@
                         <input type="number" id="adv-intermediate-voutbreak" step="100" min="0">
                     </div>
 
-                    <!-- Intensive support -->
+                    <!-- Intensive programmes -->
                     <div class="form-group">
                         <label for="adv-advanced-grads">
-                            Intensive support completion rate (share of participants)
+                            Intensive completion rate (share of participants)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Share of participants that complete an intensive support programme."
+                                    data-tooltip="Share of participants that complete an intensive programme."
                                     aria-label="Completion rate information">i</button>
                         </label>
                         <input type="number" id="adv-advanced-grads" step="0.01" min="0" max="1">
@@ -1263,7 +1262,7 @@
                         <label for="adv-advanced-outbreaks">
                             Intensive meaningful connections per group per year
                             <button type="button" class="info-icon"
-                                    data-tooltip="Approximate number of meaningful connections that an intensive support programme supports per year."
+                                    data-tooltip="Approximate number of meaningful connections that an intensive programme supports per year."
                                     aria-label="Connections information">i</button>
                         </label>
                         <input type="number" id="adv-advanced-outbreaks" step="0.1" min="0">
@@ -1381,7 +1380,6 @@ LonelyLessAustralia assumption log will appear here after advanced settings and 
 <!-- This template is retained for backward compatibility. The main technical appendix now lives in technical-appendix.html. -->
 </script>
 
-<!-- MAIN SCRIPT: LonelyLessAustralia engine -->
 <script src="script.js"></script>
 </body>
 </html>
