@@ -1,6 +1,6 @@
 /* ===================================================
    LonelyLessAustralia Decision Aid – Premium UI
-   Serious, policy-facing layout for loneliness tool
+   Based on STEPS FETP India layout and components
    =================================================== */
 
 /* ===========================
@@ -1133,14 +1133,6 @@ canvas {
     padding-bottom: 6px;
 }
 
-/* Numeric alignment */
-
-.data-table th.numeric-col,
-.data-table td.numeric-col {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-}
-
 /* ===========================
    Cost breakdown summary
    =========================== */
@@ -1608,21 +1600,10 @@ canvas {
     border: 1px solid var(--color-border);
 }
 
-.sensitivity-section-label {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--color-text-muted);
-    margin-top: 6px;
-}
-
-.sensitivity-caption {
-    margin-top: 6px;
-    font-size: 12px;
-    color: var(--color-text-muted);
-}
-
-.sensitivity-table-divider-row td {
-    border-top: 2px solid var(--color-border-strong);
+.data-table th.numeric-col,
+.data-table td.numeric-col {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
 }
 
 .sensitivity-row-selected {
