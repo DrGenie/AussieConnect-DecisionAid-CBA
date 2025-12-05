@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,12 +91,11 @@
                 <ul class="plain-list">
                     <li>Preferences and willingness-to-pay estimates from a discrete choice experiment with older adults and key stakeholders.</li>
                     <li>Costing templates for different programme types, delivery methods and levels of intensity.</li>
-                    <li>Simple reach and uptake calculations that translate preferences into participation and willingness-to-pay based benefit summaries.</li>
+                    <li>Simple reach indicators such as participants engaged and meaningful connections supported, derived from the configuration and uptake.</li>
                 </ul>
                 <p>
                     Users can set a programme configuration, see expected uptake, willingness to pay, costs and benefit–cost ratios
-                    based solely on discrete choice experiment evidence, and compare saved scenarios side by side for business case
-                    and commissioning discussions.
+                    based solely on the discrete choice experiment, and compare saved scenarios side by side for business case and commissioning discussions.
                 </p>
                 <p>
                     The tool is designed to support transparent conversations with health services, aged care providers,
@@ -112,8 +110,9 @@
                         type of support programme, method of engagement, frequency of interaction, duration of each
                         interaction, accessibility/convenience and the out-of-pocket cost per session.</li>
                     <li>Keep the cost slider within the cost range used in the discrete choice experiment (Free,
-                        AUD 5, AUD 20 and AUD 50 per session) so that uptake predictions remain valid.</li>
-                    <li>The tool uses the mixed logit preference model estimated from the loneliness discrete choice experiment. There is a single
+                        AUD 5, AUD 20 and AUD 50 per session) so that uptake predictions and willingness-to-pay
+                        summaries remain valid.</li>
+                    <li>The tool uses the mixed logit preference model estimated from the loneliness DCE. There is a single
                         preference model, so no model selection is required.</li>
                     <li>Click <strong>Apply configuration</strong> to update all calculations, then use
                         <strong>View results summary</strong> to open a scenario summary with headline recommendations.</li>
@@ -121,8 +120,7 @@
                         Excel or a policy brief PDF for reporting and funding submissions.</li>
                     <li>For workshops or sensitivity checks, use the <strong>Population simulation</strong> and
                         <strong>Sensitivity / DCE benefits</strong> tabs to explore how results change with scale,
-                        uptake and different willingness-to-pay views, and the <strong>Advanced and methods</strong> tab to adjust
-                        display assumptions and review the assumption log.</li>
+                        and the <strong>Advanced and methods</strong> tab to adjust multipliers and open the full technical appendix.</li>
                 </ol>
                 <p class="note">
                     LonelyLessAustralia is designed for laptops, desktops, tablets and mobiles.
@@ -271,10 +269,10 @@
                     <div class="attr-table-row">
                         <div class="attr-cell-title">Opportunity cost of staff and volunteer time</div>
                         <div class="attr-cell-levels">
-                            The value of staff and volunteer time spent on the programme instead of other activities, per participant per programme.
+                            The value of staff and volunteer time spent on the programme instead of other activities, per participant per month.
                         </div>
                         <div class="attr-cell-expl">
-                            When the opportunity cost toggle is on, LonelyLessAustralia adds a proportion of direct programme cost to yield total
+                            When the opportunity cost toggle is on, LonelyLessAustralia adds this to programme costs to yield total
                             economic cost. When off, outputs focus on budgetary costs only.
                         </div>
                     </div>
@@ -286,7 +284,7 @@
                         <div class="attr-cell-expl">
                             All uptake and willingness-to-pay estimates are based on a single mixed logit model that uses the attributes
                             and levels described above. There are no latent classes in the loneliness DCE; sensitivity analysis focuses
-                            on cost, uptake and willingness-to-pay assumptions instead.
+                            on cost, uptake and alternative DCE-based benefit definitions instead.
                         </div>
                     </div>
                 </div>
@@ -347,7 +345,7 @@
                         </label>
                         <select id="mentorship">
                             <option value="daily">Daily</option>
-                            <option value="weekly" selected>Weekly</option>
+                            <option value="weekly">Weekly</option>
                             <option value="monthly">Monthly</option>
                         </select>
                     </div>
@@ -361,7 +359,7 @@
                         </label>
                         <select id="delivery">
                             <option value="30min">30 minutes</option>
-                            <option value="2hrs" selected>2 hours</option>
+                            <option value="2hrs">2 hours</option>
                             <option value="4hrs">4 hours</option>
                         </select>
                     </div>
@@ -420,7 +418,7 @@
                         <input type="number" id="cohorts" min="1" max="200" value="20">
                         <p class="hint">
                             Increase this to explore regional or state-wide scale-up. The Population simulation tab shows
-                            how total costs and benefits change as you adjust this number.
+                            how total costs and DCE-based benefits change as you adjust this number.
                         </p>
                     </div>
 
@@ -428,7 +426,7 @@
                         <label for="programme-months">
                             Programme horizon (months)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Number of months that participants are expected to stay in the programme. This horizon is used when aggregating costs and willingness-to-pay over sessions."
+                                    data-tooltip="Number of months that participants are expected to stay in the programme. This horizon is used when aggregating costs and willingness-to-pay."
                                     aria-label="Programme horizon information">i</button>
                         </label>
                         <input type="number" id="programme-months" min="1" max="60" value="12">
@@ -457,7 +455,7 @@
                         <label for="region-select">
                             Cost-of-living region
                             <button type="button" class="info-icon"
-                                    data-tooltip="Select the Australian state or territory whose cost-of-living pattern best fits the programme setting. The tool multiplies the base cost per session by a regional cost-of-living factor for budgeting, while the DCE model uses the base cost only."
+                                    data-tooltip="Select the Australian state or territory whose cost-of-living pattern best fits the programme setting. The tool multiplies the base cost per session by a regional cost-of-living factor."
                                     aria-label="Cost of living region information">i</button>
                         </label>
                         <select id="region-select">
@@ -471,8 +469,7 @@
                             <option value="NT">Northern Territory (NT)</option>
                         </select>
                         <p class="hint">
-                            Regional cost-of-living multipliers are applied directly to the cost per session for budgeting.
-                            The preference model continues to use the base cost entered via the slider.
+                            Regional cost-of-living multipliers are applied directly to the cost slider. ACT and NSW have the highest multipliers, while QLD is the baseline.
                         </p>
                     </div>
 
@@ -480,7 +477,7 @@
                         <label>
                             Include opportunity cost of staff and volunteer time
                             <button type="button" class="info-icon"
-                                    data-tooltip="Adds a proportion of direct programme costs to represent the opportunity cost of staff and volunteer time. Switching this off shows only direct financial costs."
+                                    data-tooltip="Adds the value of staff and volunteer time to costs when templates include opportunity cost entries. Switching this off shows only direct financial costs."
                                     aria-label="Opportunity cost information">i</button>
                         </label>
                         <button type="button" id="opp-toggle" class="switch-pill on">
@@ -488,8 +485,7 @@
                             <span class="switch-label">Opportunity cost included</span>
                         </button>
                         <p class="hint">
-                            Where cost templates include opportunity cost assumptions, this switch determines whether they
-                            are reflected in economic costs.
+                            Where the cost template has opportunity cost, this adds it to economic costs.
                         </p>
                     </div>
 
@@ -511,7 +507,7 @@
                             type="button"
                             data-tour-step="apply"
                             data-tour-title="Apply configuration"
-                            data-tour-content="Click here after you set the configuration. This updates uptake, costs, willingness-to-pay benefits and population results.">
+                            data-tour-content="Click here after you set the configuration. This updates uptake, costs, DCE-based benefits and population results.">
                         Apply configuration
                     </button>
                     <button id="open-snapshot" class="btn-secondary" type="button">
@@ -551,8 +547,7 @@
                 </div>
                 <h3>Headline recommendation</h3>
                 <p id="headline-recommendation" class="headline-text">
-                    Apply a configuration to see a concise recommendation that combines uptake, willingness to pay and costs, using only
-                    DCE-based willingness-to-pay benefits.
+                    Apply a configuration to see a concise recommendation that combines uptake, willingness to pay and costs using the discrete choice experiment results.
                 </p>
                 <div class="headline-briefing">
                     <h4>Briefing text (copy into emails or reports)</h4>
@@ -570,7 +565,7 @@
         <div class="results-grid"
              data-tour-step="results"
              data-tour-title="Results and interpretation"
-             data-tour-content="This view brings together uptake, willingness to pay, costs and DCE-based benefit summaries for the current configuration.">
+             data-tour-content="This view brings together uptake, willingness to pay, costs, DCE-based benefits and social outcome implications for the current configuration.">
             <div class="card">
                 <div class="card-header-with-info">
                     <h2>Uptake and opt-out</h2>
@@ -608,14 +603,14 @@
                 <div class="card-header-with-info">
                     <h2>Willingness to pay and economic outcomes</h2>
                     <button type="button" class="info-icon"
-                            data-tooltip="Summarises how much value respondents place on the configuration per participant per session and how this aggregates to total willingness-to-pay and programme costs."
+                            data-tooltip="Summarises how much value respondents place on the configuration per participant per session, and how this aggregates to group and population level compared with programme costs."
                             aria-label="Willingness to pay and economic outcomes information">i</button>
                 </div>
                 <p class="hint">
                     Willingness to pay (WTP) per participant per session is derived from the preference model by dividing attribute
                     coefficients by the cost coefficient. It indicates how much value respondents attach to the bundle of
-                    attributes in this configuration relative to a baseline design. Total WTP aggregates this value across all
-                    participants and sessions for each group and across all groups over the chosen planning horizon.
+                    attributes in this configuration relative to a baseline. Total WTP aggregates this value across all
+                    sessions, participants and months in each group and at population scale.
                 </p>
                 <div class="metric-pair metric-pair-tight">
                     <div class="metric-block">
@@ -629,16 +624,16 @@
                         <span class="metric-label">Total WTP per group (chosen horizon)</span>
                         <span class="metric-value" id="wtp-total-cohort">-</span>
                         <p class="metric-caption">
-                            WTP per participant per session multiplied by participants per group and the number of sessions over the planning horizon.
+                            WTP per participant per session multiplied by the number of sessions, participants and months over the chosen horizon.
                         </p>
                     </div>
                 </div>
                 <div class="metric-pair metric-pair-tight">
                     <div class="metric-block">
-                        <span class="metric-label">Programme cost per group (direct)</span>
+                        <span class="metric-label">Programme cost per group</span>
                         <span class="metric-value" id="prog-cost-per-cohort">-</span>
                         <p class="metric-caption">
-                            Direct programme cost per group over the planning horizon, based on cost per session, group size and number of sessions.
+                            Direct programme cost per group before adding any opportunity cost of staff or volunteer time.
                         </p>
                     </div>
                     <div class="metric-block">
@@ -650,18 +645,18 @@
                     </div>
                 </div>
                 <div class="metric-single">
-                    <span class="metric-label">Net benefit, all groups (DCE WTP based)</span>
+                    <span class="metric-label">Net benefit per group (DCE WTP)</span>
                     <span class="metric-value" id="net-benefit">-</span>
                     <p class="metric-caption">
-                        Total WTP benefit across all groups minus total economic cost across all groups, using only DCE-based willingness-to-pay.
+                        Total DCE willingness-to-pay benefit per group minus total economic cost per group. All monetary benefits are derived from the discrete choice experiment.
                     </p>
                 </div>
                 <div class="metric-single">
-                    <span class="metric-label">Benefit–cost ratio (DCE WTP only, all groups)</span>
+                    <span class="metric-label">Benefit–cost ratio (per group, WTP only)</span>
                     <span class="metric-value" id="bcr">-</span>
                     <p class="metric-caption">
-                        Total WTP benefit across all groups divided by total economic cost across all groups. Values above one suggest
-                        that willingness-to-pay benefits exceed costs on the assumptions used.
+                        Total WTP benefit per group divided by total economic cost per group. Values above one suggest
+                        that DCE-based benefits exceed costs on the assumptions used.
                     </p>
                 </div>
                 <div class="chart-block">
@@ -671,40 +666,41 @@
 
             <div class="card">
                 <div class="card-header-with-info">
-                    <h2>Participation and WTP-based benefits</h2>
+                    <h2>Social outcome implications</h2>
                     <button type="button" class="info-icon"
-                            data-tooltip="Shows how many participants are expected to choose the programme and how this translates into total DCE-based willingness-to-pay benefits."
-                            aria-label="Participation and WTP-based benefits information">i</button>
+                            data-tooltip="Shows approximate social outcomes such as participants reached and meaningful connections supported, based on uptake, completion rates and simple multipliers."
+                            aria-label="Social outcomes information">i</button>
                 </div>
                 <p class="hint">
-                    Participation and benefit figures are obtained by combining group size, number of groups and modelled uptake
-                    with DCE-based willingness-to-pay. No additional social outcome multipliers are used in these calculations.
+                    Participants reached and social outcomes are obtained by combining uptake with multipliers on group size,
+                    number of groups and completion rates. Monetary valuation of benefits in benefit–cost ratios is based only
+                    on the discrete choice experiment; social outcome metrics here are descriptive.
                 </p>
                 <div class="metric-pair metric-pair-tight">
                     <div class="metric-block">
-                        <span class="metric-label">Participants choosing the programme (all groups)</span>
+                        <span class="metric-label">Participants completing programme (all groups)</span>
                         <span class="metric-value" id="epi-graduates">-</span>
                         <p class="metric-caption">
-                            Estimated number of participants who would choose the programme across all groups, based on modelled uptake.
+                            Estimated number of participants who complete the programme across all planned groups, adjusting for uptake and completion rates.
                         </p>
                     </div>
                     <div class="metric-block">
-                        <span class="metric-label">Total eligible participants (all groups)</span>
+                        <span class="metric-label">Meaningful connections supported per year</span>
                         <span class="metric-value" id="epi-outbreaks">-</span>
                         <p class="metric-caption">
-                            Total number of participants across all planned groups regardless of whether they choose the programme.
+                            Approximate number of sustained social connection episodes or equivalent outcome units per year once programmes are running at scale.
                         </p>
                     </div>
                 </div>
                 <div class="metric-single">
-                    <span class="metric-label">Total WTP benefit (all groups)</span>
+                    <span class="metric-label">Indicative DCE-based benefit (all groups)</span>
                     <span class="metric-value" id="epi-benefit">-</span>
                     <p class="metric-caption">
-                        DCE-based willingness-to-pay for the configuration across all groups over the chosen planning horizon.
+                        Total DCE willingness-to-pay benefit across all groups. This is the same DCE-based benefit concept used in the economic summaries.
                     </p>
                 </div>
                 <div class="chart-block">
-                    <canvas id="chart-epi" aria-label="Participation and WTP results chart"></canvas>
+                    <canvas id="chart-epi" aria-label="Social outcome results chart"></canvas>
                 </div>
             </div>
         </div>
@@ -766,7 +762,7 @@
                             <th>Component</th>
                             <th>Share of programme cost</th>
                             <th>Amount per group</th>
-                            <th>Amount per participant per session</th>
+                            <th>Amount per participant per month</th>
                             <th>Notes</th>
                         </tr>
                         </thead>
@@ -784,7 +780,7 @@
         <div class="card"
              data-tour-step="natsim"
              data-tour-title="Population simulation"
-             data-tour-content="Here you can see how the configuration scales up to a population level: total cost, total DCE-based benefit, net benefit and participants.">
+             data-tour-content="Here you can see how the configuration scales up to a population level: total cost, DCE-based benefit, net benefit, participants and social outcomes.">
             <div class="card-header-with-info">
                 <h2>Population simulation and sensitivity</h2>
                 <button type="button" class="info-icon"
@@ -794,12 +790,13 @@
             <p>
                 This view scales the current configuration to a larger population using the number of groups you
                 have selected. It is intended for business case discussions and high level sensitivity checks.
-                To see how results change, adjust cost, group size, number of groups or the planning horizon in the
-                Configuration tab, and explore DCE-based benefit summaries in the Sensitivity / DCE benefits tab.
+                To see how results change, adjust cost, group size, number of groups or the social outcome
+                multipliers in the Advanced and methods tab and explore the DCE-based benefit definitions in the
+                Sensitivity / DCE benefits tab.
             </p>
             <div class="grid-two">
                 <div class="natsim-column">
-                    <h3>Population economic picture (DCE-based)</h3>
+                    <h3>Population economic picture</h3>
                     <div class="metric-pair metric-pair-tight">
                         <div class="metric-block">
                             <span class="metric-label">Total economic cost (all groups)</span>
@@ -812,11 +809,11 @@
                     </div>
                     <div class="metric-pair metric-pair-tight">
                         <div class="metric-block">
-                            <span class="metric-label">Population net benefit (DCE WTP based)</span>
+                            <span class="metric-label">Population net benefit (WTP only)</span>
                             <span class="metric-value" id="nat-net-benefit">-</span>
                         </div>
                         <div class="metric-block">
-                            <span class="metric-label">Population benefit–cost ratio (DCE WTP only)</span>
+                            <span class="metric-label">Population benefit–cost ratio (WTP only)</span>
                             <span class="metric-value" id="nat-bcr">-</span>
                         </div>
                     </div>
@@ -824,36 +821,36 @@
                         <span class="metric-label">Total WTP (all groups)</span>
                         <span class="metric-value" id="nat-total-wtp">-</span>
                         <p class="metric-caption">
-                            Aggregated willingness to pay across all participants, sessions and groups, reflecting stakeholder valuation
-                            of the chosen configuration.
+                            Aggregated willingness to pay across all participants and groups, reflecting stakeholder valuation of the chosen configuration.
                         </p>
                     </div>
                     <p class="hint">
-                        These values multiply per group costs and benefits by the number of groups. The benefit–cost ratio
+                        These values multiply the per group costs and benefits by the number of groups. The benefit–cost ratio
                         stays the same, but the absolute costs and total WTP grow with scale.
                     </p>
                     <div class="chart-block">
-                        <canvas id="chart-nat-cost-benefit" aria-label="Population cost versus WTP benefit chart"></canvas>
+                        <canvas id="chart-nat-cost-benefit" aria-label="Population cost versus benefit chart"></canvas>
                     </div>
                 </div>
                 <div class="natsim-column">
-                    <h3>Population participation picture</h3>
+                    <h3>Population social impact</h3>
                     <div class="metric-pair metric-pair-tight">
                         <div class="metric-block">
-                            <span class="metric-label">Total eligible participants</span>
+                            <span class="metric-label">Total participants completing</span>
                             <span class="metric-value" id="nat-graduates">-</span>
                         </div>
                         <div class="metric-block">
-                            <span class="metric-label">Participants choosing the programme</span>
+                            <span class="metric-label">Meaningful connections per year</span>
                             <span class="metric-value" id="nat-outbreaks">-</span>
                         </div>
                     </div>
                     <p class="hint">
-                        Participant figures here combine group size, number of groups and modelled uptake. To explore sensitivity,
-                        try increasing groups, testing different programme types or changing cost and frequency assumptions.
+                        Participants and meaningful connections here are population-level figures, combining uptake,
+                        group size, number of groups and the social outcome multipliers. Monetary valuation in benefit–cost
+                        indicators relies only on DCE willingness-to-pay.
                     </p>
                     <div class="chart-block">
-                        <canvas id="chart-nat-epi" aria-label="Population participation chart"></canvas>
+                        <canvas id="chart-nat-epi" aria-label="Population social outcome chart"></canvas>
                     </div>
                 </div>
             </div>
@@ -861,8 +858,8 @@
                 <h3>Text summary for business cases</h3>
                 <p id="natsim-summary-text">
                     Once a configuration is applied, this section will summarise total participants, total economic cost,
-                    total WTP benefit, net benefit and key ratios in plain language that can be dropped directly into
-                    concept notes or project documents.
+                    total WTP benefit, net benefit and annual social outcomes in plain language
+                    that can be dropped directly into concept notes or project documents.
                 </p>
             </div>
         </div>
@@ -879,27 +876,27 @@
                 <button type="button"
                         class="info-icon"
                         aria-label="Sensitivity and DCE benefit summary information"
-                        data-tooltip="This table shows economic cost, DCE-based willingness-to-pay benefits and cost–benefit indicators for the current configuration and each saved scenario.">
+                        data-tooltip="This table shows cost, willingness-to-pay and derived DCE benefit measures for the current configuration and each saved scenario, including benefit–cost ratios and uptake-adjusted effective benefits.">
                     i
                 </button>
             </div>
 
             <p class="hint">
-                This tab brings together preference-based benefits from the discrete choice experiment and the cost module.
-                It shows total willingness-to-pay benefit associated with each configuration, effective willingness-to-pay
-                after applying uptake, and summary cost–benefit indicators such as the benefit–cost ratio and net benefit.
-                No external social outcome valuations are used in these calculations.
+                This tab brings together preference-based benefits from the discrete choice experiment and the cost
+                module. It shows the total willingness-to-pay benefit associated with each configuration, the share that
+                is linked to attributes most closely associated with loneliness improvement, and summary cost–benefit
+                indicators such as the benefit–cost ratio and net benefit. No external outcome valuations are used.
             </p>
 
             <p>
                 Each row in the table represents a scenario, starting with the current configuration and followed by saved scenarios.
-                For each scenario, LonelyLessAustralia recomputes uptake, economic cost per group, DCE-based willingness-to-pay
-                benefits and combined benefit–cost metrics using the mixed logit preference model and the opportunity cost setting.
+                For each scenario, LonelyLessAustralia recomputes uptake, economic cost per group, willingness-to-pay-based benefits
+                and combined benefit–cost metrics using the mixed logit preference model and the opportunity cost setting.
             </p>
             <p class="note">
                 Full formulas and worked numerical examples are set out in the technical appendix, including how
-                willingness to pay is constructed from the discrete choice experiment and how total benefits are aggregated
-                over participants and sessions.
+                willingness to pay per session is constructed from the discrete choice experiment and how it is aggregated
+                across sessions, participants and months.
                 <a href="technical-appendix.html" target="_blank">See the technical appendix for full formulas and worked examples.</a>
             </p>
 
@@ -910,17 +907,17 @@
                         <label for="benefit-definition-select">
                             Benefit definition
                             <button type="button" class="info-icon" aria-label="Benefit definition information"
-                                    data-tooltip="Choose whether to focus on total DCE willingness-to-pay benefits or on uptake-adjusted effective willingness-to-pay for sensitivity analysis.">
+                                    data-tooltip="Choose whether to view results based on total DCE willingness-to-pay or to focus on uptake-adjusted WTP for sensitivity analysis.">
                                 i
                             </button>
                         </label>
                         <select id="benefit-definition-select">
-                            <option value="wtp_only">Total WTP (DCE only)</option>
-                            <option value="endorsement_adjusted">Uptake-adjusted WTP (sensitivity)</option>
+                            <option value="wtp_only">DCE WTP only</option>
+                            <option value="endorsement_adjusted">Uptake-adjusted WTP</option>
                         </select>
                         <p class="hint">
-                            Use this control to emphasise either total willingness-to-pay or uptake-adjusted willingness-to-pay.
-                            In both cases, cost–benefit indicators are based only on DCE-derived WTP.
+                            Use this control to switch between total DCE willingness-to-pay and a view that scales
+                            willingness-to-pay by uptake. No external outcome valuations are included.
                         </p>
                     </div>
 
@@ -945,7 +942,7 @@
                         <label for="endorsement-override">
                             Uptake rate for sensitivity (%)
                             <button type="button" class="info-icon" aria-label="Uptake rate override information"
-                                    data-tooltip="Optional override of the model-predicted uptake. When a value is entered, the tool uses this rate to calculate uptake-adjusted effective willingness-to-pay benefits.">
+                                    data-tooltip="Optional override of the model-predicted uptake. When a value is entered and the uptake-adjusted view is selected, the tool uses this rate to scale willingness-to-pay benefits in sensitivity calculations.">
                                 i
                             </button>
                         </label>
@@ -976,8 +973,9 @@
 
             <h3>Headline WTP-based benefits and cost–benefit metrics</h3>
             <p class="hint">
-                The table below summarises total economic cost, DCE willingness-to-pay benefits, uptake-adjusted effective benefits
-                and key cost–benefit indicators for each scenario over the chosen time horizon.
+                The table below summarises programme costs, DCE willingness-to-pay benefits, the component of WTP most closely linked
+                to loneliness improvement, uptake-adjusted effective benefits and cost–benefit indicators for each scenario over the
+                chosen time horizon.
             </p>
 
             <div class="table-wrapper">
@@ -985,12 +983,13 @@
                     <thead>
                     <tr>
                         <th>Scenario</th>
-                        <th>Total economic cost (all groups, AUD)</th>
-                        <th>Total WTP benefit (all groups, AUD)</th>
+                        <th>Total economic cost (AUD, all groups)</th>
+                        <th>Total WTP benefit (AUD, all groups)</th>
+                        <th>WTP from loneliness improvement (AUD, all groups)</th>
                         <th>Uptake rate used (%)</th>
-                        <th>Effective WTP benefit (all groups, AUD)</th>
-                        <th>BCR (DCE WTP only)</th>
-                        <th>Net benefit (DCE WTP only, all groups, AUD)</th>
+                        <th>Effective WTP benefit (AUD, all groups)</th>
+                        <th>BCR (WTP only)</th>
+                        <th>Net benefit (WTP − cost, AUD)</th>
                     </tr>
                     </thead>
                     <tbody id="dce-benefits-table-body">
@@ -1002,8 +1001,8 @@
             <h3>Detailed sensitivity matrix</h3>
             <p>
                 For users who wish to see a more granular breakdown, the detailed matrix below retains the main set of columns
-                needed for documenting DCE-based cost–benefit calculations and alternative uptake assumptions. It can be used
-                alongside the headline table above to cross-check results and document sensitivity scenarios.
+                for the sensitivity view. It can be used alongside the headline table above to cross-check results and document
+                alternative assumptions. All monetary benefits are derived from the discrete choice experiment.
             </p>
 
             <div class="table-wrapper">
@@ -1014,11 +1013,11 @@
                         <th>Model</th>
                         <th>Uptake rate</th>
                         <th>Cost per group (AUD)</th>
-                        <th>Total economic cost (all groups, AUD)</th>
-                        <th>Total WTP benefit (all groups, AUD)</th>
-                        <th>Effective WTP benefit (all groups, AUD)</th>
-                        <th>BCR (DCE WTP only)</th>
-                        <th>Net benefit (DCE WTP only, all groups, AUD)</th>
+                        <th>Total WTP benefit per group (AUD)</th>
+                        <th>WTP benefit from loneliness improvement (AUD)</th>
+                        <th>Effective WTP benefit per group (AUD)</th>
+                        <th>BCR (WTP only)</th>
+                        <th>Net benefit per group (AUD)</th>
                     </tr>
                     </thead>
                     <tbody id="sensitivity-table-body">
@@ -1068,11 +1067,10 @@
                         <th>Uptake</th>
                         <th>WTP per participant per session</th>
                         <th>Total WTP (all groups)</th>
-                        <th>Benefit–cost ratio (DCE WTP)</th>
+                        <th>Benefit–cost ratio (WTP only)</th>
                         <th>Total economic cost (all groups)</th>
-                        <th>Total WTP benefit (all groups)</th>
-                        <th>Net WTP benefit (all groups)</th>
-                        <th>Participants choosing programme (all groups)</th>
+                        <th>Net benefit (all groups)</th>
+                        <th>Meaningful connections per year</th>
                         <th>Notes</th>
                     </tr>
                     </thead>
@@ -1094,7 +1092,7 @@
             <p>
                 LonelyLessAustralia is part of a broader programme of work on loneliness and social isolation among
                 older adults in Australia. The tool provides a structured way to test programme options and explain cost,
-                DCE-based willingness-to-pay benefits and uptake implications in policy discussions.
+                DCE-based benefit and uptake implications in policy discussions.
             </p>
             <p>
                 The tool is designed to support health and aged-care departments, local governments, primary health
@@ -1102,9 +1100,9 @@
                 questions such as:
             </p>
             <ul class="plain-list">
-                <li>How do costs and willingness-to-pay change when moving across different types of support programmes?</li>
+                <li>How do costs, willingness to pay and DCE-based benefits change when moving across different types of support programmes?</li>
                 <li>What happens to uptake when the method of engagement, frequency, duration or accessibility changes?</li>
-                <li>How many groups and participants are needed to reach participation targets for reducing loneliness?</li>
+                <li>How many groups and participants are needed to reach population targets for reducing loneliness?</li>
             </ul>
             <p class="note">
                 Prepared by <strong>Mesfin Genie, PhD</strong>, Newcastle Business School, The University of
@@ -1123,14 +1121,15 @@
             <div class="card">
                 <h2>Advanced settings and assumptions</h2>
                 <p>
-                    This panel allows technical users to adjust key display parameters for workshops without editing code.
+                    This panel allows technical users to adjust key multipliers for workshops without editing code.
                     Changes affect calculations immediately in this browser session and are reflected in the Results,
                     Population simulation and Sensitivity / DCE benefits tabs.
                 </p>
                 <p class="note">
-                    The current version uses only DCE-based willingness-to-pay for benefit calculations. The additional
-                    outcome-related fields are placeholders for future extensions and are not used in any of the cost–benefit
-                    metrics reported in the tool.
+                    Use these settings when you want to align assumptions with updated evidence or
+                    discussions with partner organisations. For example, you can change completion rates or the number
+                    of meaningful connections per group. Monetary benefits in the tool are based solely on DCE
+                    willingness-to-pay estimates.
                 </p>
                 <form id="advanced-settings-form" class="form-grid">
                     <div class="form-group form-group-wide">
@@ -1144,12 +1143,12 @@
                         <p class="hint">Used only for currency display. All calculations are in AUD.</p>
                     </div>
 
-                    <!-- Light-touch programmes (not used in current DCE-only benefit metrics) -->
+                    <!-- Light-touch programmes -->
                     <div class="form-group">
                         <label for="adv-frontline-grads">
                             Light-touch completion rate (share of participants)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Placeholder for future extensions. Not used in current DCE-only calculations."
+                                    data-tooltip="Share of participants that complete a light-touch programme. For example 0.8 means 80 percent complete."
                                     aria-label="Completion rate information">i</button>
                         </label>
                         <input type="number" id="adv-frontline-grads" step="0.01" min="0" max="1">
@@ -1158,7 +1157,7 @@
                         <label for="adv-frontline-outbreaks">
                             Light-touch meaningful connections per group per year
                             <button type="button" class="info-icon"
-                                    data-tooltip="Placeholder for future extensions. Not used in current DCE-only calculations."
+                                    data-tooltip="Approximate number of meaningful connections supported by a light-touch group each year once running at steady state."
                                     aria-label="Connections information">i</button>
                         </label>
                         <input type="number" id="adv-frontline-outbreaks" step="0.1" min="0">
@@ -1167,7 +1166,7 @@
                         <label for="adv-frontline-vgrad">
                             Value per light-touch completer (AUD)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Placeholder for future extensions. Not used in current DCE-only calculations."
+                                    data-tooltip="Indicative monetary value can be entered here for documentation; DCE-based calculations in the tool continue to rely on willingness-to-pay estimates."
                                     aria-label="Value per completer information">i</button>
                         </label>
                         <input type="number" id="adv-frontline-vgrad" step="50" min="0">
@@ -1176,18 +1175,18 @@
                         <label for="adv-frontline-voutbreak">
                             Value per light-touch meaningful connection (AUD)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Placeholder for future extensions. Not used in current DCE-only calculations."
+                                    data-tooltip="Indicative value per meaningful connection for documentation. Benefit–cost ratios in the tool remain based on DCE willingness-to-pay."
                                     aria-label="Value per connection information">i</button>
                         </label>
                         <input type="number" id="adv-frontline-voutbreak" step="100" min="0">
                     </div>
 
-                    <!-- Structured group programmes (placeholders) -->
+                    <!-- Structured group programmes -->
                     <div class="form-group">
                         <label for="adv-intermediate-grads">
                             Structured group completion rate (share of participants)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Placeholder for future extensions. Not used in current DCE-only calculations."
+                                    data-tooltip="Share of participants that complete a structured group programme."
                                     aria-label="Completion rate information">i</button>
                         </label>
                         <input type="number" id="adv-intermediate-grads" step="0.01" min="0" max="1">
@@ -1196,7 +1195,7 @@
                         <label for="adv-intermediate-outbreaks">
                             Structured group meaningful connections per group per year
                             <button type="button" class="info-icon"
-                                    data-tooltip="Placeholder for future extensions. Not used in current DCE-only calculations."
+                                    data-tooltip="Approximate number of meaningful connections supported by a structured group each year."
                                     aria-label="Connections information">i</button>
                         </label>
                         <input type="number" id="adv-intermediate-outbreaks" step="0.1" min="0">
@@ -1205,7 +1204,7 @@
                         <label for="adv-intermediate-vgrad">
                             Value per structured group completer (AUD)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Placeholder for future extensions. Not used in current DCE-only calculations."
+                                    data-tooltip="Indicative value per additional completer of a structured group programme; recorded here for transparency."
                                     aria-label="Value per completer information">i</button>
                         </label>
                         <input type="number" id="adv-intermediate-vgrad" step="50" min="0">
@@ -1214,18 +1213,18 @@
                         <label for="adv-intermediate-voutbreak">
                             Value per structured group meaningful connection (AUD)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Placeholder for future extensions. Not used in current DCE-only calculations."
+                                    data-tooltip="Indicative value per meaningful connection supported by structured programmes; not used in the DCE-based benefit–cost ratios."
                                     aria-label="Value per connection information">i</button>
                         </label>
                         <input type="number" id="adv-intermediate-voutbreak" step="100" min="0">
                     </div>
 
-                    <!-- Intensive programmes (placeholders) -->
+                    <!-- Intensive programmes -->
                     <div class="form-group">
                         <label for="adv-advanced-grads">
                             Intensive completion rate (share of participants)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Placeholder for future extensions. Not used in current DCE-only calculations."
+                                    data-tooltip="Share of participants that complete an intensive programme."
                                     aria-label="Completion rate information">i</button>
                         </label>
                         <input type="number" id="adv-advanced-grads" step="0.01" min="0" max="1">
@@ -1234,7 +1233,7 @@
                         <label for="adv-advanced-outbreaks">
                             Intensive meaningful connections per group per year
                             <button type="button" class="info-icon"
-                                    data-tooltip="Placeholder for future extensions. Not used in current DCE-only calculations."
+                                    data-tooltip="Approximate number of meaningful connections that an intensive programme supports per year."
                                     aria-label="Connections information">i</button>
                         </label>
                         <input type="number" id="adv-advanced-outbreaks" step="0.1" min="0">
@@ -1243,7 +1242,7 @@
                         <label for="adv-advanced-vgrad">
                             Value per intensive completer (AUD)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Placeholder for future extensions. Not used in current DCE-only calculations."
+                                    data-tooltip="Indicative value per intensive programme completer for documentation."
                                     aria-label="Value per completer information">i</button>
                         </label>
                         <input type="number" id="adv-advanced-vgrad" step="50" min="0">
@@ -1252,7 +1251,7 @@
                         <label for="adv-advanced-voutbreak">
                             Value per intensive meaningful connection (AUD)
                             <button type="button" class="info-icon"
-                                    data-tooltip="Placeholder for future extensions. Not used in current DCE-only calculations."
+                                    data-tooltip="Indicative value per meaningful connection supported by intensive programmes."
                                     aria-label="Value per connection information">i</button>
                         </label>
                         <input type="number" id="adv-advanced-voutbreak" step="100" min="0">
@@ -1267,7 +1266,7 @@
                 </form>
                 <p class="note">
                     Country or regional teams can also supply a configuration file with multipliers and indicative values that
-                    the tool could load in future versions. For the current version, benefit metrics remain fully DCE based.
+                    the tool will load automatically. This keeps social outcome assumptions separate from the main code base.
                 </p>
                 <div class="assumption-log">
                     <h3>Assumption log</h3>
@@ -1285,7 +1284,7 @@ LonelyLessAustralia assumption log will appear here after advanced settings and 
                 <h2>Technical appendix and model description</h2>
                 <p>
                     The technical appendix explains how LonelyLessAustralia uses discrete choice experiment estimates, cost
-                    templates, willingness-to-pay measures and the scaling logic for participants and sessions. It includes numerical
+                    templates and DCE-based willingness-to-pay measures. It includes numerical
                     examples based on the final mixed logit model and the willingness-to-pay results.
                 </p>
                 <p>
@@ -1299,7 +1298,7 @@ LonelyLessAustralia assumption log will appear here after advanced settings and 
                 </div>
                 <div id="technical-preview" class="technical-preview">
                     <p>
-                        The appendix covers the preference model, uptake probabilities, willingness to pay,
+                        The appendix covers the preference model, uptake probabilities, willingness to pay per session,
                         cost templates and population simulation logic. It includes step-by-step
                         worked examples that match typical configurations such as weekly community engagement groups,
                         and shows how total WTP sits alongside costs in business case discussions.
