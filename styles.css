@@ -1,7 +1,6 @@
-
 /* ===================================================
    LonelyLessAustralia Decision Aid – Premium UI
-   Based on STEPS FETP India layout and components
+   Serious, policy-facing layout for loneliness tool
    =================================================== */
 
 /* ===========================
@@ -1134,6 +1133,14 @@ canvas {
     padding-bottom: 6px;
 }
 
+/* Numeric alignment */
+
+.data-table th.numeric-col,
+.data-table td.numeric-col {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
 /* ===========================
    Cost breakdown summary
    =========================== */
@@ -1593,45 +1600,12 @@ canvas {
    Sensitivity / DCE benefits tab
    =========================== */
 
-.sensitivity-controls {
+.sensitivity-controls-panel {
     margin: 10px 0 12px;
     padding: 10px 12px;
     border-radius: var(--radius-md);
     background-color: #F9FAFB;
     border: 1px solid var(--color-border);
-}
-
-.sensitivity-controls-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px 16px;
-}
-
-.sensitivity-controls .form-group {
-    margin: 0;
-}
-
-.sensitivity-controls-note {
-    margin-top: 8px;
-    font-size: 12px;
-    color: var(--color-text-muted);
-}
-
-.endorsement-inline-group {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.sensitivity-table {
-    min-width: 900px;
-}
-
-.sensitivity-tables-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin-top: 8px;
 }
 
 .sensitivity-section-label {
@@ -1647,30 +1621,12 @@ canvas {
     color: var(--color-text-muted);
 }
 
-.data-table th.numeric-col,
-.data-table td.numeric-col {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-}
-
 .sensitivity-table-divider-row td {
     border-top: 2px solid var(--color-border-strong);
 }
 
 .sensitivity-row-selected {
     background-color: #EEF2FF !important;
-}
-
-@media (max-width: 1024px) {
-    .sensitivity-controls-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 640px) {
-    .sensitivity-controls-grid {
-        grid-template-columns: minmax(0, 1fr);
-    }
 }
 
 /* ===========================
