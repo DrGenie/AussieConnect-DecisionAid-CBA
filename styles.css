@@ -1,6 +1,7 @@
+/* styles.css */
 /* ===================================================
    LonelyLessAustralia Decision Aid – Premium UI
-   Based on STEPS FETP India layout and components
+   Based on STEPS-style layout and components
    =================================================== */
 
 /* ===========================
@@ -16,9 +17,9 @@
     --color-border-strong: #D1D5DB;
 
     /* Primary palette – calm, serious, policy-facing */
-    --color-primary: #0F766E;          /* deep teal */
-    --color-primary-hover: #115E59;    /* darker teal on hover */
-    --color-primary-soft: #D1FAE5;     /* soft mint background */
+    --color-primary: #0F766E;
+    --color-primary-hover: #115E59;
+    --color-primary-soft: #D1FAE5;
 
     --color-success: #15803D;
     --color-success-soft: #DCFCE7;
@@ -32,7 +33,6 @@
     --color-info: #1D4ED8;
     --color-info-soft: #DBEAFE;
 
-    /* Additional tokens for premium tables / metrics */
     --color-table-stripe: #F9FAFB;
     --color-table-hover: #EEF2FF;
     --color-table-header: #F3F4F6;
@@ -1133,6 +1133,15 @@ canvas {
     padding-bottom: 6px;
 }
 
+/* Numeric alignment helpers */
+
+.data-table th.numeric-col,
+.data-table td.numeric-col,
+.numeric-cell {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
 /* ===========================
    Cost breakdown summary
    =========================== */
@@ -1398,8 +1407,7 @@ canvas {
     margin: 10px 0;
 }
 
-.text-right,
-.numeric-cell {
+.text-right {
     text-align: right;
     font-variant-numeric: tabular-nums;
 }
@@ -1600,10 +1608,12 @@ canvas {
     border: 1px solid var(--color-border);
 }
 
-.data-table th.numeric-col,
-.data-table td.numeric-col {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
+.sensitivity-controls-panel .form-grid {
+    margin-top: 4px;
+}
+
+.sensitivity-table-divider-row td {
+    border-top: 2px solid var(--color-border-strong);
 }
 
 .sensitivity-row-selected {
