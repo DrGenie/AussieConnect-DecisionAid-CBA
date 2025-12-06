@@ -1,7 +1,7 @@
 /****************************************************************************
  * SCRIPT.JS
  * Enhanced interactivity, new inputs, dynamic summaries, WTP-based benefits,
- * and refined cost–benefit analysis.
+ * and refined cost-benefit analysisss.
  ****************************************************************************/
 
 // Ensure DOM is loaded before attaching events
