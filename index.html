@@ -14,21 +14,18 @@
 </head>
 <body>
   <div class="container">
-    <header>
-      <div class="header-layout">
-        <div class="header-left">
-          <div class="logo-circle" aria-label="LonelyLessAustralia logo">L</div>
-          <div class="header-text">
-            <h1>LonelyLessAustralia Decision Aid Tool</h1>
-            <p>This tool helps you evaluate programme configurations for reducing loneliness among older adults in Australia. </p>
-          </div>
+    <header class="app-header">
+      <div class="brand-block">
+        <div class="logo-badge" aria-label="LonelyLessAustralia logo">L</div>
+        <div class="brand-text">
+          <h1>LonelyLessAustralia Decision Aid Tool</h1>
+          <p>This tool helps you evaluate programme configurations for reducing loneliness among older adults in Australia.</p>
         </div>
-        <div class="header-right">
-          <span class="header-subtitle">Reducing loneliness among older adults in Australia</span>
-          <button class="header-link" type="button" onclick="openTechnicalAppendix()">
-            <i class="fa-solid fa-file-code"></i><span>Technical Appendix</span>
-          </button>
-        </div>
+      </div>
+      <div class="header-meta">
+        <span class="tag-pill">Government decision aid</span>
+        <span class="tag-pill">Older adults 65+</span>
+        <span class="tag-pill">DCE-based analytics</span>
       </div>
     </header>
 
@@ -36,11 +33,11 @@
       <button class="tablink active" data-tab="introTab" aria-selected="true">
         <i class="fa-solid fa-info-circle"></i><span> Introduction</span>
       </button>
-      <button class="tablink" data-tab="videoTab" aria-selected="false">
-        <i class="fa-solid fa-video"></i><span> Video Overview</span>
-      </button>
       <button class="tablink" data-tab="instructionsTab" aria-selected="false">
         <i class="fa-solid fa-circle-question"></i><span> Instructions</span>
+      </button>
+      <button class="tablink" data-tab="videoTab" aria-selected="false">
+        <i class="fa-solid fa-video"></i><span> Video Guide</span>
       </button>
       <button class="tablink" data-tab="attributesTab" aria-selected="false">
         <i class="fa-solid fa-list"></i><span> Attributes</span>
@@ -57,72 +54,31 @@
       <button class="tablink" data-tab="costsTab" aria-selected="false">
         <i class="fa-solid fa-calculator"></i><span> Costs &amp; Benefits</span>
       </button>
+      <button class="tablink" data-tab="appendixTab" aria-selected="false">
+        <i class="fa-solid fa-file-alt"></i><span> Technical Appendix</span>
+      </button>
       <button class="tablink" data-tab="scenariosTab" aria-selected="false">
         <i class="fa-solid fa-folder-open"></i><span> Saved Scenarios</span>
-      </button>
-      <button class="tablink" data-tab="technicalTab" aria-selected="false">
-        <i class="fa-solid fa-file-code"></i><span> Technical Appendix</span>
       </button>
     </nav>
 
     <!-- Introduction Tab -->
     <section id="introTab" class="tabcontent" tabindex="0" style="display: block;">
-      <div class="intro-box calculation-info">
+      <div class="intro-box">
         <p>
-          Loneliness affects over five million Australians, particularly older adults (65 and above), causing significant health and economic challenges. This tool uses discrete choice experiment estimates to predict programme uptake probabilities, enabling personalised services based on the factors older adults value most.
+          Loneliness affects over five million Australians, particularly older adults (65 and above), causing significant health and economic challenges. This decision aid uses discrete choice experiment estimates to predict programme uptake probabilities and to quantify costs and benefits, including QALY-based and willingness-to-pay (WTP)–based benefit measures. It is designed as a serious, government-facing tool to support transparent and reproducible policy decisions.
         </p>
         <ul>
           <li><strong>Instructions</strong> – Step-by-step guidance.</li>
+          <li><strong>Video Guide</strong> – Short walkthroughs tailored to policymakers and programme planners.</li>
           <li><strong>Attributes</strong> – Detailed explanation of programme features (hover over info icons for extra details).</li>
-          <li><strong>Inputs</strong> – Configure your scenario parameters using visually appealing level cards.</li>
-          <li><strong>WTP Results</strong> – View charts showing willingness-to-pay estimates.</li>
-          <li><strong>Predicted Programme Uptake</strong> – See the predicted uptake percentage with recommendations.</li>
-          <li><strong>Costs &amp; Benefits</strong> – Analyse cost components and QALY-based and WTP-based benefits with interactive sliders.</li>
-          <li><strong>Saved Scenarios</strong> – Compare and export your saved configurations.</li>
-          <li><strong>Technical Appendix</strong> – Access detailed modelling and estimation documentation.</li>
+          <li><strong>Inputs</strong> – Configure your scenario parameters using visually structured level cards.</li>
+          <li><strong>WTP Results</strong> – View charts showing willingness-to-pay estimates for key attributes.</li>
+          <li><strong>Predicted Programme Uptake</strong> – See the predicted uptake percentage with narrative recommendations.</li>
+          <li><strong>Costs &amp; Benefits</strong> – Analyse detailed cost components and both QALY-based and WTP-based benefits.</li>
+          <li><strong>Technical Appendix</strong> – Link to a full technical HTML appendix with methods, model specification, and estimation details.</li>
+          <li><strong>Saved Scenarios</strong> – Compare and export your saved configurations for briefing packs.</li>
         </ul>
-      </div>
-    </section>
-
-    <!-- Video Overview Tab -->
-    <section id="videoTab" class="tabcontent" tabindex="0">
-      <div class="calculation-info video-info">
-        <h4>Video Overview of the LonelyLessAustralia Tool</h4>
-        <p>
-          This section is designed to host short video explainers that walk through the purpose of the LonelyLessAustralia Decision Aid Tool, how to configure scenarios, and how to interpret predicted uptake, QALY-based benefits, and WTP-based benefits. These videos can support policymakers, clinicians, and stakeholders who prefer visual explanations.
-        </p>
-        <div class="video-grid">
-          <div class="video-card">
-            <div class="video-thumb-placeholder" aria-label="Placeholder for overview video">
-              <i class="fa-solid fa-play"></i>
-            </div>
-            <h3>Overview of the Tool</h3>
-            <p>
-              A concise overview explaining why loneliness among older adults matters, how discrete choice experiments inform the model, and how the decision aid supports policy design.
-            </p>
-          </div>
-          <div class="video-card">
-            <div class="video-thumb-placeholder" aria-label="Placeholder for scenario configuration video">
-              <i class="fa-solid fa-sliders"></i>
-            </div>
-            <h3>Configuring Scenarios</h3>
-            <p>
-              A step-by-step demonstration of how to choose programme types, frequency, duration, method of delivery, and cost to reflect real world policy options.
-            </p>
-          </div>
-          <div class="video-card">
-            <div class="video-thumb-placeholder" aria-label="Placeholder for interpreting results video">
-              <i class="fa-solid fa-chart-line"></i>
-            </div>
-            <h3>Interpreting Results</h3>
-            <p>
-              A focused explanation of how to read uptake probabilities, QALY-based cost effectiveness, and WTP-based benefits, and how to compare scenarios.
-            </p>
-          </div>
-        </div>
-        <p class="video-note">
-          When videos are available, embed them here using secure streaming links such as YouTube, Vimeo, or an institutional media server.
-        </p>
       </div>
     </section>
 
@@ -130,16 +86,66 @@
     <section id="instructionsTab" class="tabcontent" tabindex="0">
       <div class="calculation-info">
         <h4>How to Use This Tool</h4>
-        <ol>
-          <li style="margin-left: 20px;">Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over the info icons for details and reference levels.</li>
-          <li style="margin-left: 20px;">Configure your scenario in the <strong>Inputs</strong> tab using the level cards. All features (except method) are required; if no method is selected, in-person is assumed.</li>
-          <li style="margin-left: 20px;">Click “Calculate &amp; View Results” to see your results.</li>
-          <li style="margin-left: 20px;">Examine the <strong>WTP Results</strong> tab for monetary values assigned to each attribute.</li>
-          <li style="margin-left: 20px;">Check the <strong>Predicted Programme Uptake</strong> tab for the uptake percentage and recommendations.</li>
-          <li style="margin-left: 20px;">Review the <strong>Costs &amp; Benefits</strong> tab for a detailed breakdown and chart, including QALY-based and WTP-based benefits.</li>
-          <li style="margin-left: 20px;">Save and compare scenarios in the <strong>Saved Scenarios</strong> tab or export the results to PDF.</li>
-          <li style="margin-left: 20px;">Consult the <strong>Technical Appendix</strong> tab for links to detailed documentation once available.</li>
+        <ol class="ordered-guide">
+          <li>Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over the info icons for details and reference levels.</li>
+          <li>Watch the <strong>Video Guide</strong> tab for a short overview of how the decision aid works and how to interpret the outputs.</li>
+          <li>Configure your scenario in the <strong>Inputs</strong> tab using the level cards. All features (except method) are required; if no method is selected, in-person is assumed.</li>
+          <li>Click <strong>“Calculate &amp; View Results”</strong> to see your results. A summary will appear in a modal window and the relevant charts will update.</li>
+          <li>Examine the <strong>WTP Results</strong> tab for monetary values assigned to each attribute.</li>
+          <li>Check the <strong>Predicted Programme Uptake</strong> tab for the uptake percentage, non-uptake, and tailored recommendations.</li>
+          <li>Review the <strong>Costs &amp; Benefits</strong> tab for a detailed breakdown of costs, QALY-based monetised benefits, WTP-based benefits, and net benefits.</li>
+          <li>Consult the <strong>Technical Appendix</strong> tab (technical-appendix.html) for full DCE methods, model specification, and parameter estimates used in the tool.</li>
+          <li>Save and compare scenarios in the <strong>Saved Scenarios</strong> tab or export the results to PDF for briefing notes.</li>
         </ol>
+      </div>
+    </section>
+
+    <!-- Video Guide Tab -->
+    <section id="videoTab" class="tabcontent" tabindex="0">
+      <div class="calculation-info">
+        <h4>Video Guide and Policy Walkthrough</h4>
+        <p>
+          This section is designed for short, structured video explanations that walk through how the LonelyLessAustralia Decision Aid works, how the DCE-based results were obtained, and how to interpret the outputs in a policy context. You can embed one or more videos here for different audiences (for example programme managers, analysts, and senior decision makers).
+        </p>
+      </div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-icon">
+            <i class="fa-solid fa-play-circle"></i>
+          </div>
+          <h5>Overview of the Decision Aid</h5>
+          <p>
+            High-level narrative explaining the purpose of the tool, the loneliness problem in older adults, and how the DCE evidence feeds into the analytics.
+          </p>
+          <div class="video-placeholder">
+            <!-- Replace with an embedded player when available -->
+            <span>Insert overview video embed here (e.g. YouTube, Vimeo, or secure government platform).</span>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-icon">
+            <i class="fa-solid fa-chalkboard-user"></i>
+          </div>
+          <h5>Using the Inputs and Reading the Charts</h5>
+          <p>
+            Step-by-step demonstration of how to configure scenarios, run the calculations, and interpret uptake, costs, QALYs, WTP-based benefits, and net benefits.
+          </p>
+          <div class="video-placeholder">
+            <span>Insert scenario configuration tutorial video here.</span>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-icon">
+            <i class="fa-solid fa-scale-balanced"></i>
+          </div>
+          <h5>Interpreting Trade-offs and Sensitivity Analyses</h5>
+          <p>
+            Explanation of how to use the decision aid for sensitivity analyses, cost-of-living adjustments, and trade-offs between reach, costs, and benefits.
+          </p>
+          <div class="video-placeholder">
+            <span>Insert trade-off and sensitivity analysis video here.</span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -150,9 +156,9 @@
         <!-- Attribute Card 1: Cost per Session (no reference) -->
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
-            <svg width="24" height="24" fill="#2980b9" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="#2980b9" stroke-width="2" fill="none"/>
-              <path d="M10 15l-3-3 1.4-1.4 1.6 1.6L15 7l1.4 1.4-6.4 6.4z" fill="#2980b9"/>
+            <svg width="24" height="24" fill="#007c91" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="#007c91" stroke-width="2" fill="none"/>
+              <path d="M10 15l-3-3 1.4-1.4 1.6 1.6L15 7l1.4 1.4-6.4 6.4z" fill="#007c91"/>
             </svg>
             <div class="tooltip" role="tooltip">
               The out-of-pocket fee (in AUD) participants pay per session.
@@ -166,9 +172,9 @@
         <!-- Attribute Card 2: Accessibility -->
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
-            <svg width="24" height="24" fill="#e67e22" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="#e67e22" stroke-width="2" fill="none"/>
-              <path d="M12 4a8 8 0 0 1 0 16 8 8 0 0 1 0-16z" fill="#e67e22"/>
+            <svg width="24" height="24" fill="#c89b3c" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="#c89b3c" stroke-width="2" fill="none"/>
+              <path d="M12 4a8 8 0 0 1 0 16 8 8 0 0 1 0-16z" fill="#c89b3c"/>
             </svg>
             <div class="tooltip" role="tooltip">
               <strong>Reference: At Home</strong><br/>Offered locally (up to 12 km) versus in a wider community (50+ km).
@@ -182,9 +188,9 @@
         <!-- Attribute Card 3: Frequency of Interaction -->
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
-            <svg width="24" height="24" fill="#27ae60" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="#27ae60" stroke-width="2" fill="none"/>
-              <path d="M12 6v6l4 2" stroke="#27ae60" stroke-width="2" fill="none"/>
+            <svg width="24" height="24" fill="#1f7a4d" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="#1f7a4d" stroke-width="2" fill="none"/>
+              <path d="M12 6v6l4 2" stroke="#1f7a4d" stroke-width="2" fill="none"/>
             </svg>
             <div class="tooltip" role="tooltip">
               <strong>Reference: Daily</strong><br/>Weekly sessions encourage more regular engagement than monthly.
@@ -198,9 +204,9 @@
         <!-- Attribute Card 4: Method of Interaction -->
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
-            <svg width="24" height="24" fill="#8e44ad" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="#8e44ad" stroke-width="2" fill="none"/>
-              <path d="M8 12h8M12 8v8" stroke="#8e44ad" stroke-width="2" fill="none"/>
+            <svg width="24" height="24" fill="#5b3d8a" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="#5b3d8a" stroke-width="2" fill="none"/>
+              <path d="M8 12h8M12 8v8" stroke="#5b3d8a" stroke-width="2" fill="none"/>
             </svg>
             <div class="tooltip" role="tooltip">
               <strong>Reference: In-person</strong><br/>Virtual sessions are online; hybrid sessions blend both.
@@ -214,9 +220,9 @@
         <!-- Attribute Card 5: Duration of Each Interaction -->
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
-            <svg width="24" height="24" fill="#3498db" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="#3498db" stroke-width="2" fill="none"/>
-              <path d="M12 6v6l4 2" stroke="#3498db" stroke-width="2" fill="none"/>
+            <svg width="24" height="24" fill="#0064a3" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="#0064a3" stroke-width="2" fill="none"/>
+              <path d="M12 6v6l4 2" stroke="#0064a3" stroke-width="2" fill="none"/>
             </svg>
             <div class="tooltip" role="tooltip">
               <strong>Reference: 30-minute</strong><br/>Longer sessions (2 or 4 hours) affect depth and scheduling.
@@ -230,9 +236,9 @@
         <!-- Attribute Card 6: Type of Support Programme -->
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
-            <svg width="24" height="24" fill="#e74c3c" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="#e74c3c" stroke-width="2" fill="none"/>
-              <path d="M8 12l2-2 4 4 6-6" stroke="#e74c3c" stroke-width="2" fill="none"/>
+            <svg width="24" height="24" fill="#b72c3b" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="#b72c3b" stroke-width="2" fill="none"/>
+              <path d="M8 12l2-2 4 4 6-6" stroke="#b72c3b" stroke-width="2" fill="none"/>
             </svg>
             <div class="tooltip" role="tooltip">
               <strong>Reference: Peer Support</strong><br/>Options include community engagement, counselling, or VR-based sessions.
@@ -380,7 +386,7 @@
           </div>
           <div class="buttons-row">
             <button type="button" onclick="openSingleScenario()">
-              <i class="fa-solid fa-chart-line"></i> Calculate &amp; View Results
+              <i class="fa-solid fa-calculator"></i> Calculate &amp; View Results
             </button>
           </div>
         </form>
@@ -406,7 +412,7 @@
         </p>
         <div class="buttons-row">
           <button onclick="renderWTPChart()">
-            <i class="fa-solid fa-chart-bar"></i> Show WTP Charts
+            <i class="fa-solid fa-chart-column"></i> Show WTP Charts
           </button>
         </div>
         <div class="chart-grid">
@@ -422,7 +428,7 @@
     <section id="probTab" class="tabcontent" tabindex="0">
       <div class="calculation-info">
         <h4>Predicted Programme Uptake</h4>
-        <p>Click “Show Probability Plot” to compute the predicted programme uptake percentage.</p>
+        <p>Click “Show Probability Plot” to compute the predicted programme uptake percentage and display a visual breakdown of uptake versus non-uptake.</p>
         <div class="buttons-row">
           <button onclick="renderProbChart()">
             <i class="fa-solid fa-chart-pie"></i> Show Probability Plot
@@ -456,7 +462,7 @@
           <h3><i class="fa-solid fa-lightbulb"></i> Modelling Assumptions</h3>
           <p>
             Our analysis uses interactive cost sliders, pop-up info boxes, and educational summaries to explain how costs and benefits are calculated.
-            <br/><strong>Reference:</strong> Engel, L., Lee, Y. Y., Le, L. K. D., Lal, A., &amp; Mihalopoulos, C. (2021). Reducing loneliness to prevent depression in older adults in Australia: A modelled cost-effectiveness analysis. <em>Mental Health and Prevention, 24</em>. <a href="https://doi.org/10.1016/j.mhp.2021.200212" target="_blank">https://doi.org/10.1016/j.mhp.2021.200212</a>
+            <br/><strong>Reference:</strong> Engel, L., Lee, Y. Y., Le, L. K. D., Lal, A., &amp; Mihalopoulos, C. (2021). Reducing loneliness to prevent depression in older adults in Australia: A modelled cost-effectiveness analysis. <em>Mental Health and Prevention, 24</em>. <a href="https://doi.org/10.1016/j.mhp.2021.200212" target="_blank" rel="noopener">https://doi.org/10.1016/j.mhp.2021.200212</a>
           </p>
         </div>
         <div class="cost-icons">
@@ -464,11 +470,10 @@
             <i class="fa-solid fa-layer-group"></i> Cost Breakdown
           </button>
           <button class="buttons-row" onclick="toggleBenefitsAnalysis()">
-            <i class="fa-solid fa-hand-holding-dollar"></i> Benefits Analysis
+            <i class="fa-solid fa-hand-holding-heart"></i> Benefits Analysis
           </button>
         </div>
         <div id="detailedCostBreakdown" class="cost-cards" style="display: none;">
-          <!-- (Cost cards as before) -->
           <div class="cost-card">
             <h4><i class="fa-solid fa-newspaper"></i> Advertisements in Local Press</h4>
             <p><strong>Value:</strong> A$2978.80</p>
@@ -553,12 +558,36 @@
             <p>Calculated as: (Participants × QALY per Participant) × A$50,000.</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-coins"></i> WTP-Based Benefits</h4>
+            <h4><i class="fa-solid fa-coins"></i> WTP-based Benefits</h4>
             <p>
-              Calculated as: (Participants × sum of WTP values for all selected attribute levels). This provides a complementary WTP-based benefit measure in monetary terms alongside the QALY-based valuation.
+              Calculated as: (Participants × average WTP per participant, based on selected attribute levels). This complements the QALY-based approach and reflects the monetary valuations revealed in the DCE.
             </p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Technical Appendix Tab -->
+    <section id="appendixTab" class="tabcontent" tabindex="0">
+      <div class="calculation-info">
+        <h4>Technical Appendix</h4>
+        <p>
+          The technical appendix provides full documentation of the discrete choice experiment design, econometric models, estimation procedures, and implementation logic used in this decision aid. It is intended for analysts, methodologists, and peer reviewers who require complete transparency on the underlying evidence and assumptions.
+        </p>
+        <p>
+          The appendix will be delivered as a standalone HTML document with the file name <strong>technical-appendix.html</strong>. Once created, it will be linked directly into this tool.
+        </p>
+        <p>
+          You can access the appendix using the link below once the file is available on the same server:
+        </p>
+        <p class="appendix-link-wrapper">
+          <a href="technical-appendix.html" class="appendix-link" target="_blank" rel="noopener">
+            <i class="fa-solid fa-file-alt"></i> Open Technical Appendix (technical-appendix.html)
+          </a>
+        </p>
+        <p>
+          Suggested content includes: DCE design, sampling frame, utility specifications, model fit diagnostics, WTP derivation steps, simulation settings, and sensitivity analyses that correspond exactly to the parameters used in this interface.
+        </p>
       </div>
     </section>
 
@@ -566,7 +595,7 @@
     <section id="scenariosTab" class="tabcontent" tabindex="0">
       <div class="calculation-info">
         <h4>Saved Scenarios</h4>
-        <p>Below are your saved scenarios. Each row displays the input values along with the computed predicted uptake and QALY-based net benefit.</p>
+        <p>Below are your saved scenarios. Each row displays the input values along with the computed predicted uptake, QALY-based net benefit, and WTP-based benefit indicators.</p>
         <div class="buttons-row">
           <button onclick="saveScenario()">
             <i class="fa-solid fa-bookmark"></i> Save Current Scenario
@@ -595,33 +624,14 @@
                 <th>Counselling?</th>
                 <th>VR?</th>
                 <th>Uptake (%)</th>
-                <th>Net Benefit (A$, QALY)</th>
+                <th>Net Benefit (QALY, A$)</th>
+                <th>WTP-based Benefit (A$)</th>
+                <th>Net Benefit (WTP, A$)</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
         </div>
-      </div>
-    </section>
-
-    <!-- Technical Appendix Tab -->
-    <section id="technicalTab" class="tabcontent" tabindex="0">
-      <div class="calculation-info">
-        <h4>Technical Appendix</h4>
-        <p>
-          The technical appendix documents the discrete choice experiment design, econometric models, estimation routines, and all parameter values used in the LonelyLessAustralia Decision Aid Tool. It is intended for technical audiences who need full transparency of assumptions and methods, such as health economists, statisticians, and policy analysts.
-        </p>
-        <p>
-          A dedicated HTML file named <code>technical-appendix.html</code> will host the full appendix. Once completed, it will include sections on model specification, estimation details, WTP derivations, simulation settings, and validation checks, as well as references to the underlying empirical work.
-        </p>
-        <p>
-          You can open the placeholder technical appendix file using the link below. This allows the appendix to be developed and maintained separately while remaining tightly integrated with the main tool.
-        </p>
-        <p>
-          <a href="technical-appendix.html" target="_blank" class="tech-link">
-            <i class="fa-solid fa-file-code"></i> Open technical-appendix.html (placeholder)
-          </a>
-        </p>
       </div>
     </section>
 
