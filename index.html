@@ -4,44 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LonelyLessAustralia Decision Aid Tool</title>
-
-  <!-- Core styles -->
   <link rel="stylesheet" href="styles.css" />
-
   <!-- Font Awesome for icons -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        integrity="sha512-papNMzNnQn5iH+1G+FHu8SyuXHs6A1k+Ln7tK5qRo1l5eYm6Jzv+1pArJ7N4C9FfpRrmAgM3tYWd3FZ9jKz1Bw=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer" />
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papNMzNnQn5iH+1G+FHu8SyuXHs6A1k+Ln7tK5qRo1l5eYm6Jzv+1pArJ7N4C9FfpRrmAgM3tYWd3FZ9jKz1Bw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Chart.js Library -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <!-- jsPDF Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <div class="container">
-    <header class="site-header">
-      <div class="brand">
-        <div class="logo-mark" aria-label="LonelyLessAustralia logo">L</div>
-        <div class="brand-text">
-          <h1>LonelyLessAustralia Decision Aid Tool</h1>
-          <p>
-            DCE informed decision support for programs that reduce loneliness among older adults in Australia.
-          </p>
-        </div>
-      </div>
-      <div class="header-meta">
-        <span class="badge">Government decision support</span>
-        <span class="badge badge-secondary">Prototype for policy trials</span>
-      </div>
+    <header>
+      <h1><span class="logo">L</span> LonelyLessAustralia Decision Aid Tool</h1>
+      <p>This tool helps you evaluate programme configurations for reducing loneliness among older adults in Australia. </p>
     </header>
 
     <nav class="tabs" role="tablist">
       <button class="tablink active" data-tab="introTab" aria-selected="true">
         <i class="fa-solid fa-info-circle"></i><span> Introduction</span>
+      </button>
+      <button class="tablink" data-tab="videoTab" aria-selected="false">
+        <i class="fa-solid fa-video"></i><span> Video Guide</span>
       </button>
       <button class="tablink" data-tab="instructionsTab" aria-selected="false">
         <i class="fa-solid fa-circle-question"></i><span> Instructions</span>
@@ -56,7 +39,7 @@
         <i class="fa-solid fa-chart-bar"></i><span> WTP Results</span>
       </button>
       <button class="tablink" data-tab="probTab" aria-selected="false">
-        <i class="fa-solid fa-chart-pie"></i><span> Predicted Uptake</span>
+        <i class="fa-solid fa-chart-pie"></i><span> Predicted Programme Uptake</span>
       </button>
       <button class="tablink" data-tab="costsTab" aria-selected="false">
         <i class="fa-solid fa-calculator"></i><span> Costs &amp; Benefits</span>
@@ -64,72 +47,58 @@
       <button class="tablink" data-tab="scenariosTab" aria-selected="false">
         <i class="fa-solid fa-folder-open"></i><span> Saved Scenarios</span>
       </button>
-      <button class="tablink" data-tab="videosTab" aria-selected="false">
-        <i class="fa-solid fa-video"></i><span> Video Overview</span>
-      </button>
-      <button class="tablink" data-tab="appendixTab" aria-selected="false">
-        <i class="fa-solid fa-file-lines"></i><span> Technical Appendix</span>
-      </button>
     </nav>
 
     <!-- Introduction Tab -->
     <section id="introTab" class="tabcontent" tabindex="0" style="display: block;">
-      <div class="intro-box calculation-info">
-        <h2>Purpose of the tool</h2>
+      <div class="intro-box">
         <p>
-          Loneliness affects a large number of Australians, particularly older adults, and is linked with poorer health,
-          reduced quality of life and higher health system costs. This decision aid uses discrete choice experiment
-          results to predict programme uptake and to value programme features using willingness to pay and health outcomes.
+          Loneliness affects over five million Australians, particularly older adults (65 and above), causing significant health and economic challenges. This tool uses discrete choice experiment estimates to predict programme uptake probabilities, enabling personalised services based on the factors older adults value most.
         </p>
-        <p>
-          The tool is designed for central and state level policymakers, commissioners, and programme managers who want
-          to test alternative configurations of loneliness support services before making investment decisions.
-        </p>
-        <h3>What you can do</h3>
-        <ul class="intro-list">
-          <li>Review key <strong>attributes</strong> and levels that older adults value in loneliness support programmes.</li>
-          <li><strong>Configure</strong> a scenario with chosen programme features, costs, state specific adjustments and opportunity costs.</li>
-          <li>View <strong>willingness to pay results</strong> for each attribute from the discrete choice experiment.</li>
-          <li>Assess <strong>predicted uptake</strong> for your configuration, relative to opting out.</li>
-          <li>Compare <strong>cost benefit results</strong> using both QALY based and DCE WTP based benefit measures.</li>
-          <li><strong>Save scenarios</strong>, generate briefing text, and export summaries for meetings and reports.</li>
-          <li>Use <strong>video overviews</strong> and the technical appendix to understand the underlying methods.</li>
+        <ul>
+          <li><strong>Instructions</strong> – Step-by-step guidance.</li>
+          <li><strong>Attributes</strong> – Detailed explanation of programme features (hover over info icons for extra details).</li>
+          <li><strong>Configuration</strong> – Configure your scenario parameters using visually appealing level cards.</li>
+          <li><strong>WTP Results</strong> – View charts showing willingness-to-pay estimates for each attribute.</li>
+          <li><strong>Predicted Programme Uptake</strong> – See the predicted uptake percentage with recommendations.</li>
+          <li><strong>Costs &amp; Benefits</strong> – Analyse cost components and outcomes (QALY-based and WTP-based) with interactive charts.</li>
+          <li><strong>Saved Scenarios</strong> – Compare and export your saved configurations.</li>
         </ul>
       </div>
+    </section>
+
+    <!-- Video Guide Tab -->
+    <section id="videoTab" class="tabcontent" tabindex="0">
+      <h2>Video Overview</h2>
+      <p>
+        Welcome to the LonelyLessAustralia Decision Aid Tool video guide. This short overview will walk you through the purpose of the tool and how to use it effectively to design loneliness reduction programs for older adults.
+      </p>
+      <p>
+        <strong>Introduction:</strong> The video begins by highlighting the impact of loneliness on older Australians and the need for evidence-based programs. You’ll learn how this tool harnesses research data to predict how likely older adults are to join a program based on its features, and to estimate the program’s costs and benefits.
+      </p>
+      <p>
+        <strong>Using the Tool:</strong> Next, we demonstrate the tool’s interface. We show how to navigate the tabs, starting with a detailed look at each program attribute in the Attributes tab. Then, you’ll see how to configure a scenario under the Configuration tab by selecting different features such as program type, delivery method, frequency, session duration, location, and cost. The video explains the effect of each choice on predicted uptake and outcomes.
+      </p>
+      <p>
+        <strong>Interpreting Results:</strong> Finally, the video guide walks through the results tabs. We interpret the willingness-to-pay (WTP) chart to understand how much participants value each feature. We then examine the Predicted Programme Uptake doughnut chart, which shows the percentage of older adults likely to participate. The Costs &amp; Benefits section is covered in detail, explaining both the health benefits in quality-adjusted life years and an alternative benefit measure based on WTP. We show how to compare multiple scenarios and save or export results for reporting.
+      </p>
+      <p>
+        By the end of this video, you will be equipped to use the LonelyLessAustralia tool to inform decision-making and tailor interventions that effectively reduce loneliness among older Australians. Thank you for watching, and let’s get started with improving social connectedness!
+      </p>
     </section>
 
     <!-- Instructions Tab -->
     <section id="instructionsTab" class="tabcontent" tabindex="0">
       <div class="calculation-info">
-        <h2>How to use this decision aid</h2>
-        <ol class="instruction-list">
-          <li>
-            Start with the <strong>Attributes</strong> tab to understand the programme features and reference levels, using the
-            information icons to see definitions.
-          </li>
-          <li>
-            Move to the <strong>Configuration</strong> tab. Enter a scenario name and notes, choose programme levels,
-            set the cost per session, select the state, and choose whether to include opportunity costs of participants.
-          </li>
-          <li>
-            Click <strong>Apply configuration</strong> to run the model. This updates the configuration at a glance,
-            the headline recommendation, the briefing text, and the costs and benefits calculations.
-          </li>
-          <li>
-            Use <strong>View results summary</strong> to see a concise summary of uptake, benefits and costs in a pop up window.
-          </li>
-          <li>
-            Use <strong>Save scenario</strong> from the Configuration or Saved Scenarios tab to store the configuration,
-            with uptake and benefit cost indicators, for later comparison and export.
-          </li>
-          <li>
-            Explore <strong>WTP Results</strong>, <strong>Predicted Uptake</strong>, and <strong>Costs &amp; Benefits</strong>
-            tabs to see charts and tables for each dimension.
-          </li>
-          <li>
-            Use the <strong>Video Overview</strong> tab and the <strong>Technical Appendix</strong> to support communication
-            with colleagues, World Bank teams and ministries.
-          </li>
+        <h4>How to Use This Tool</h4>
+        <ol>
+          <li style="margin-left: 20px;">Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over the info icons for details and reference levels.</li>
+          <li style="margin-left: 20px;">Configure your scenario in the <strong>Configuration</strong> tab using the level cards. All features (except method) are required; if no method is selected, it defaults to in-person.</li>
+          <li style="margin-left: 20px;">Click <strong>Apply Configuration</strong> to generate the results, then select <strong>View Results Summary</strong> for an on-screen summary of your scenario’s outcomes.</li>
+          <li style="margin-left: 20px;">Examine the <strong>WTP Results</strong> tab for the monetary value assigned to each attribute.</li>
+          <li style="margin-left: 20px;">Check the <strong>Predicted Programme Uptake</strong> tab for the uptake percentage and tailored recommendations.</li>
+          <li style="margin-left: 20px;">Review the <strong>Costs &amp; Benefits</strong> tab for a detailed breakdown, interactive charts, and benefit-cost analysis (both QALY- and WTP-based).</li>
+          <li style="margin-left: 20px;">Save and compare scenarios in the <strong>Saved Scenarios</strong> tab, or export the results to PDF for sharing.</li>
         </ol>
       </div>
     </section>
@@ -137,47 +106,39 @@
     <!-- Attributes Tab -->
     <section id="attributesTab" class="tabcontent" tabindex="0">
       <h2>Key Attributes</h2>
-      <p class="section-intro">
-        The discrete choice experiment included the following programme attributes. Reference categories are shown in the
-        information boxes where relevant. All willingness to pay values in the tool are defined relative to these
-        reference categories.
-      </p>
       <div class="attributes-list">
         <!-- Attribute Card 1: Cost per Session -->
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
-            <svg width="24" height="24" fill="#005792" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="#005792" stroke-width="2" fill="none"></circle>
-              <path d="M10 15l-3-3 1.4-1.4 1.6 1.6L15 7l1.4 1.4-6.4 6.4z" fill="#005792"></path>
+            <svg width="24" height="24" fill="#2980b9" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="#2980b9" stroke-width="2" fill="none"></circle>
+              <path d="M10 15l-3-3 1.4-1.4 1.6 1.6L15 7l1.4 1.4-6.4 6.4z" fill="#2980b9"></path>
             </svg>
             <div class="tooltip" role="tooltip">
-              The out of pocket fee in Australian dollars that participants pay per session.
+              The out-of-pocket fee (in A$) participants pay per session.
             </div>
           </div>
           <div class="attribute-content">
             <h4>Cost per session</h4>
-            <p>Direct fee per group or individual session, adjusted for state level cost of living where selected.</p>
+            <p>The fee paid by participants for each session.</p>
           </div>
         </div>
-
         <!-- Attribute Card 2: Accessibility -->
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
-            <svg width="24" height="24" fill="#f39c12" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="#f39c12" stroke-width="2" fill="none"></circle>
-              <path d="M12 4a8 8 0 0 1 0 16 8 8 0 0 1 0-16z" fill="#f39c12"></path>
+            <svg width="24" height="24" fill="#e67e22" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="#e67e22" stroke-width="2" fill="none"></circle>
+              <path d="M12 4a8 8 0 0 1 0 16 8 8 0 0 1 0-16z" fill="#e67e22"></path>
             </svg>
             <div class="tooltip" role="tooltip">
-              Reference level is support at home. Alternatives are delivery in the local area (around 12 km)
-              or in a wider community area (more than 50 km away).
+              <strong>Reference: At Home</strong><br>Programme offered locally (up to 12 km away) versus in a wider community (50+ km away).
             </div>
           </div>
           <div class="attribute-content">
             <h4>Accessibility</h4>
-            <p>Where the programme is offered, ranging from local neighbourhood services to wider community locations.</p>
+            <p>Local area or wider community delivery.</p>
           </div>
         </div>
-
         <!-- Attribute Card 3: Frequency of Interaction -->
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
@@ -186,15 +147,14 @@
               <path d="M12 6v6l4 2" stroke="#27ae60" stroke-width="2" fill="none"></path>
             </svg>
             <div class="tooltip" role="tooltip">
-              Reference level is daily contact. Alternatives are weekly or monthly sessions to support longer term engagement.
+              <strong>Reference: Daily</strong><br>Weekly sessions encourage more regular engagement than monthly sessions.
             </div>
           </div>
           <div class="attribute-content">
-            <h4>Frequency of interaction</h4>
-            <p>How often participants meet or connect with the programme, for example weekly or monthly.</p>
+            <h4>Frequency of Interaction</h4>
+            <p>Weekly or monthly sessions.</p>
           </div>
         </div>
-
         <!-- Attribute Card 4: Method of Interaction -->
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
@@ -203,16 +163,14 @@
               <path d="M8 12h8M12 8v8" stroke="#8e44ad" stroke-width="2" fill="none"></path>
             </svg>
             <div class="tooltip" role="tooltip">
-              Reference level is in person contact. Alternatives are virtual delivery or hybrid models that combine
-              in person and online elements.
+              <strong>Reference: In-person</strong><br>Virtual sessions occur online; hybrid blends in-person and virtual delivery.
             </div>
           </div>
           <div class="attribute-content">
-            <h4>Method of interaction</h4>
-            <p>How the support is delivered, including in person, virtual, or hybrid models.</p>
+            <h4>Method of Interaction</h4>
+            <p>Virtual or hybrid delivery (in-person + online).</p>
           </div>
         </div>
-
         <!-- Attribute Card 5: Duration of Each Interaction -->
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
@@ -221,15 +179,14 @@
               <path d="M12 6v6l4 2" stroke="#3498db" stroke-width="2" fill="none"></path>
             </svg>
             <div class="tooltip" role="tooltip">
-              Reference level is a 30 minute interaction. Alternatives include sessions lasting two hours or four hours.
+              <strong>Reference: 30-minute</strong><br>Longer sessions (2 or 4 hours) allow deeper engagement but require more time.
             </div>
           </div>
           <div class="attribute-content">
-            <h4>Duration of each interaction</h4>
-            <p>Length of each contact, for example two hour or four hour sessions.</p>
+            <h4>Duration of Each Interaction</h4>
+            <p>2-hour or 4-hour session lengths.</p>
           </div>
         </div>
-
         <!-- Attribute Card 6: Type of Support Programme -->
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
@@ -238,90 +195,45 @@
               <path d="M8 12l2-2 4 4 6-6" stroke="#e74c3c" stroke-width="2" fill="none"></path>
             </svg>
             <div class="tooltip" role="tooltip">
-              Reference level is peer support. Alternatives include community based social groups,
-              psychological counselling, and virtual reality based engagement.
+              <strong>Reference: Peer Support</strong><br>Options include community engagement, psychological counselling, or virtual reality-based sessions.
             </div>
           </div>
           <div class="attribute-content">
-            <h4>Type of support programme</h4>
-            <p>Programme focus, such as community engagement activities, psychological support, or virtual reality sessions.</p>
+            <h4>Type of Support Programme</h4>
+            <p>Community engagement, counselling, or VR-based activities.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Configuration Tab -->
+    <!-- Configuration Tab (Inputs) -->
     <section id="inputsTab" class="tabcontent" tabindex="0">
       <div class="input-card">
-        <div class="config-header">
-          <div>
-            <h2>Configuration</h2>
-            <p>
-              Configure a scenario using the fields below, then apply the configuration to see uptake and cost benefit results.
-            </p>
-          </div>
-          <div class="current-config-panel">
-            <h3>Current configuration at a glance</h3>
-            <p id="currentConfigSummary">
-              No configuration has been applied yet. Choose programme levels and click Apply configuration to see a summary here.
-            </p>
-          </div>
-        </div>
-
-        <form id="configForm" onsubmit="event.preventDefault();">
-          <div class="config-meta-grid">
-            <div class="config-meta-item">
-              <label for="scenarioName">Scenario name</label>
-              <input
-                type="text"
-                id="scenarioName"
-                placeholder="For example: Community engagement weekly 2 hour local sessions" />
-            </div>
-            <div class="config-meta-item">
-              <label class="switch-label">
-                <span>Opportunity cost included</span>
-                <span class="switch-subtext">
-                  Where the cost has opportunity cost, this adds it to economic costs.
-                </span>
-              </label>
-              <label class="switch">
-                <input type="checkbox" id="includeOppCost" checked />
-                <span class="slider round"></span>
-              </label>
-            </div>
-          </div>
-
-          <div class="config-notes">
-            <label for="scenarioNotes">Scenario notes</label>
-            <textarea
-              id="scenarioNotes"
-              rows="3"
-              placeholder="Optional notes for World Bank reporting and meetings with ministries."></textarea>
-          </div>
-
+        <h2>Programme Inputs</h2>
+        <p>Configure your scenario by selecting the levels for each feature below.</p>
+        <form onsubmit="event.preventDefault();">
           <div class="input-cards">
             <!-- Support Programme Card -->
             <div class="input-level-card">
-              <h3>Support programme <span class="reference">(Reference: Peer support)</span></h3>
+              <h3>Support Programme <span class="reference">(Reference: Peer Support)</span></h3>
               <div class="options">
                 <label>
                   <input type="radio" name="support" id="commCheck" value="community" />
-                  Community engagement
+                  Community Engagement
                 </label>
                 <label>
                   <input type="radio" name="support" id="psychCheck" value="counselling" />
-                  Psychological counselling
+                  Psychological Counselling
                 </label>
                 <label>
                   <input type="radio" name="support" id="vrCheck" value="vr" />
-                  Virtual reality
+                  Virtual Reality
                 </label>
               </div>
             </div>
-
-            <!-- Method Card (Optional; defaults to in-person if unselected) -->
+            <!-- Method Card (optional; defaults to in-person) -->
             <div class="input-level-card">
-              <h3>Method <span class="reference">(Reference: In person)</span></h3>
+              <h3>Method <span class="reference">(Reference: In-person)</span></h3>
               <div class="options">
                 <label>
                   <input type="radio" name="method" id="virtualCheck" value="virtual" />
@@ -329,11 +241,10 @@
                 </label>
                 <label>
                   <input type="radio" name="method" id="hybridCheck" value="hybrid" />
-                  Hybrid (in person and virtual)
+                  Hybrid (In-person &amp; Virtual)
                 </label>
               </div>
             </div>
-
             <!-- Frequency Card -->
             <div class="input-level-card">
               <h3>Frequency <span class="reference">(Reference: Daily)</span></h3>
@@ -348,72 +259,56 @@
                 </label>
               </div>
             </div>
-
             <!-- Duration Card -->
             <div class="input-level-card">
-              <h3>Duration <span class="reference">(Reference: 30 minute)</span></h3>
+              <h3>Duration <span class="reference">(Reference: 30-minute)</span></h3>
               <div class="options">
                 <label>
                   <input type="radio" name="duration" id="twoHCheck" value="2hr" />
-                  Two hour interaction
+                  2-hour Interaction
                 </label>
                 <label>
                   <input type="radio" name="duration" id="fourHCheck" value="4hr" />
-                  Four hour interaction
+                  4-hour Interaction
                 </label>
               </div>
             </div>
-
             <!-- Accessibility Card -->
             <div class="input-level-card">
-              <h3>Accessibility <span class="reference">(Reference: At home)</span></h3>
+              <h3>Accessibility <span class="reference">(Reference: At Home)</span></h3>
               <div class="options">
                 <label>
                   <input type="radio" name="accessibility" id="localCheck" value="local" />
-                  Local area (around 12 km)
+                  Local Area (12 km)
                 </label>
                 <label>
                   <input type="radio" name="accessibility" id="widerCheck" value="wider" />
-                  Wider community (more than 50 km)
+                  Wider Community (50+ km)
                 </label>
               </div>
             </div>
-
             <!-- Cost Card (Slider) -->
             <div class="input-level-card">
-              <h3>Cost per session (AUD)</h3>
+              <h3>Cost per Session (AUD)</h3>
               <div class="options slider-option">
                 <label for="costSlider">
                   <i class="fa-solid fa-dollar-sign"></i>
                   <span id="costLabel">50</span>
                 </label>
-                <input
-                  type="range"
-                  id="costSlider"
-                  min="0"
-                  max="100"
-                  step="1"
-                  value="50"
-                  oninput="updateCostDisplay(this.value)" />
+                <input type="range" id="costSlider" min="0" max="100" step="1" value="50" oninput="updateCostDisplay(this.value)" />
               </div>
             </div>
-
             <!-- Cost-of-Living Adjustment Card -->
             <div class="input-level-card">
-              <h3>Cost of living adjustment</h3>
+              <h3>Cost-of-Living Adjustment</h3>
               <div class="options">
                 <label for="state_select">
-                  <i class="fa-solid fa-map-marker-alt"></i> State
+                  <i class="fa-solid fa-map-marker-alt"></i> State:
                   <span class="info-container">
-                    <button class="info-button"
-                            type="button"
-                            aria-label="Choose your state to adjust for cost of living differences."
-                            tabindex="0">
+                    <button class="info-button" aria-label="Choose your state to adjust the cost-of-living multiplier." tabindex="0">
                       <i class="fa-solid fa-info-circle"></i>
                     </button>
-                    <span class="tooltip-text">
-                      Choose the relevant state or territory to apply cost of living multipliers.
-                    </span>
+                    <span class="tooltip-text">Select your state to adjust session cost for local cost-of-living differences.</span>
                   </span>
                 </label>
                 <select id="state_select">
@@ -427,65 +322,72 @@
                   <option value="ACT">Australian Capital Territory (ACT)</option>
                   <option value="NT">Northern Territory (NT)</option>
                 </select>
-
                 <label for="adjustCosts">
-                  <i class="fa-solid fa-sync-alt"></i> Adjust for cost of living
+                  <i class="fa-solid fa-sync-alt"></i> Adjust for Cost of Living?
                   <span class="info-container">
-                    <button class="info-button"
-                            type="button"
-                            aria-label="Select Yes to apply cost of living multipliers for the chosen state."
-                            tabindex="0">
+                    <button class="info-button" aria-label="Apply the cost-of-living multiplier for the selected state to the session cost." tabindex="0">
                       <i class="fa-solid fa-info-circle"></i>
                     </button>
-                    <span class="tooltip-text">
-                      Select Yes to apply cost of living multipliers for the chosen state to the cost per session.
-                    </span>
+                    <span class="tooltip-text">Choose "Yes" to apply the above state multiplier to the session cost.</span>
                   </span>
                 </label>
                 <select id="adjustCosts">
                   <option value="no">No</option>
                   <option value="yes">Yes</option>
                 </select>
+                <label for="oppCost">
+                  <i class="fa-solid fa-user"></i> Include Participant Cost?
+                  <span class="info-container">
+                    <button class="info-button" aria-label="Include participants' time and travel costs in the analysis." tabindex="0">
+                      <i class="fa-solid fa-info-circle"></i>
+                    </button>
+                    <span class="tooltip-text">If "Yes", participant time (A$20/hr) and travel (A$10/session) are counted as part of total costs.</span>
+                  </span>
+                </label>
+                <select id="oppCost">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+              </div>
+            </div>
+            <!-- Scenario Name & Notes Card -->
+            <div class="input-level-card">
+              <h3>Scenario Details</h3>
+              <div class="options">
+                <label for="scenarioName">
+                  <i class="fa-solid fa-tag"></i> Scenario Name:
+                  <span class="info-container">
+                    <button class="info-button" aria-label="Provide a descriptive name for this scenario." tabindex="0">
+                      <i class="fa-solid fa-info-circle"></i>
+                    </button>
+                    <span class="tooltip-text">Provide a short descriptive title for this scenario (e.g., "Community weekly 2h local").</span>
+                  </span>
+                </label>
+                <input type="text" id="scenarioName" placeholder="e.g., Community weekly 2h local" />
+                <label for="scenarioNotes">
+                  <i class="fa-solid fa-file-lines"></i> Notes:
+                  <span class="info-container">
+                    <button class="info-button" aria-label="Additional notes for this scenario (optional)." tabindex="0">
+                      <i class="fa-solid fa-info-circle"></i>
+                    </button>
+                    <span class="tooltip-text">Optional notes or comments for this scenario (for reports or discussions).</span>
+                  </span>
+                </label>
+                <textarea id="scenarioNotes" rows="2" placeholder="Optional notes..."></textarea>
               </div>
             </div>
           </div>
-
-          <div class="buttons-row config-buttons">
-            <button type="button" onclick="applyConfiguration(true)">
-              <i class="fa-solid fa-play"></i> Apply configuration
-            </button>
-            <button type="button" onclick="viewResultsSummary()">
-              <i class="fa-solid fa-clipboard-list"></i> View results summary
-            </button>
-            <button type="button" onclick="handleSaveScenario()">
-              <i class="fa-solid fa-save"></i> Save scenario
-            </button>
-          </div>
-
-          <div class="headline-briefing-grid">
-            <div class="headline-box">
-              <h3>Headline recommendation</h3>
-              <p id="headlineRecommendation">
-                Configure a scenario and apply it to see a short narrative recommendation based on uptake and benefit cost indicators.
-              </p>
-            </div>
-            <div class="briefing-box">
-              <h3>Briefing text (copy into emails or reports)</h3>
-              <textarea
-                id="briefingText"
-                rows="7"
-                readonly>
-Once you apply a configuration, a short briefing summary will appear here that you can copy into emails, slide decks, or World Bank style notes.</textarea>
-            </div>
+          <div class="buttons-row">
+            <button type="button" onclick="applyConfiguration()">Apply Configuration</button>
+            <button type="button" onclick="viewSummary()">View Results Summary</button>
+            <button type="button" onclick="saveScenario()">Save Scenario</button>
           </div>
         </form>
-
-        <!-- Modal Popup for Results -->
-        <div id="resultModal" class="modal">
-          <div class="modal-content">
-            <span class="close-button" onclick="closeModal()">&times;</span>
-            <div id="modalResults"></div>
-          </div>
+        <!-- Results Summary Section (hidden until generated) -->
+        <div id="configSummary" class="calculation-info" style="display:none;">
+          <h4>Configuration Summary</h4>
+          <p id="headlineRec"></p>
+          <p id="briefingText"></p>
         </div>
       </div>
     </section>
@@ -493,24 +395,19 @@ Once you apply a configuration, a short briefing summary will appear here that y
     <!-- WTP Results Tab -->
     <section id="wtpTab" class="tabcontent" tabindex="0">
       <div class="calculation-info">
-        <h2>Willingness to pay results</h2>
+        <h4>Willingness-to-Pay (WTP) Results</h4>
         <p>
-          Willingness to pay values are derived from the discrete choice experiment by dividing attribute coefficients
-          by the negative of the cost coefficient. They represent how much, in Australian dollars per session, older
-          adults are willing to pay for changes in programme features, relative to reference categories.
+          The willingness-to-pay (WTP) for each programme attribute is calculated by taking the ratio of that attribute’s coefficient to the negative of the cost coefficient. This quantifies the monetary value respondents place on each attribute, holding other factors constant.
         </p>
         <p>
-          These willingness to pay values are also used in the cost benefit analysis as a DCE based benefit measure,
-          complementing health outcome based valuations.
+          For example, among programme types, community engagement is most valued with a WTP of A$14.47 (SE=3.31, p &lt; 0.001). This means older adults are willing to pay an additional A$14.47 per session for community-based programs compared to a peer support program. Negative WTP values (e.g., -A$11.69 for fully virtual delivery) indicate how much cost would need to be reduced for that feature to be acceptable.
         </p>
         <div class="buttons-row">
-          <button type="button" onclick="renderWTPChart()">
-            <i class="fa-solid fa-chart-column"></i> Show WTP charts
-          </button>
+          <button onclick="renderWTPChart()">Show WTP Charts</button>
         </div>
         <div class="chart-grid">
           <div class="chart-box">
-            <h3>Willingness to pay by attribute (A$ per session)</h3>
+            <h3>WTP (A$)</h3>
             <canvas id="wtpChartMain"></canvas>
           </div>
         </div>
@@ -520,19 +417,14 @@ Once you apply a configuration, a short briefing summary will appear here that y
     <!-- Predicted Programme Uptake Tab -->
     <section id="probTab" class="tabcontent" tabindex="0">
       <div class="calculation-info">
-        <h2>Predicted programme uptake</h2>
-        <p>
-          The predicted uptake is calculated from the choice model using the configured attribute levels and cost per
-          session, compared with opting out. It reflects the probability that an older adult would enrol in the programme.
-        </p>
+        <h4>Predicted Programme Uptake</h4>
+        <p>Click “Show Probability Plot” to compute and display the predicted programme uptake percentage for the configured scenario.</p>
         <div class="buttons-row">
-          <button type="button" onclick="renderProbChart()">
-            <i class="fa-solid fa-chart-pie"></i> Show probability plot
-          </button>
+          <button onclick="renderProbChart()">Show Probability Plot</button>
         </div>
         <div class="chart-grid">
           <div class="chart-box" style="position: relative; height:300px;">
-            <h3>Uptake versus non uptake</h3>
+            <h3>Uptake vs. Non‑uptake</h3>
             <canvas id="uptakeChart"></canvas>
           </div>
         </div>
@@ -542,183 +434,146 @@ Once you apply a configuration, a short briefing summary will appear here that y
     <!-- Costs & Benefits Tab -->
     <section id="costsTab" class="tabcontent" tabindex="0">
       <div class="calculation-info">
-        <h2>Costs and benefits analysis</h2>
-        <p>
-          This tab reports both health outcome based and DCE willingness to pay based benefit measures. Health outcomes
-          are expressed as quality adjusted life years (QALYs), valued at 50,000 Australian dollars per QALY. DCE based
-          benefits are derived from willingness to pay for the configured programme and represent the monetary value
-          that participants place on the package of attributes.
-        </p>
-
-        <div class="costs-controls">
-          <div class="control-group">
-            <label for="qalySelect">Select QALY gain scenario</label>
-            <select id="qalySelect" onchange="renderCostsBenefits()">
-              <option value="low">Low (0.02 QALYs per participant)</option>
-              <option value="moderate" selected>Moderate (0.05 QALYs per participant)</option>
-              <option value="high">High (0.10 QALYs per participant)</option>
-            </select>
-          </div>
-          <div class="control-group note">
-            <p>
-              QALY gains are illustrative and can be aligned with external evidence.
-              For example, see: Engel L, Lee Y Y, Le L K D, Lal A, Mihalopoulos C (2021).
-              Reducing loneliness to prevent depression in older adults in Australia: A modelled cost effectiveness analysis.
-              <em>Mental Health and Prevention</em>, 24.
-            </p>
-          </div>
+        <h4>Costs &amp; Benefits Analysis</h4>
+        <div class="qaly-selector">
+          <label for="qalySelect">Select QALY Gain Scenario:</label>
+          <select id="qalySelect" onchange="renderCostsBenefits()">
+            <option value="low">Low (0.02 QALYs)</option>
+            <option value="moderate" selected>Moderate (0.05 QALYs)</option>
+            <option value="high">High (0.1 QALYs)</option>
+          </select>
         </div>
-
-        <div id="costsBenefitsResults"></div>
-
+        <div id="costsBenefitsResults">
+          <!-- Summary and chart will render here -->
+        </div>
+        <div class="modelling-assumptions">
+          <h3><i class="fa-solid fa-lightbulb"></i> Modelling Assumptions</h3>
+          <p>
+            The analysis uses interactive cost sliders, info tooltips, and scenario summaries to explain how costs and benefits are calculated.
+            <br><strong>Reference:</strong> Engel et al. (2021) – Cost-effectiveness of reducing loneliness in older adults.
+          </p>
+        </div>
         <div class="cost-icons">
-          <button class="buttons-row" type="button" onclick="toggleCostBreakdown()">
-            <i class="fa-solid fa-layer-group"></i> Cost breakdown
-          </button>
-          <button class="buttons-row" type="button" onclick="toggleBenefitsAnalysis()">
-            <i class="fa-solid fa-hand-holding-dollar"></i> Benefits explanation
-          </button>
+          <button class="buttons-row" onclick="toggleCostBreakdown()">Cost Breakdown</button>
+          <button class="buttons-row" onclick="toggleBenefitsAnalysis()">Benefits Analysis</button>
         </div>
-
         <div id="detailedCostBreakdown" class="cost-cards" style="display: none;">
           <div class="cost-card">
-            <h4><i class="fa-solid fa-newspaper"></i> Advertisements in local press</h4>
-            <p><strong>Value:</strong> A$2,978.80</p>
+            <h4><i class="fa-solid fa-newspaper"></i> Advertisements in Local Press</h4>
+            <p><strong>Value:</strong> A$2978.80</p>
             <p><strong>Quantity:</strong> 2</p>
-            <p><strong>Unit cost:</strong> A$1,489.40</p>
-            <p><strong>Total cost:</strong> A$2,978.80</p>
+            <p><strong>Total Cost:</strong> A$2978.80</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-print"></i> Printing of leaflets</h4>
+            <h4><i class="fa-solid fa-print"></i> Printing of Leaflets</h4>
             <p><strong>Value:</strong> A$0.12</p>
-            <p><strong>Quantity:</strong> 10,000</p>
-            <p><strong>Unit cost:</strong> A$0.12</p>
-            <p><strong>Total cost:</strong> A$1,200.00</p>
+            <p><strong>Quantity:</strong> 10000</p>
+            <p><strong>Unit Cost:</strong> A$0.12</p>
+            <p><strong>Total Cost:</strong> A$1200.00</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-envelope"></i> Parcel and postage of leaflets</h4>
+            <h4><i class="fa-solid fa-envelope"></i> Postage of Leaflets</h4>
             <p><strong>Value:</strong> A$0.15</p>
-            <p><strong>Quantity:</strong> 10,000</p>
-            <p><strong>Unit cost:</strong> A$0.15</p>
-            <p><strong>Total cost:</strong> A$1,470.00</p>
+            <p><strong>Quantity:</strong> 10000</p>
+            <p><strong>Unit Cost:</strong> A$0.15</p>
+            <p><strong>Total Cost:</strong> A$1470.00</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-user"></i> Administrative personnel</h4>
+            <h4><i class="fa-solid fa-user"></i> Administrative Personnel</h4>
             <p><strong>Value:</strong> A$49.99</p>
             <p><strong>Quantity:</strong> 10</p>
-            <p><strong>Unit cost:</strong> A$49.99</p>
-            <p><strong>Total cost:</strong> A$499.90</p>
+            <p><strong>Unit Cost:</strong> A$49.99</p>
+            <p><strong>Total Cost:</strong> A$499.90</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-chalkboard-teacher"></i> Trainer cost for five hour training sessions</h4>
+            <h4><i class="fa-solid fa-chalkboard-user"></i> Facilitator Training (5 hrs)</h4>
             <p><strong>Value:</strong> A$223.86</p>
             <p><strong>Quantity:</strong> 100</p>
-            <p><strong>Unit cost:</strong> A$223.86</p>
-            <p><strong>Total cost:</strong> A$22,386.00</p>
+            <p><strong>Unit Cost:</strong> A$223.86</p>
+            <p><strong>Total Cost:</strong> A$22386.00</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-percent"></i> On costs (30 percent)</h4>
+            <h4><i class="fa-solid fa-percent"></i> On-Costs (30% for wages)</h4>
             <p><strong>Value:</strong> A$44.77</p>
             <p><strong>Quantity:</strong> 100</p>
-            <p><strong>Unit cost:</strong> A$44.77</p>
-            <p><strong>Total cost:</strong> A$4,477.00</p>
+            <p><strong>Unit Cost:</strong> A$44.77</p>
+            <p><strong>Total Cost:</strong> A$4477.00</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-user-tie"></i> Facilitator salaries (12 sessions x 2 hours)</h4>
+            <h4><i class="fa-solid fa-user-tie"></i> Facilitator Session Delivery (12×2h)</h4>
             <p><strong>Value:</strong> A$100.00</p>
             <p><strong>Quantity:</strong> 100</p>
-            <p><strong>Unit cost:</strong> A$100.00</p>
-            <p><strong>Total cost:</strong> A$10,000.00</p>
+            <p><strong>Unit Cost:</strong> A$100.00</p>
+            <p><strong>Total Cost:</strong> A$10000.00</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-box"></i> Material costs</h4>
+            <h4><i class="fa-solid fa-box"></i> Material Costs</h4>
             <p><strong>Value:</strong> A$50.00</p>
             <p><strong>Quantity:</strong> 100</p>
-            <p><strong>Unit cost:</strong> A$50.00</p>
-            <p><strong>Total cost:</strong> A$5,000.00</p>
+            <p><strong>Unit Cost:</strong> A$50.00</p>
+            <p><strong>Total Cost:</strong> A$5000.00</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-building"></i> Venue hire</h4>
+            <h4><i class="fa-solid fa-building"></i> Venue Hire</h4>
             <p><strong>Value:</strong> A$15.00</p>
             <p><strong>Quantity:</strong> 100</p>
-            <p><strong>Unit cost:</strong> A$15.00</p>
-            <p><strong>Total cost:</strong> A$3,000.00</p>
+            <p><strong>Unit Cost:</strong> A$15.00</p>
+            <p><strong>Total Cost:</strong> A$1500.00</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-clock"></i> Time cost for sessions</h4>
+            <h4><i class="fa-solid fa-clock"></i> Time Cost for Participants</h4>
             <p><strong>Value:</strong> A$20.00</p>
             <p><strong>Quantity:</strong> 250</p>
-            <p><strong>Unit cost:</strong> A$20.00</p>
-            <p><strong>Total cost:</strong> A$5,000.00</p>
+            <p><strong>Unit Cost:</strong> A$20.00</p>
+            <p><strong>Total Cost:</strong> A$5000.00</p>
           </div>
           <div class="cost-card">
-            <h4><i class="fa-solid fa-road"></i> Travel costs</h4>
+            <h4><i class="fa-solid fa-road"></i> Travel Costs for Participants</h4>
             <p><strong>Value:</strong> A$10.00</p>
             <p><strong>Quantity:</strong> 250</p>
-            <p><strong>Unit cost:</strong> A$10.00</p>
-            <p><strong>Total cost:</strong> A$2,500.00</p>
+            <p><strong>Unit Cost:</strong> A$10.00</p>
+            <p><strong>Total Cost:</strong> A$2500.00</p>
           </div>
         </div>
-
         <div id="detailedBenefitsAnalysis" class="cost-cards" style="display: none;">
           <div class="cost-card">
-            <h4><i class="fa-solid fa-hand-holding-heart"></i> QALY benefits</h4>
-            <p>
-              Health outcome benefits are calculated as the number of participants multiplied by the QALY gain per participant,
-              valued at A$50,000 per QALY. This gives a health sector style valuation of the loneliness programme.
-            </p>
-          </div>
-          <div class="cost-card">
-            <h4><i class="fa-solid fa-hand-holding-dollar"></i> DCE WTP based benefits</h4>
-            <p>
-              DCE based benefits are calculated using the sum of willingness to pay for the selected attributes per participant,
-              multiplied by the expected number of participants. This gives a participant valuation of the configured programme.
-            </p>
+            <h4><i class="fa-solid fa-hand-holding-dollar"></i> QALY Benefits</h4>
+            <p>Calculated as: (Participants × QALY gain per participant) × A$50,000.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Scenarios Tab -->
+    <!-- Saved Scenarios Tab -->
     <section id="scenariosTab" class="tabcontent" tabindex="0">
       <div class="calculation-info">
-        <h2>Saved scenarios</h2>
-        <p>
-          Each saved scenario records the programme configuration together with predicted uptake and DCE based cost benefit
-          indicators. Use this tab to support structured discussions with ministries and funding partners.
-        </p>
+        <h4>Saved Scenarios</h4>
+        <p>Below are your saved scenarios. Each row displays the input levels along with the computed predicted uptake and net benefit for that scenario.</p>
         <div class="buttons-row">
-          <button type="button" onclick="saveScenario()">
-            <i class="fa-solid fa-save"></i> Save current scenario
-          </button>
-          <button type="button" onclick="openComparison()">
-            <i class="fa-solid fa-file-pdf"></i> Compare and export to PDF
-          </button>
+          <button onclick="saveScenario()">Save Current Scenario</button>
+          <button onclick="openComparison()">Compare &amp; Export to PDF</button>
         </div>
         <div class="table-container">
           <table id="scenarioTable">
             <thead>
               <tr>
-                <th>Scenario name</th>
-                <th>Notes</th>
+                <th>Name</th>
                 <th>State</th>
-                <th>Cost adjust</th>
-                <th>Opp. cost included</th>
-                <th>Cost (A$ per session)</th>
-                <th>Local</th>
-                <th>Wider</th>
-                <th>Weekly</th>
-                <th>Monthly</th>
-                <th>Virtual</th>
-                <th>Hybrid</th>
-                <th>Two hour</th>
-                <th>Four hour</th>
-                <th>Community</th>
-                <th>Counselling</th>
-                <th>VR</th>
+                <th>Cost Adjust?</th>
+                <th>Cost (A$)</th>
+                <th>Local?</th>
+                <th>Wider?</th>
+                <th>Weekly?</th>
+                <th>Monthly?</th>
+                <th>Virtual?</th>
+                <th>Hybrid?</th>
+                <th>2-Hour?</th>
+                <th>4-Hour?</th>
+                <th>Community?</th>
+                <th>Counselling?</th>
+                <th>VR?</th>
                 <th>Uptake (%)</th>
-                <th>BCR (WTP)</th>
-                <th>Net benefit (WTP, A$)</th>
+                <th>Net Benefit (A$)</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -727,73 +582,13 @@ Once you apply a configuration, a short briefing summary will appear here that y
       </div>
     </section>
 
-    <!-- Video Overview Tab -->
-    <section id="videosTab" class="tabcontent" tabindex="0">
-      <div class="calculation-info">
-        <h2>Video overview</h2>
-        <p>
-          This section can host short videos that walk through the purpose of the tool, how to configure scenarios,
-          and how to interpret uptake and cost benefit outputs. The placeholders below can be replaced with recorded
-          content for training or stakeholder briefings.
-        </p>
-        <div class="video-grid">
-          <div class="video-card">
-            <h3>Overview of the LonelyLessAustralia tool</h3>
-            <p>
-              Suggested content: a two to three minute video introducing the policy problem of loneliness, the role of
-              discrete choice experiments, and how this tool supports transparent decision making.
-            </p>
-            <div class="video-placeholder">
-              <i class="fa-solid fa-play"></i>
-              <span>Placeholder for overview video</span>
-            </div>
-          </div>
-          <div class="video-card">
-            <h3>Interpreting uptake and cost benefit results</h3>
-            <p>
-              Suggested content: a short walkthrough on reading predicted uptake, DCE based willingness to pay benefits,
-              health outcome valuations and benefit cost ratios, including how to use the briefing text in meetings.
-            </p>
-            <div class="video-placeholder">
-              <i class="fa-solid fa-play"></i>
-              <span>Placeholder for interpretation video</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Technical Appendix Tab -->
-    <section id="appendixTab" class="tabcontent" tabindex="0">
-      <div class="calculation-info">
-        <h2>Technical appendix</h2>
-        <p>
-          The full technical appendix provides detailed methods for the discrete choice experiment, model estimation,
-          and cost calculations, suitable for technical reviewers and research partners.
-        </p>
-        <p>
-          A placeholder file named <code>technical-appendix.html</code> is included in this tool and can be populated
-          with the full technical documentation. You can open it in a new tab using the link below or by navigating
-          directly to the file.
-        </p>
-        <p>
-          <a href="technical-appendix.html" target="_blank" class="appendix-link">
-            <i class="fa-solid fa-file-lines"></i> Open technical appendix placeholder
-          </a>
-        </p>
-      </div>
-    </section>
-
     <footer>
-      <p>
-        &copy; 2025 LonelyLessAustralia. All rights reserved.<br />
-        Developed for policy and research use by Mesfin Genie, Newcastle Business School, The University of Newcastle, Australia.
-      </p>
+      <p>&copy; 2025 LonelyLessAustralia. All Rights Reserved.<br>Mesfin Genie – Newcastle Business School, The University of Newcastle, Australia | <a href="technical-appendix.html" target="_blank">Technical Appendix</a></p>
     </footer>
   </div>
 
-  <!-- Toast notification -->
-  <div id="toast" class="toast" aria-live="polite" aria-atomic="true"></div>
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
 
   <script src="script.js"></script>
 </body>
