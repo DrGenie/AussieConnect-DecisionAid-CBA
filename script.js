@@ -1,677 +1,1090 @@
+// script.js (updated with Copilot soft-integration)
 /****************************************************************************
- * SCRIPT.JS
- * Enhanced interactivity, new inputs, dynamic summaries, WTP-based benefits,
- * and refined cost-benefit analysisss.
+ * LonelyLessAustralia Decision Aid
+ * - World Bank / WHO style UI
+ * - DCE based uptake and willingness to pay
+ * - QALY, ROI, cost saving and loneliness free day outcomes
+ * - Scenario saving, PDF export and briefing text
+ * - Soft integration with Microsoft Copilot
  ****************************************************************************/
 
-// Ensure DOM is loaded before attaching events
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
   const tabButtons = document.querySelectorAll(".tablink");
   tabButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      openTab(button.getAttribute("data-tab"), button);
+    button.addEventListener("click", function () {
+      openTab(this.getAttribute("data-tab"), this);
     });
   });
-  // Initialize default tab (Introduction)
-  openTab("introTab", document.querySelector(".tablink"));
-
-  // Optional: Pre-render default charts or results if needed
+  // Default tab
+  openTab("aboutTab", document.querySelector(".tablink"));
 });
 
-/** Tab Switching Function */
+/* Tab switching */
 function openTab(tabId, btn) {
-  // Hide all tabs and remove active states
-  document.querySelectorAll(".tabcontent").forEach(tab => tab.style.display = "none");
-  document.querySelectorAll(".tablink").forEach(button => {
+  const tabs = document.querySelectorAll(".tabcontent");
+  tabs.forEach(tab => tab.style.display = "none");
+
+  const tabButtons = document.querySelectorAll(".tablink");
+  tabButtons.forEach(button => {
     button.classList.remove("active");
     button.setAttribute("aria-selected", "false");
   });
-  // Show selected tab and mark as active
-  document.getElementById(tabId).style.display = "block";
-  btn.classList.add("active");
-  btn.setAttribute("aria-selected", "true");
 
-  // Auto-render charts when their tab is opened (if data available)
-  if (tabId === 'wtpTab' && scenarioComputed) renderWTPChart();
-  if (tabId === 'probTab' && scenarioComputed) renderProbChart();
-  if (tabId === 'costsTab' && scenarioComputed) renderCostsBenefits();
+  const current = document.getElementById(tabId);
+  if (current) current.style.display = "block";
+
+  if (btn) {
+    btn.classList.add("active");
+    btn.setAttribute("aria-selected", "true");
+  }
+
+  if (tabId === "wtpTab") renderWTPChart();
+  if (tabId === "costsTab") renderCostsBenefits();
+  if (tabId === "probTab") renderProbChart();
 }
 
-/** Update displayed cost label for slider */
+/* Slider label */
 function updateCostDisplay(val) {
-  document.getElementById("costLabel").textContent = val;
+  const label = document.getElementById("costLabel");
+  if (label) label.textContent = val;
 }
 
-// Flag to indicate if a scenario has been computed (to auto-render charts on tab switch)
-let scenarioComputed = false;
-
 /***************************************************************************
- * Coefficients and Multipliers (from DCE and cost-of-living data)
+ * Global parameters and coefficients
  ***************************************************************************/
+
+/* DCE coefficients (main effect logit, continuous cost) */
 const mainCoefficients = {
-  ASC_mean: -0.112,      // Alternate specific constant (for taking a program vs opt-out)
-  ASC_optout: 0.131,     // Opt-out constant
-  type_comm: 0.527,      // Community engagement
-  type_psych: 0.156,     // Psychological counselling
-  type_vr: -0.349,       // Virtual reality
-  mode_virtual: -0.426,  // Virtual method
-  mode_hybrid: -0.289,   // Hybrid method
-  freq_weekly: 0.617,    // Weekly
-  freq_monthly: 0.336,   // Monthly
-  dur_2hrs: 0.185,       // 2-hour
-  dur_4hrs: 0.213,       // 4-hour
-  dist_local: 0.059,     // Local area (12 km)
-  dist_signif: -0.509,   // Wider community (50+ km)
-  cost_cont: -0.036      // Cost coefficient (per $1)
-};
-const costOfLivingMultipliers = { // relative multipliers for cost coefficient
-  "NSW": 1.10,
-  "VIC": 1.05,
-  "QLD": 1.00,
-  "WA": 1.08,
-  "SA": 1.02,
-  "TAS": 1.03,
-  "ACT": 1.15,
-  "NT": 1.07
+  ASC_mean: -0.112,
+  ASC_optout: 0.131,
+  type_comm: 0.527,
+  type_psych: 0.156,
+  type_vr: -0.349,
+  mode_virtual: -0.426,
+  mode_hybrid: -0.289,
+  freq_weekly: 0.617,
+  freq_monthly: 0.336,
+  dur_2hrs: 0.185,
+  dur_4hrs: 0.213,
+  dist_local: 0.059,
+  dist_signif: -0.509,
+  cost_cont: -0.036
 };
 
-/***************************************************************************
- * WTP Data (for reference in charts and calculations)
- ***************************************************************************/
+/* Cost of living multipliers (illustrative scaling factors) */
+const costOfLivingMultipliers = {
+  NSW: 1.10,
+  VIC: 1.05,
+  QLD: 1.00,
+  WA: 1.08,
+  SA: 1.02,
+  TAS: 1.03,
+  ACT: 1.15,
+  NT: 1.07
+};
+
+/* WTP data (AUD per participant per session) */
 const wtpDataMain = [
-  { attribute: "Community engagement", wtp: 14.47, se: 3.31, pVal: "<0.001" },
-  { attribute: "Psychological counselling", wtp: 4.28, se: 3.76, pVal: "0.245" },
-  { attribute: "Virtual reality", wtp: -9.58, se: 3.72, pVal: "0.009" },
-  { attribute: "Virtual (method)", wtp: -11.69, se: 5.02, pVal: "0.019" },
-  { attribute: "Hybrid (method)", wtp: -7.95, se: 2.51, pVal: "0.001" },
-  { attribute: "Weekly (freq)", wtp: 16.93, se: 2.73, pVal: "<0.001" },
-  { attribute: "Monthly (freq)", wtp: 9.21, se: 3.26, pVal: "0.005" },
-  { attribute: "2-hour interaction", wtp: 5.08, se: 2.69, pVal: "0.059" },
-  { attribute: "4-hour interaction", wtp: 5.85, se: 2.79, pVal: "0.037" },
-  { attribute: "Local area accessibility", wtp: 1.62, se: 4.41, pVal: "0.712" },
-  { attribute: "Wider community accessibility", wtp: -13.99, se: 3.98, pVal: "<0.001" }
+  { key: "type_comm", label: "Community engagement", wtp: 14.47, pVal: 0.000, se: 3.31 },
+  { key: "type_psych", label: "Psychological counselling", wtp: 4.28, pVal: 0.245, se: 3.76 },
+  { key: "type_vr", label: "Virtual reality", wtp: -9.58, pVal: 0.009, se: 3.72 },
+  { key: "mode_virtual", label: "Virtual (method)", wtp: -11.69, pVal: 0.019, se: 5.02 },
+  { key: "mode_hybrid", label: "Hybrid (method)", wtp: -7.95, pVal: 0.001, se: 2.51 },
+  { key: "freq_weekly", label: "Weekly", wtp: 16.93, pVal: 0.000, se: 2.73 },
+  { key: "freq_monthly", label: "Monthly", wtp: 9.21, pVal: 0.005, se: 3.26 },
+  { key: "dur_2hrs", label: "2 hour interaction", wtp: 5.08, pVal: 0.059, se: 2.69 },
+  { key: "dur_4hrs", label: "4 hour interaction", wtp: 5.85, pVal: 0.037, se: 2.79 },
+  { key: "dist_local", label: "Local area accessibility", wtp: 1.62, pVal: 0.712, se: 4.41 },
+  { key: "dist_signif", label: "Wider community accessibility", wtp: -13.99, pVal: 0.000, se: 3.98 }
 ];
 
+/* QALY parameters */
+const QALY_SCENARIO_VALUES = {
+  low: 0.02,
+  moderate: 0.05,
+  high: 0.10
+};
+const VALUE_PER_QALY = 50000;
+
+/* Intervention reach for micro programme */
+const BASE_PARTICIPANTS = 250;
+const SESSIONS_PER_PROGRAM = 12;
+
+/* ROI and loneliness free day parameters based on national modelling */
+const ROI_PARAMS = {
+  healthSavingsPerParticipant5Y: 159,
+  productivitySavingsPerParticipant5Y: 288,
+  lonelinessFreeDaysPerParticipant5Y: 115,
+  timeHorizonYears: 5
+};
+
+/* Opportunity cost assumptions */
+const OPP_COST_HOURLY_VALUE = 20; // AUD per hour
+const TRAVEL_HOURS_LOCAL_PER_SESSION = 0.5;
+const TRAVEL_HOURS_WIDER_PER_SESSION = 1.5;
+
 /***************************************************************************
- * Build scenario object from current inputs
+ * Scenario building
  ***************************************************************************/
+
 function buildScenarioFromInputs() {
-  // Read simple inputs
   const state = document.getElementById("state_select").value;
   const adjustCosts = document.getElementById("adjustCosts").value;
-  const oppCostSetting = document.getElementById("oppCostSelect").value;
-  const cost_val = parseInt(document.getElementById("costSlider").value, 10);
+  const costSliderEl = document.getElementById("costSlider");
+  if (!costSliderEl) return null;
+  const rawCost = parseFloat(costSliderEl.value || "0");
 
-  // Required attributes (radio groups)
-  const supportInput = document.querySelector('input[name="support"]:checked');
-  const frequencyInput = document.querySelector('input[name="frequency"]:checked');
-  const durationInput = document.querySelector('input[name="duration"]:checked');
-  const accessibilityInput = document.querySelector('input[name="accessibility"]:checked');
-  // Optional method
-  const methodInput = document.querySelector('input[name="method"]:checked');
+  const scenarioName = (document.getElementById("scenarioName") || {}).value || "";
+  const scenarioNotes = (document.getElementById("scenarioNotes") || {}).value || "";
+  const includeOppCost = document.getElementById("includeOppCost")?.checked || false;
 
-  // Validate required fields
-  if (!supportInput || !frequencyInput || !durationInput || !accessibilityInput) {
-    alert("Please select a level for all required attributes: Support Programme, Frequency, Duration, and Accessibility.");
+  const support = document.querySelector('input[name="support"]:checked');
+  const frequency = document.querySelector('input[name="frequency"]:checked');
+  const duration = document.querySelector('input[name="duration"]:checked');
+  const accessibility = document.querySelector('input[name="accessibility"]:checked');
+  const method = document.querySelector('input[name="method"]:checked');
+
+  if (!support || !frequency || !duration || !accessibility) {
+    alert("Please select a level for support programme, frequency, duration and accessibility.");
     return null;
   }
 
-  // Determine boolean flags for each option
-  const commCheck = (supportInput.value === "community");
-  const psychCheck = (supportInput.value === "counselling");
-  const vrCheck = (supportInput.value === "vr");
+  const commCheck = support.value === "community";
+  const psychCheck = support.value === "counselling";
+  const vrCheck = support.value === "vr";
 
-  const weeklyCheck = (frequencyInput.value === "weekly");
-  const monthlyCheck = (frequencyInput.value === "monthly");
+  const weeklyCheck = frequency.value === "weekly";
+  const monthlyCheck = frequency.value === "monthly";
 
-  const twoHCheck = (durationInput.value === "2hr");
-  const fourHCheck = (durationInput.value === "4hr");
+  const twoHCheck = duration.value === "2hr";
+  const fourHCheck = duration.value === "4hr";
 
-  const localCheck = (accessibilityInput.value === "local");
-  const widerCheck = (accessibilityInput.value === "wider");
+  const localCheck = accessibility.value === "local";
+  const widerCheck = accessibility.value === "wider";
 
-  let virtualCheck = false, hybridCheck = false;
-  if (methodInput) {
-    virtualCheck = (methodInput.value === "virtual");
-    hybridCheck = (methodInput.value === "hybrid");
+  let virtualCheck = false;
+  let hybridCheck = false;
+  if (method) {
+    virtualCheck = method.value === "virtual";
+    hybridCheck = method.value === "hybrid";
   }
-  // (If neither virtual nor hybrid is selected, assume in-person implicitly)
-
-  // Compute predicted uptake probability using the choice model
-  const prob = computeProbability({
-    cost_val, state, adjustCosts,
-    commCheck, psychCheck, vrCheck,
-    virtualCheck, hybridCheck,
-    weeklyCheck, monthlyCheck,
-    twoHCheck, fourHCheck,
-    localCheck, widerCheck
-  }, mainCoefficients);
-  const uptakePercentage = prob * 100;
-
-  // Compute number of participants (assuming base population of 250)
-  const baseParticipants = 250;
-  const numberOfParticipants = baseParticipants * prob;
-
-  // QALY scenario values
-  const QALY_VALUES = { low: 0.02, moderate: 0.05, high: 0.1 };
-  const qalyScenario = document.getElementById("qalySelect") ? document.getElementById("qalySelect").value : "moderate";
-  const qalyPerParticipant = QALY_VALUES[qalyScenario];
-
-  // Compute total QALYs and monetized benefits (using $50,000 per QALY)
-  const totalQALY = numberOfParticipants * qalyPerParticipant;
-  const VALUE_PER_QALY = 50000;
-  const monetizedBenefits = totalQALY * VALUE_PER_QALY;
-
-  // Cost calculations
-  // Fixed costs: Advertising + fixed portion of training (advertising: 2978.80, training total: 26863.00)
-  const FIXED_TOTAL = 2978.80 + 26863.00;
-  // Variable costs (scale with prob): printing, postage, project manager, facilitator training & oncost, facilitator session costs, materials, venue, participant time & travel
-  const VARIABLE_TOTAL = (0.12 * 10000)   // printing
-                       + (0.147 * 10000)  // postage (adjusted 0.15 to 0.147 for given total)
-                       + (49.99 * 10)    // admin (project manager)
-                       + (223.86 * 100)  // training cost
-                       + (44.77 * 100)   // on-costs
-                       + (100.00 * 100)  // facilitator salaries for sessions
-                       + (50.00 * 100)   // materials
-                       + (30.00 * 100)   // venue (15*2h assumed as 30 per session)
-                       + (oppCostSetting === 'yes' ? (20.00 * 250 + 10.00 * 250) : 0);  // participant time + travel if included
-  const totalCost = FIXED_TOTAL + VARIABLE_TOTAL * prob;
-
-  // Net benefit (QALY-based)
-  const netBenefit = monetizedBenefits - totalCost;
 
   return {
-    // Input selections
+    scenarioName,
+    scenarioNotes,
     state,
     adjustCosts,
-    oppCostSetting,
-    cost_val,
-    localCheck, widerCheck,
-    weeklyCheck, monthlyCheck,
-    virtualCheck, hybridCheck,
-    twoHCheck, fourHCheck,
-    commCheck, psychCheck, vrCheck,
-    // Results
-    predictedUptake: uptakePercentage.toFixed(2),
-    numberOfParticipants: numberOfParticipants,
-    totalCost: totalCost,
-    monetizedBenefits: monetizedBenefits,
-    netBenefit: netBenefit,
-    // Additional info for saving
-    name: "", // to be filled by scenarioName if provided
-    notes: "" // to be filled by scenarioNotes if provided
+    rawCost,
+    includeOppCost,
+    commCheck,
+    psychCheck,
+    vrCheck,
+    weeklyCheck,
+    monthlyCheck,
+    twoHCheck,
+    fourHCheck,
+    localCheck,
+    widerCheck,
+    virtualCheck,
+    hybridCheck
   };
 }
 
 /***************************************************************************
- * Logit Model to Compute Programme Uptake Probability
+ * Utility calculations
  ***************************************************************************/
-function computeProbability(selection, coefs) {
-  // Apply cost-of-living multiplier if applicable
-  let effectiveCost = selection.cost_val;
-  if (selection.adjustCosts === 'yes' && selection.state && costOfLivingMultipliers[selection.state]) {
-    effectiveCost *= costOfLivingMultipliers[selection.state];
-  }
-  // Translate booleans to 0/1 for model
-  const x_type_comm = selection.commCheck ? 1 : 0;
-  const x_type_psych = selection.psychCheck ? 1 : 0;
-  const x_type_vr = selection.vrCheck ? 1 : 0;
-  const x_mode_virtual = selection.virtualCheck ? 1 : 0;
-  const x_mode_hybrid = selection.hybridCheck ? 1 : 0;
-  const x_freq_weekly = selection.weeklyCheck ? 1 : 0;
-  const x_freq_monthly = selection.monthlyCheck ? 1 : 0;
-  const x_dur_2hrs = selection.twoHCheck ? 1 : 0;
-  const x_dur_4hrs = selection.fourHCheck ? 1 : 0;
-  const x_dist_local = selection.localCheck ? 1 : 0;
-  const x_dist_signif = selection.widerCheck ? 1 : 0;
 
-  // Utility of choosing the program (vs not participating)
-  const U_alt = coefs.ASC_mean
-    + coefs.type_comm * x_type_comm
-    + coefs.type_psych * x_type_psych
-    + coefs.type_vr * x_type_vr
-    + coefs.mode_virtual * x_mode_virtual
-    + coefs.mode_hybrid * x_mode_hybrid
-    + coefs.freq_weekly * x_freq_weekly
-    + coefs.freq_monthly * x_freq_monthly
-    + coefs.dur_2hrs * x_dur_2hrs
-    + coefs.dur_4hrs * x_dur_4hrs
-    + coefs.dist_local * x_dist_local
-    + coefs.dist_signif * x_dist_signif
-    + coefs.cost_cont * effectiveCost;
-  const U_optout = coefs.ASC_optout;
-  // Logistic choice probability of choosing the program
-  return Math.exp(U_alt) / (Math.exp(U_alt) + Math.exp(U_optout));
+function applyCostOfLiving(rawCost, state, adjustFlag) {
+  let cost = rawCost;
+  if (adjustFlag === "yes" && state && costOfLivingMultipliers[state]) {
+    cost *= costOfLivingMultipliers[state];
+  }
+  return cost;
+}
+
+function computeProbabilityFromScenario(sc) {
+  if (!sc) return 0;
+
+  const adjustedCost = applyCostOfLiving(sc.rawCost, sc.state, sc.adjustCosts);
+  const dist_local = sc.localCheck ? 1 : 0;
+  const dist_signif = sc.widerCheck ? 1 : 0;
+  const freq_weekly = sc.weeklyCheck ? 1 : 0;
+  const freq_monthly = sc.monthlyCheck ? 1 : 0;
+  const mode_virtual = sc.virtualCheck ? 1 : 0;
+  const mode_hybrid = sc.hybridCheck ? 1 : 0;
+  const dur_2hrs = sc.twoHCheck ? 1 : 0;
+  const dur_4hrs = sc.fourHCheck ? 1 : 0;
+  const type_comm = sc.commCheck ? 1 : 0;
+  const type_psych = sc.psychCheck ? 1 : 0;
+  const type_vr = sc.vrCheck ? 1 : 0;
+
+  const U_alt =
+    mainCoefficients.ASC_mean +
+    mainCoefficients.type_comm * type_comm +
+    mainCoefficients.type_psych * type_psych +
+    mainCoefficients.type_vr * type_vr +
+    mainCoefficients.mode_virtual * mode_virtual +
+    mainCoefficients.mode_hybrid * mode_hybrid +
+    mainCoefficients.freq_weekly * freq_weekly +
+    mainCoefficients.freq_monthly * freq_monthly +
+    mainCoefficients.dur_2hrs * dur_2hrs +
+    mainCoefficients.dur_4hrs * dur_4hrs +
+    mainCoefficients.dist_local * dist_local +
+    mainCoefficients.dist_signif * dist_signif +
+    mainCoefficients.cost_cont * adjustedCost;
+
+  const U_optout = mainCoefficients.ASC_optout;
+
+  const expAlt = Math.exp(U_alt);
+  const expOpt = Math.exp(U_optout);
+
+  return expAlt / (expAlt + expOpt);
+}
+
+/* Opportunity cost in monetary terms */
+function computeOpportunityCost(sc, participants) {
+  if (!sc.includeOppCost || participants <= 0) return 0;
+
+  const baseSessionHours = sc.twoHCheck ? 2 : (sc.fourHCheck ? 4 : 0.5);
+  const travelHours = sc.widerCheck
+    ? TRAVEL_HOURS_WIDER_PER_SESSION
+    : (sc.localCheck ? TRAVEL_HOURS_LOCAL_PER_SESSION : 0);
+
+  const hoursPerParticipant = SESSIONS_PER_PROGRAM * (baseSessionHours + travelHours);
+  const oppCostPerParticipant = hoursPerParticipant * OPP_COST_HOURLY_VALUE;
+
+  return oppCostPerParticipant * participants;
+}
+
+/* WTP value for configuration per participant per session */
+function computeWTPPerParticipantSession(sc) {
+  let total = 0;
+  if (sc.commCheck) {
+    total += getWTPByKey("type_comm");
+  } else if (sc.psychCheck) {
+    total += getWTPByKey("type_psych");
+  } else if (sc.vrCheck) {
+    total += getWTPByKey("type_vr");
+  }
+
+  if (sc.weeklyCheck) {
+    total += getWTPByKey("freq_weekly");
+  } else if (sc.monthlyCheck) {
+    total += getWTPByKey("freq_monthly");
+  }
+
+  if (sc.twoHCheck) {
+    total += getWTPByKey("dur_2hrs");
+  } else if (sc.fourHCheck) {
+    total += getWTPByKey("dur_4hrs");
+  }
+
+  if (sc.localCheck) {
+    total += getWTPByKey("dist_local");
+  } else if (sc.widerCheck) {
+    total += getWTPByKey("dist_signif");
+  }
+
+  if (sc.virtualCheck) {
+    total += getWTPByKey("mode_virtual");
+  } else if (sc.hybridCheck) {
+    total += getWTPByKey("mode_hybrid");
+  }
+
+  return total;
+}
+
+function getWTPByKey(key) {
+  const rec = wtpDataMain.find(d => d.key === key);
+  return rec ? rec.wtp : 0;
 }
 
 /***************************************************************************
- * Render WTP Chart (Bar chart with error bars)
+ * High level calculations for configuration
  ***************************************************************************/
+
+function getFullResultsForScenario() {
+  const sc = buildScenarioFromInputs();
+  if (!sc) return null;
+
+  const uptakeProb = computeProbabilityFromScenario(sc);
+  const uptakePercent = uptakeProb * 100;
+  const participants = BASE_PARTICIPANTS * uptakeProb;
+
+  const qalyScenario = document.getElementById("qalySelect")
+    ? document.getElementById("qalySelect").value || "moderate"
+    : "moderate";
+  const qalyPerParticipant = QALY_SCENARIO_VALUES[qalyScenario] || QALY_SCENARIO_VALUES.moderate;
+  const totalQALYs = participants * qalyPerParticipant;
+  const qalyMonetised = totalQALYs * VALUE_PER_QALY;
+
+  const adjustedUnitCost = applyCostOfLiving(sc.rawCost, sc.state, sc.adjustCosts);
+  const FIXED_COST_ADVERT = 2978.80;
+  const OTHER_FIXED_COSTS = 26863.00;
+  const FIXED_TOTAL = FIXED_COST_ADVERT + OTHER_FIXED_COSTS;
+
+  const variableComponents =
+    0.12 * 10000 +
+    0.15 * 10000 +
+    49.99 * 10 +
+    223.86 * 100 +
+    44.77 * 100 +
+    100.00 * 100 +
+    50.00 * 100 +
+    15.00 * 100 +
+    20.00 * 250 +
+    10.00 * 250;
+
+  const VARIABLE_TOTAL = variableComponents;
+
+  const baselineCost = FIXED_TOTAL + VARIABLE_TOTAL * uptakeProb;
+  const participantFeeRevenue = adjustedUnitCost * SESSIONS_PER_PROGRAM * participants;
+  const opportunityCost = computeOpportunityCost(sc, participants);
+
+  const totalEconomicCost = baselineCost + opportunityCost;
+
+  const healthSavings = ROI_PARAMS.healthSavingsPerParticipant5Y * participants;
+  const productivitySavings = ROI_PARAMS.productivitySavingsPerParticipant5Y * participants;
+  const totalSavings = healthSavings + productivitySavings;
+
+  const lonelinessFreeDays = ROI_PARAMS.lonelinessFreeDaysPerParticipant5Y * participants;
+
+  const wtpPerParticipantSession = computeWTPPerParticipantSession(sc);
+  const wtpPerParticipantProgram = wtpPerParticipantSession * SESSIONS_PER_PROGRAM;
+  const totalWTPBenefits = wtpPerParticipantProgram * participants;
+
+  const netBenefitQALY = qalyMonetised - totalEconomicCost;
+  const netBenefitSavings = totalSavings - totalEconomicCost;
+  const netBenefitWTP = totalWTPBenefits - totalEconomicCost;
+
+  const bcrQALY = totalEconomicCost > 0 ? qalyMonetised / totalEconomicCost : null;
+  const bcrSavings = totalEconomicCost > 0 ? totalSavings / totalEconomicCost : null;
+  const bcrWTP = totalEconomicCost > 0 ? totalWTPBenefits / totalEconomicCost : null;
+
+  return {
+    scenario: sc,
+    uptakeProb,
+    uptakePercent,
+    participants,
+    adjustedUnitCost,
+    qalyScenario,
+    qalyPerParticipant,
+    totalQALYs,
+    qalyMonetised,
+    baselineCost,
+    opportunityCost,
+    totalEconomicCost,
+    healthSavings,
+    productivitySavings,
+    totalSavings,
+    lonelinessFreeDays,
+    wtpPerParticipantSession,
+    wtpPerParticipantProgram,
+    totalWTPBenefits,
+    netBenefitQALY,
+    netBenefitSavings,
+    netBenefitWTP,
+    bcrQALY,
+    bcrSavings,
+    bcrWTP
+  };
+}
+
+/***************************************************************************
+ * Apply configuration, summary and briefing
+ ***************************************************************************/
+
+function applyConfiguration() {
+  const res = getFullResultsForScenario();
+  if (!res) return;
+
+  updateConfigurationSummary(res);
+  updateHeadlineRecommendation(res);
+  updateBriefingText(res);
+  renderCostsBenefits(res);
+  showToast("Configuration applied. Results updated.");
+}
+
+function viewResultsSummary() {
+  const res = getFullResultsForScenario();
+  if (!res) return;
+
+  const modalDiv = document.getElementById("modalResults");
+  if (!modalDiv) return;
+
+  const s = res.scenario;
+  const html = `
+    <h3>Results summary for "${escapeHtml(s.scenarioName || "Unnamed scenario")}"</h3>
+    <p><strong>Predicted uptake:</strong> ${res.uptakePercent.toFixed(1)} percent of eligible older adults</p>
+    <p><strong>Participants:</strong> ${res.participants.toFixed(0)}</p>
+    <p><strong>Total economic cost:</strong> A$${formatMoney(res.totalEconomicCost)}</p>
+    <p><strong>Monetised QALY benefits:</strong> A$${formatMoney(res.qalyMonetised)} (scenario: ${res.qalyScenario})</p>
+    <p><strong>Cost savings and productivity gains (5 years):</strong> A$${formatMoney(res.totalSavings)}</p>
+    <p><strong>WTP based benefits:</strong> A$${formatMoney(res.totalWTPBenefits)}</p>
+    <p><strong>Loneliness free days (5 years):</strong> ${res.lonelinessFreeDays.toFixed(0)}</p>
+    <p><strong>Benefit cost ratio (QALY):</strong> ${res.bcrQALY ? res.bcrQALY.toFixed(2) : "n.a."}</p>
+    <p><strong>Benefit cost ratio (cost savings):</strong> ${res.bcrSavings ? res.bcrSavings.toFixed(2) : "n.a."}</p>
+    <p><strong>Benefit cost ratio (WTP):</strong> ${res.bcrWTP ? res.bcrWTP.toFixed(2) : "n.a."}</p>
+  `;
+  modalDiv.innerHTML = html;
+  openModal();
+}
+
+/* Configuration summary card */
+function updateConfigurationSummary(res) {
+  const div = document.getElementById("configSummary");
+  if (!div) return;
+  const s = res.scenario;
+
+  const lines = [];
+  lines.push(`<strong>Programme type:</strong> ${s.commCheck ? "Community engagement" : s.psychCheck ? "Psychological counselling" : s.vrCheck ? "Virtual reality" : "Peer support (reference)"}`);
+  lines.push(`<strong>Method:</strong> ${s.virtualCheck ? "Virtual" : s.hybridCheck ? "Hybrid" : "In person"}`);
+  lines.push(`<strong>Frequency and duration:</strong> ${s.weeklyCheck ? "Weekly" : s.monthlyCheck ? "Monthly" : "Daily reference"}, ${s.twoHCheck ? "2 hour sessions" : s.fourHCheck ? "4 hour sessions" : "30 minute reference"}`);
+  lines.push(`<strong>Accessibility:</strong> ${s.localCheck ? "Local area" : s.widerCheck ? "Wider community" : "At home reference"}`);
+  lines.push(`<strong>Participant cost per session:</strong> A$${applyCostOfLiving(s.rawCost, s.state, s.adjustCosts).toFixed(2)}${s.adjustCosts === "yes" && s.state ? " (adjusted for " + s.state + ")" : ""}`);
+  lines.push(`<strong>Include opportunity cost:</strong> ${s.includeOppCost ? "Yes" : "No"}`);
+  lines.push(`<strong>Predicted uptake:</strong> ${res.uptakePercent.toFixed(1)} percent`);
+  lines.push(`<strong>Total economic cost:</strong> A$${formatMoney(res.totalEconomicCost)}`);
+
+  div.innerHTML = `<ul class="bullet-list"><li>${lines.join("</li><li>")}</li></ul>`;
+}
+
+/* Headline recommendation */
+function updateHeadlineRecommendation(res) {
+  const div = document.getElementById("headlineRecommendation");
+  if (!div) return;
+
+  const up = res.uptakePercent;
+  const bcrQ = res.bcrQALY || 0;
+  const bcrSav = res.bcrSavings || 0;
+  const bcrW = res.bcrWTP || 0;
+
+  let message = "";
+
+  if (up >= 70 && (bcrQ > 1 || bcrSav > 1 || bcrW > 1)) {
+    message =
+      "This configuration appears attractive, combining high projected programme uptake with at least one benefit cost ratio above one. " +
+      "Subject to budget and implementation feasibility, it is a strong candidate for scale up.";
+  } else if (up >= 50 && (bcrQ > 1 || bcrSav > 1 || bcrW > 1)) {
+    message =
+      "This configuration delivers moderate to high uptake and at least one benefit cost ratio above one. " +
+      "There is a reasonable case for investment, particularly if targeting priority groups at risk of loneliness.";
+  } else if (up >= 50 && bcrQ <= 1 && bcrSav <= 1 && bcrW <= 1) {
+    message =
+      "Uptake is acceptable but economic returns are borderline. " +
+      "Reducing programme costs, increasing effectiveness or adjusting programme features may improve the value for money profile.";
+  } else if (up < 50 && (bcrQ > 1 || bcrSav > 1 || bcrW > 1)) {
+    message =
+      "Economic returns look promising, but projected uptake is modest. " +
+      "Consider revising programme design to improve participation, for example by using local venues, weekly frequency or community engagement formats.";
+  } else {
+    message =
+      "Both uptake and benefit cost ratios are modest, suggesting that the configuration is unlikely to offer good value in its current form. " +
+      "It may still be useful for specific subgroups, but further design work is recommended.";
+  }
+
+  div.innerHTML = `<p>${message}</p>`;
+}
+
+/* Briefing text generation */
+function updateBriefingText(res) {
+  const textarea = document.getElementById("briefingText");
+  if (!textarea) return;
+  const s = res.scenario;
+
+  const name = s.scenarioName || "the proposed programme configuration";
+  const up = res.uptakePercent;
+  const part = res.participants;
+  const totalCost = res.totalEconomicCost;
+  const bcrQ = res.bcrQALY;
+  const bcrSav = res.bcrSavings;
+  const bcrW = res.bcrWTP;
+
+  const text =
+    `${name} is expected to attract around ${up.toFixed(1)} percent of eligible older adults, which corresponds to approximately ${part.toFixed(0)} participants under the base cohort of ${BASE_PARTICIPANTS}. ` +
+    `Total economic costs, including fixed programme inputs${s.includeOppCost ? " and the opportunity cost of participants time" : ""}, are estimated at about A$${formatMoney(totalCost)} over the modelled period. ` +
+    `Using QALY based monetised health gains, the implied benefit cost ratio is ${bcrQ ? bcrQ.toFixed(2) : "not defined"}. ` +
+    `When focusing on health care and productivity cost savings, the benefit cost ratio is ${bcrSav ? bcrSav.toFixed(2) : "not defined"}. ` +
+    `Using discrete choice willingness to pay as an alternative benefit measure, the benefit cost ratio is ${bcrW ? bcrW.toFixed(2) : "not defined"}. ` +
+    `Under these assumptions, the configuration would generate on the order of ${res.lonelinessFreeDays.toFixed(0)} loneliness free days over five years for participants. ` +
+    `These results suggest that the configuration ${bcrQ > 1 || bcrSav > 1 || bcrW > 1 ? "could represent a sound use of resources, subject to budget constraints and implementation capacity" : "may require further refinement to improve both uptake and value for money"}.`;
+
+  textarea.value = text;
+}
+
+/***************************************************************************
+ * WTP chart and WTP benefits
+ ***************************************************************************/
+
 let wtpChartInstance = null;
+
 function renderWTPChart() {
-  const ctx = document.getElementById("wtpChartMain").getContext("2d");
+  const canvas = document.getElementById("wtpChartMain");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
   if (wtpChartInstance) wtpChartInstance.destroy();
-  const labels = wtpDataMain.map(item => item.attribute);
-  const values = wtpDataMain.map(item => item.wtp);
-  const errors = wtpDataMain.map(item => item.se);
+
+  const labels = wtpDataMain.map(d => d.label);
+  const values = wtpDataMain.map(d => d.wtp);
+  const errors = wtpDataMain.map(d => d.se);
+
   wtpChartInstance = new Chart(ctx, {
-    type: 'bar',
+    type: "bar",
     data: {
-      labels: labels,
+      labels,
       datasets: [{
-        label: "WTP (A$)",
+        label: "WTP (A$ per session)",
         data: values,
-        backgroundColor: values.map(v => v >= 0 ? 'rgba(52, 152, 219, 0.6)' : 'rgba(231, 76, 60, 0.6)'),
-        borderColor: values.map(v => v >= 0 ? 'rgba(41, 128, 185, 1)' : 'rgba(192, 57, 43, 1)'),
-        borderWidth: 1,
-        // We will draw error bars manually
+        backgroundColor: values.map(v => v >= 0 ? "rgba(0,123,255,0.7)" : "rgba(220,53,69,0.7)"),
+        borderColor: values.map(v => v >= 0 ? "rgba(0,123,255,1)" : "rgba(220,53,69,1)"),
+        borderWidth: 1
       }]
     },
     options: {
       responsive: true,
-      scales: {
-        y: { beginAtZero: true }
-      },
       plugins: {
         legend: { display: false },
-        title: { display: false },
+        title: {
+          display: true,
+          text: "Willingness to pay for attribute levels",
+          font: { size: 14 }
+        },
         tooltip: {
           callbacks: {
-            afterBody: ctx => {
-              const idx = ctx[0].dataIndex;
-              return `SE: ${errors[idx]}, p-value: ${wtpDataMain[idx].pVal}`;
+            afterBody: (ctxArr) => {
+              const idx = ctxArr[0].dataIndex;
+              const rec = wtpDataMain[idx];
+              return `Standard error: ${rec.se}, p-value: ${rec.pVal}`;
             }
           }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: "A$ per participant per session" }
         }
       }
     },
     plugins: [{
-      id: 'errorbars',
+      id: "errorbars",
       afterDraw: chart => {
-        const { ctx, chartArea: { top, bottom } } = chart;
-        const scaleY = chart.scales.y;
+        const { ctx, scales: { y } } = chart;
         chart.getDatasetMeta(0).data.forEach((bar, i) => {
           const value = values[i];
-          const err = errors[i];
-          if (typeof err === 'number') {
-            const x = bar.x;
-            const yValue = scaleY.getPixelForValue(value);
-            const yTop = scaleY.getPixelForValue(value + err);
-            const yBottom = scaleY.getPixelForValue(value - err);
-            // Draw vertical error line
-            ctx.save();
-            ctx.strokeStyle = "#000";
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(x, yTop);
-            ctx.lineTo(x, yBottom);
-            ctx.stroke();
-            // Draw top cap
-            ctx.beginPath();
-            ctx.moveTo(x - 5, yTop);
-            ctx.lineTo(x + 5, yTop);
-            ctx.stroke();
-            // Draw bottom cap
-            ctx.beginPath();
-            ctx.moveTo(x - 5, yBottom);
-            ctx.lineTo(x + 5, yBottom);
-            ctx.stroke();
-            ctx.restore();
-          }
+          const se = errors[i];
+          if (typeof se !== "number") return;
+
+          const x = bar.x;
+          const topY = y.getPixelForValue(value + se);
+          const bottomY = y.getPixelForValue(value - se);
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(x, topY);
+          ctx.lineTo(x, bottomY);
+          ctx.moveTo(x - 4, topY);
+          ctx.lineTo(x + 4, topY);
+          ctx.moveTo(x - 4, bottomY);
+          ctx.lineTo(x + 4, bottomY);
+          ctx.strokeStyle = "#222";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          ctx.restore();
         });
       }
     }]
   });
 }
 
+function updateWTPBenefitsForCurrentScenario() {
+  const res = getFullResultsForScenario();
+  if (!res) return;
+  const div = document.getElementById("wtpBenefitSummary");
+  if (!div) return;
+
+  const html =
+    `<p><strong>Average willingness to pay per participant per session:</strong> A$${res.wtpPerParticipantSession.toFixed(2)}</p>` +
+    `<p><strong>Average willingness to pay per participant per programme (12 sessions):</strong> A$${res.wtpPerParticipantProgram.toFixed(2)}</p>` +
+    `<p><strong>Total willingness to pay based benefits:</strong> A$${formatMoney(res.totalWTPBenefits)}</p>` +
+    `<p>These values summarise how strongly older adults in the discrete choice study valued this configuration, based on the trade offs they made between programme features and cost.</p>`;
+
+  div.innerHTML = html;
+}
+
 /***************************************************************************
- * Render Predicted Uptake Chart (Doughnut) and provide recommendation
+ * Programme uptake chart
  ***************************************************************************/
-let uptakeChartInstance = null;
+
+let uptakeChart = null;
+
 function renderProbChart() {
-  const scenario = buildScenarioFromInputs();
-  if (!scenario) return;
-  scenarioComputed = true;
-  // Draw doughnut chart
-  const ctx = document.getElementById("uptakeChart").getContext("2d");
-  const uptakeVal = parseFloat(scenario.predictedUptake); // % value
-  const nonUptakeVal = 100 - uptakeVal;
-  const chartData = [uptakeVal, nonUptakeVal];
-  const chartLabels = ["Uptake", "Non‑uptake"];
-  if (uptakeChartInstance) uptakeChartInstance.destroy();
-  uptakeChartInstance = new Chart(ctx, {
-    type: 'doughnut',
+  const res = getFullResultsForScenario();
+  if (!res) return;
+
+  drawUptakeChart(res.uptakePercent);
+  const div = document.getElementById("uptakeInterpretation");
+  if (!div) return;
+
+  const up = res.uptakePercent;
+  let explanation;
+
+  if (up >= 70) {
+    explanation =
+      "Projected uptake is high. The configuration aligns well with older adults stated preferences, " +
+      "suggesting that most eligible participants would consider joining the programme.";
+  } else if (up >= 50) {
+    explanation =
+      "Projected uptake is moderate. Many older adults would join, but some design adjustments around cost, " +
+      "location or delivery method could further strengthen appeal.";
+  } else {
+    explanation =
+      "Projected uptake is modest. It may be important to revisit core features, such as participant fees, " +
+      "frequency or venue location, to improve engagement.";
+  }
+
+  div.innerHTML = `<p>${explanation}</p>`;
+}
+
+function drawUptakeChart(uptakeVal) {
+  const canvas = document.getElementById("uptakeChart");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  if (uptakeChart) uptakeChart.destroy();
+
+  const nonUptake = 100 - uptakeVal;
+
+  uptakeChart = new Chart(ctx, {
+    type: "doughnut",
     data: {
-      labels: chartLabels,
+      labels: ["Uptake", "Non uptake"],
       datasets: [{
-        data: chartData,
+        data: [uptakeVal, nonUptake],
         backgroundColor: ["#28a745", "#dc3545"]
       }]
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false,
       plugins: {
-        legend: {
-          position: 'bottom',
-          labels: { boxWidth: 12, font: { size: 12 } }
-        },
+        legend: { position: "bottom" },
         title: {
           display: true,
-          text: `Predicted Uptake: ${uptakeVal.toFixed(1)}%`,
-          font: { size: 16 }
+          text: `Predicted programme uptake: ${uptakeVal.toFixed(1)} percent`
         },
         tooltip: {
           callbacks: {
-            label: context => `${context.label}: ${context.parsed.toFixed(1)}%`
+            label: (ctx) => `${ctx.label}: ${ctx.parsed.toFixed(1)} percent`
           }
         }
       }
     }
   });
-  // Generate recommendation text
-  const recommendationText = generateRecommendation(scenario, uptakeVal);
-  // Show recommendation in modal and on page (for accessibility)
-  const modalResultsDiv = document.getElementById("modalResults");
-  if (modalResultsDiv && modalResultsDiv.innerHTML) {
-    // If modal is already open or content exists, update it accordingly
-    modalResultsDiv.innerHTML = `<h4>Calculation Results</h4>
-      <p><strong>Predicted Uptake:</strong> ${uptakeVal.toFixed(1)}%</p>
-      <p>${recommendationText}</p>`;
-  }
-  // Also update the uptakeRecommendation div on the page
-  const recContainer = document.getElementById("uptakeRecommendation");
-  recContainer.innerHTML = `<p>${recommendationText}</p>`;
-}
-
-/** Generate recommendation text based on scenario and uptake. */
-function generateRecommendation(sc, uptake) {
-  let rec = "";
-  const uptakeRounded = uptake.toFixed(1);
-  // Overall judgement
-  if (uptake >= 70) {
-    rec += "Uptake is high. The current configuration is very appealing to the target group. ";
-  } else if (uptake >= 50) {
-    rec += "Uptake is moderate. The configuration attracts a fair share of participants, but there might be room for improvement. ";
-  } else {
-    rec += "Uptake is low. Many older adults may not enroll under this configuration. Consider adjustments to improve appeal. ";
-  }
-  // Check each attribute for suggestions
-  if (!sc.virtualCheck && !sc.hybridCheck) {
-    // In-person by default
-    rec += "Delivery is in-person (default). ";
-  }
-  if (sc.virtualCheck && uptake < 50) {
-    rec += "Fully virtual delivery likely lowers uptake; consider adding in-person elements or support for technology use. ";
-  }
-  if (sc.hybridCheck && uptake < 50) {
-    rec += "Hybrid delivery could be improved by increasing in-person interaction if possible. ";
-  }
-  if (sc.commCheck && uptake < 40) {
-    rec += "Community engagement is chosen but uptake is still low – ensure the community activity aligns with interests or consider additional outreach. ";
-  }
-  if (sc.psychCheck && uptake < 40) {
-    rec += "Counselling alone may be less enticing; pairing it with group activities might improve uptake. ";
-  }
-  if (sc.vrCheck && uptake < 40) {
-    rec += "VR-based sessions seem less preferred; perhaps provide trial sessions or combine with in-person meetups to boost interest. ";
-  }
-  if (sc.monthlyCheck && uptake < 50) {
-    rec += "Monthly sessions are quite infrequent; increasing frequency (e.g., weekly) could improve engagement. ";
-  }
-  if (sc.twoHCheck && uptake < 50) {
-    rec += "2-hour interactions might be a bit long for some – consider shorter, more frequent meetups. ";
-  }
-  if (sc.fourHCheck && uptake >= 70) {
-    rec += "Notably, the long 4-hour sessions do not deter participation here, suggesting participants are keen on extended interactions. ";
-  }
-  if (sc.widerCheck && uptake < 50) {
-    rec += "Offering the program only in a wider community (far away) likely dampens uptake – providing local options could boost participation. ";
-  }
-  if (uptake >= 70) {
-    rec += "The program’s features strongly align with participant preferences, indicating a good chance of success.";
-  }
-  return "Recommendation: " + rec.trim();
 }
 
 /***************************************************************************
- * Render Costs & Benefits Analysis (Bar chart + Summary for QALY and WTP)
+ * Costs and benefits combined chart
  ***************************************************************************/
+
 let combinedChartInstance = null;
-function renderCostsBenefits() {
-  const scenario = buildScenarioFromInputs();
-  if (!scenario) return;
-  scenarioComputed = true;
-  const uptakePercentage = parseFloat(scenario.predictedUptake);
-  const participants = scenario.numberOfParticipants;
-  const totalCost = scenario.totalCost;
-  const monetizedBenefits = scenario.monetizedBenefits;
-  const netBenefit = scenario.netBenefit;
-  // Compute benefit-cost ratio for QALY perspective
-  const BCR = totalCost > 0 ? monetizedBenefits / totalCost : Infinity;
 
-  // Compute WTP-based benefit outcomes
-  let wtpPerPerson = 0;
-  if (scenario.commCheck) wtpPerPerson += 14.47;
-  if (scenario.psychCheck) wtpPerPerson += 4.28;
-  if (scenario.vrCheck) wtpPerPerson += -9.58;
-  if (scenario.virtualCheck) wtpPerPerson += -11.69;
-  if (scenario.hybridCheck) wtpPerPerson += -7.95;
-  if (scenario.weeklyCheck) wtpPerPerson += 16.93;
-  if (scenario.monthlyCheck) wtpPerPerson += 9.21;
-  if (scenario.twoHCheck) wtpPerPerson += 5.08;
-  if (scenario.fourHCheck) wtpPerPerson += 5.85;
-  if (scenario.localCheck) wtpPerPerson += 1.62;
-  if (scenario.widerCheck) wtpPerPerson += -13.99;
-  const totalWTPBenefit = wtpPerPerson * participants;
-  const netBenefitWTP = totalWTPBenefit - totalCost;
-  const BCR_WTP = totalCost > 0 ? totalWTPBenefit / totalCost : Infinity;
+function renderCostsBenefits(preComputed) {
+  const res = preComputed || getFullResultsForScenario();
+  if (!res) return;
 
-  // Construct summary HTML
-  const resultsDiv = document.getElementById("costsBenefitsResults");
-  resultsDiv.innerHTML = ""; // clear previous
-  // Summary (QALY-based)
-  const summaryHtml = `
-    <div class="calculation-info">
-      <p><strong>Uptake:</strong> ${uptakePercentage.toFixed(2)}% (${participants.toFixed(0)} participants)</p>
-      <p><strong>Total Intervention Cost:</strong> A$${totalCost.toFixed(2)}</p>
-      <p><strong>Cost per Participant:</strong> A$${(totalCost / (participants || 1)).toFixed(2)}</p>
-      <p><strong>Total QALYs Gained:</strong> ${ (scenario.monetizedBenefits / 50000).toFixed(2) }</p>
-      <p><strong>Monetised Benefits (QALY-based):</strong> A$${monetizedBenefits.toFixed(2)}</p>
-      <p><strong>Net Benefit (QALY-based):</strong> A$${netBenefit.toFixed(2)} ${ BCR >= 1 ? "(positive)" : "(negative)"}</p>
-      <p><em>Benefit-Cost Ratio (QALY): ${ BCR === Infinity ? "N/A" : BCR.toFixed(2) }</em></p>
-    </div>`;
-  resultsDiv.insertAdjacentHTML('beforeend', summaryHtml);
-  // Bar chart for cost vs benefits (QALY)
-  const chartContainer = document.createElement("div");
-  chartContainer.className = "chart-box";
-  chartContainer.innerHTML = `<h3>Cost-Benefit Summary (A$)</h3><canvas id="combinedChart"></canvas>`;
-  resultsDiv.appendChild(chartContainer);
-  const ctx = document.getElementById("combinedChart").getContext("2d");
+  const container = document.getElementById("costsBenefitsResults");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const summaryDiv = document.createElement("div");
+  summaryDiv.className = "card secondary-card";
+
+  const s = res.scenario;
+
+  const html =
+    `<h3>Cost and benefit summary</h3>` +
+    `<p><strong>Predicted uptake:</strong> ${res.uptakePercent.toFixed(1)} percent</p>` +
+    `<p><strong>Participants (base cohort of ${BASE_PARTICIPANTS}):</strong> ${res.participants.toFixed(0)}</p>` +
+    `<p><strong>Total economic cost:</strong> A$${formatMoney(res.totalEconomicCost)}${s.includeOppCost ? " (includes opportunity cost of participant time)" : ""}</p>` +
+    `<p><strong>Cost per participant:</strong> A$${res.participants > 0 ? (res.totalEconomicCost / res.participants).toFixed(2) : "n.a."}</p>` +
+    `<p><strong>Monetised QALY benefits:</strong> A$${formatMoney(res.qalyMonetised)} (scenario: ${res.qalyScenario}, value per QALY A$${VALUE_PER_QALY.toLocaleString()})</p>` +
+    `<p><strong>Health system and productivity savings (5 years):</strong> A$${formatMoney(res.totalSavings)} (health: A$${formatMoney(res.healthSavings)}, productivity: A$${formatMoney(res.productivitySavings)})</p>` +
+    `<p><strong>WTP based benefits:</strong> A$${formatMoney(res.totalWTPBenefits)}</p>` +
+    `<p><strong>Loneliness free days (5 years):</strong> ${res.lonelinessFreeDays.toFixed(0)}</p>` +
+    `<p><strong>Net benefit (QALY):</strong> A$${formatMoney(res.netBenefitQALY)}</p>` +
+    `<p><strong>Net benefit (cost savings):</strong> A$${formatMoney(res.netBenefitSavings)}</p>` +
+    `<p><strong>Net benefit (WTP):</strong> A$${formatMoney(res.netBenefitWTP)}</p>` +
+    `<p><strong>Benefit cost ratio (QALY):</strong> ${res.bcrQALY ? res.bcrQALY.toFixed(2) : "n.a."}</p>` +
+    `<p><strong>Benefit cost ratio (cost savings):</strong> ${res.bcrSavings ? res.bcrSavings.toFixed(2) : "n.a."}</p>` +
+    `<p><strong>Benefit cost ratio (WTP):</strong> ${res.bcrWTP ? res.bcrWTP.toFixed(2) : "n.a."}</p>` +
+    `<p>These metrics combine evidence on programme costs, health outcomes, cost savings and participant preferences. Full methods and data sources are described in the technical appendix.</p>`;
+
+  summaryDiv.innerHTML = html;
+  container.appendChild(summaryDiv);
+
+  const chartWrapper = document.createElement("div");
+  chartWrapper.className = "chart-box";
+  chartWrapper.innerHTML = `<h3>Costs and benefits</h3><canvas id="combinedChart"></canvas>`;
+  container.appendChild(chartWrapper);
+
+  const canvas = document.getElementById("combinedChart");
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
   if (combinedChartInstance) combinedChartInstance.destroy();
+
+  const labels = ["Total economic cost", "QALY benefits", "Cost savings", "WTP benefits"];
+  const values = [
+    res.totalEconomicCost,
+    res.qalyMonetised,
+    res.totalSavings,
+    res.totalWTPBenefits
+  ];
+
   combinedChartInstance = new Chart(ctx, {
-    type: 'bar',
+    type: "bar",
     data: {
-      labels: ["Total Cost", "Monetised Benefits", "Net Benefit"],
+      labels,
       datasets: [{
-        label: "Amount (A$)",
-        data: [totalCost, monetizedBenefits, netBenefit],
+        label: "A$",
+        data: values,
         backgroundColor: [
-          'rgba(231, 76, 60, 0.6)',
-          'rgba(46, 204, 113, 0.6)',
-          'rgba(52, 152, 219, 0.6)'
+          "rgba(220,53,69,0.7)",
+          "rgba(40,167,69,0.7)",
+          "rgba(23,162,184,0.7)",
+          "rgba(255,193,7,0.7)"
         ],
         borderColor: [
-          'rgba(192, 57, 43, 1)',
-          'rgba(39, 174, 96, 1)',
-          'rgba(41, 128, 185, 1)'
+          "rgba(220,53,69,1)",
+          "rgba(40,167,69,1)",
+          "rgba(23,162,184,1)",
+          "rgba(255,193,7,1)"
         ],
         borderWidth: 1
       }]
     },
     options: {
       responsive: true,
-      scales: {
-        y: { beginAtZero: true }
-      },
       plugins: {
         legend: { display: false },
-        title: { display: false }
+        title: {
+          display: true,
+          text: "Comparison of costs and benefit measures",
+          font: { size: 13 }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: "A$" }
+        }
       }
     }
   });
-  // WTP-based analysis summary
-  const wtpAnalysisHtml = `
-    <div class="calculation-info">
-      <h4>WTP-based Benefit Analysis</h4>
-      <p><strong>Avg WTP per Participant:</strong> A$${wtpPerPerson.toFixed(2)}</p>
-      <p><strong>Total WTP Benefit (all participants):</strong> A$${totalWTPBenefit.toFixed(2)}</p>
-      <p><strong>Net Benefit (WTP-based):</strong> A$${netBenefitWTP.toFixed(2)} ${ BCR_WTP >= 1 ? "(positive)" : "(negative)"}</p>
-      <p><em>Benefit-Cost Ratio (WTP): ${ BCR_WTP === Infinity ? "N/A" : BCR_WTP.toFixed(2) }</em></p>
-      <p>This perspective values the program by participants’ willingness-to-pay. A positive net benefit here means participants collectively value the program more than it costs to run.</p>
-    </div>`;
-  resultsDiv.insertAdjacentHTML('beforeend', wtpAnalysisHtml);
 }
 
 /***************************************************************************
- * Toggle visibility of detailed cost breakdown and benefits analysis sections
+ * Toggle panels in costs tab
  ***************************************************************************/
+
 function toggleCostBreakdown() {
-  const breakdownEl = document.getElementById("detailedCostBreakdown");
-  if (!breakdownEl) return;
-  breakdownEl.style.display = (breakdownEl.style.display === "none" || breakdownEl.style.display === "") ? "flex" : "none";
+  const breakdown = document.getElementById("detailedCostBreakdown");
+  if (!breakdown) return;
+  breakdown.style.display = (breakdown.style.display === "none" || breakdown.style.display === "") ? "flex" : "none";
 }
+
 function toggleBenefitsAnalysis() {
-  const benefitsEl = document.getElementById("detailedBenefitsAnalysis");
-  if (!benefitsEl) return;
-  benefitsEl.style.display = (benefitsEl.style.display === "none" || benefitsEl.style.display === "") ? "flex" : "none";
+  const panel = document.getElementById("detailedBenefitsAnalysis");
+  if (!panel) return;
+  panel.style.display = (panel.style.display === "none" || panel.style.display === "") ? "flex" : "none";
 }
 
 /***************************************************************************
- * Scenario Saving and PDF Export
+ * Scenario saving and PDF export
  ***************************************************************************/
-let savedScenarios = [];
+
+const savedScenarios = [];
+
 function saveScenario() {
-  const scenario = buildScenarioFromInputs();
-  if (!scenario) return;
-  // Assign scenario name and notes from inputs (or default if empty)
-  const nameInput = document.getElementById("scenarioName").value.trim();
-  scenario.name = nameInput || `Scenario ${savedScenarios.length + 1}`;
-  scenario.notes = document.getElementById("scenarioNotes").value.trim();
-  // Add scenario to list
-  savedScenarios.push(scenario);
-  // Add a row to the scenarios table
+  const res = getFullResultsForScenario();
+  if (!res) return;
+
+  const index = savedScenarios.length + 1;
+  const name = res.scenario.scenarioName || `Scenario ${index}`;
+  const record = { index, name, ...res };
+
+  savedScenarios.push(record);
+  appendScenarioRow(record);
+  showToast(`Scenario "${name}" saved.`);
+}
+
+function appendScenarioRow(rec) {
   const tbody = document.querySelector("#scenarioTable tbody");
+  if (!tbody) return;
+
+  const s = rec.scenario;
   const row = document.createElement("tr");
-  const fields = ["name", "state", "adjustCosts", "oppCostSetting", "cost_val",
-                  "localCheck", "widerCheck", "weeklyCheck", "monthlyCheck",
-                  "virtualCheck", "hybridCheck", "twoHCheck", "fourHCheck",
-                  "commCheck", "psychCheck", "vrCheck", "predictedUptake", "netBenefit"];
-  fields.forEach(field => {
-    const cell = document.createElement("td");
-    let value = scenario[field];
-    if (field === "cost_val") {
-      cell.textContent = `A$${value.toFixed(2)}`;
-    } else if (typeof value === "boolean") {
-      cell.textContent = value ? "Yes" : "No";
-    } else if (field === "predictedUptake") {
-      cell.textContent = `${parseFloat(value).toFixed(1)}%`;
-    } else if (field === "netBenefit") {
-      cell.textContent = `A$${parseFloat(value).toFixed(2)}`;
-    } else {
-      cell.textContent = value || "N/A";
-    }
-    row.appendChild(cell);
+
+  const cells = [
+    rec.name,
+    s.state || "None",
+    s.adjustCosts === "yes" ? "Yes" : "No",
+    s.includeOppCost ? "Yes" : "No",
+    `A$${applyCostOfLiving(s.rawCost, s.state, s.adjustCosts).toFixed(2)}`,
+    s.localCheck ? "Yes" : "No",
+    s.widerCheck ? "Yes" : "No",
+    s.weeklyCheck ? "Yes" : "No",
+    s.monthlyCheck ? "Yes" : "No",
+    s.virtualCheck ? "Yes" : "No",
+    s.hybridCheck ? "Yes" : "No",
+    s.twoHCheck ? "Yes" : "No",
+    s.fourHCheck ? "Yes" : "No",
+    s.commCheck ? "Yes" : "No",
+    s.psychCheck ? "Yes" : "No",
+    s.vrCheck ? "Yes" : "No",
+    rec.uptakePercent.toFixed(1),
+    formatMoney(rec.totalEconomicCost),
+    formatMoney(rec.qalyMonetised),
+    formatMoney(rec.totalSavings),
+    formatMoney(rec.totalWTPBenefits),
+    formatMoney(rec.netBenefitQALY),
+    formatMoney(rec.netBenefitSavings),
+    formatMoney(rec.netBenefitWTP),
+    rec.bcrQALY ? rec.bcrQALY.toFixed(2) : "n.a.",
+    rec.bcrSavings ? rec.bcrSavings.toFixed(2) : "n.a.",
+    rec.bcrWTP ? rec.bcrWTP.toFixed(2) : "n.a.",
+    rec.lonelinessFreeDays.toFixed(0)
+  ];
+
+  cells.forEach(text => {
+    const td = document.createElement("td");
+    td.textContent = text;
+    row.appendChild(td);
   });
+
   tbody.appendChild(row);
-  // Show toast notification
-  const toast = document.getElementById("toast");
-  toast.textContent = `Scenario "${scenario.name}" saved.`;
-  toast.className = "toast show";
-  setTimeout(() => { toast.className = "toast"; }, 3000);
 }
 
 function openComparison() {
   if (savedScenarios.length < 1) {
-    alert("No scenarios saved to export. Please save at least one scenario.");
+    alert("Please save at least one scenario before exporting.");
+    return;
+  }
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert("Unable to load PDF library. Please check your connection.");
     return;
   }
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-  const margin = 40;
-  let y = 50;
-  doc.setFont("Helvetica");
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  let y = 16;
+
   doc.setFontSize(14);
-  doc.text("LonelyLessAustralia – Scenarios Comparison", margin, y);
-  y += 20;
+  doc.text("LonelyLessAustralia Decision Aid", pageWidth / 2, y, { align: "center" });
+  y += 6;
   doc.setFontSize(11);
-  savedScenarios.forEach((sc, index) => {
-    if (y > 760) { // roughly end of page, add new
+  doc.text("Scenario comparison summary", pageWidth / 2, y, { align: "center" });
+  y += 8;
+
+  savedScenarios.forEach((rec, idx) => {
+    if (y > 260) {
       doc.addPage();
-      y = 50;
+      y = 16;
     }
-    doc.text(`${index + 1}. Scenario Name: ${sc.name}`, margin, y);
-    y += 14;
-    if (sc.notes) {
-      doc.text(`Notes: ${sc.notes}`, margin + 20, y);
-      y += 12;
-    }
-    doc.text(`State: ${sc.state || 'None'}; Cost-of-Living Adjust: ${sc.adjustCosts === 'yes' ? 'Yes' : 'No'}; Opp. Cost Included: ${sc.oppCostSetting === 'yes' ? 'Yes' : 'No'}`, margin + 20, y);
-    y += 12;
-    doc.text(`Cost per Session: A$${sc.cost_val.toFixed(2)}`, margin + 20, y);
-    y += 12;
-    doc.text(`Local Area: ${sc.localCheck ? 'Yes' : 'No'}; Wider Community: ${sc.widerCheck ? 'Yes' : 'No'}`, margin + 20, y);
-    y += 12;
-    doc.text(`Weekly: ${sc.weeklyCheck ? 'Yes' : 'No'}; Monthly: ${sc.monthlyCheck ? 'Yes' : 'No'}`, margin + 20, y);
-    y += 12;
-    doc.text(`In-person (default): ${(!sc.virtualCheck && !sc.hybridCheck) ? 'Yes' : 'No'}; Virtual: ${sc.virtualCheck ? 'Yes' : 'No'}; Hybrid: ${sc.hybridCheck ? 'Yes' : 'No'}`, margin + 20, y);
-    y += 12;
-    doc.text(`2-hour: ${sc.twoHCheck ? 'Yes' : 'No'}; 4-hour: ${sc.fourHCheck ? 'Yes' : 'No'}`, margin + 20, y);
-    y += 12;
-    doc.text(`Community: ${sc.commCheck ? 'Yes' : 'No'}; Counselling: ${sc.psychCheck ? 'Yes' : 'No'}; VR: ${sc.vrCheck ? 'Yes' : 'No'}`, margin + 20, y);
-    y += 12;
-    doc.text(`Predicted Uptake: ${parseFloat(sc.predictedUptake).toFixed(1)}%`, margin + 20, y);
-    y += 12;
-    const nbText = parseFloat(sc.netBenefit) ? `A$${parseFloat(sc.netBenefit).toFixed(2)}` : sc.netBenefit;
-    doc.text(`Net Benefit (QALY-based): ${nbText}`, margin + 20, y);
-    y += 20;
+    const s = rec.scenario;
+    doc.setFontSize(11);
+    doc.text(`${idx + 1}. ${rec.name}`, 12, y);
+    y += 5;
+    doc.setFontSize(9);
+    const lines = [
+      `State: ${s.state || "None"}, cost adjust: ${s.adjustCosts === "yes" ? "Yes" : "No"}, include opportunity cost: ${s.includeOppCost ? "Yes" : "No"}`,
+      `Programme type: ${s.commCheck ? "Community engagement" : s.psychCheck ? "Psychological counselling" : s.vrCheck ? "Virtual reality" : "Peer support reference"}`,
+      `Method: ${s.virtualCheck ? "Virtual" : s.hybridCheck ? "Hybrid" : "In person"}, frequency: ${s.weeklyCheck ? "Weekly" : s.monthlyCheck ? "Monthly" : "Daily reference"}`,
+      `Accessibility: ${s.localCheck ? "Local area" : s.widerCheck ? "Wider community" : "At home reference"}, duration: ${s.twoHCheck ? "2 hour" : s.fourHCheck ? "4 hour" : "30 minute reference"}`,
+      `Uptake: ${rec.uptakePercent.toFixed(1)} percent, participants: ${rec.participants.toFixed(0)}`,
+      `Total cost: A$${formatMoney(rec.totalEconomicCost)}, QALY benefits: A$${formatMoney(rec.qalyMonetised)}, cost savings: A$${formatMoney(rec.totalSavings)}, WTP benefits: A$${formatMoney(rec.totalWTPBenefits)}`,
+      `Net benefit QALY: A$${formatMoney(rec.netBenefitQALY)}, net benefit savings: A$${formatMoney(rec.netBenefitSavings)}, net benefit WTP: A$${formatMoney(rec.netBenefitWTP)}`,
+      `BCR QALY: ${rec.bcrQALY ? rec.bcrQALY.toFixed(2) : "n.a."}, BCR savings: ${rec.bcrSavings ? rec.bcrSavings.toFixed(2) : "n.a."}, BCR WTP: ${rec.bcrWTP ? rec.bcrWTP.toFixed(2) : "n.a."}`,
+      `Loneliness free days (5 years): ${rec.lonelinessFreeDays.toFixed(0)}`
+    ];
+    lines.forEach(line => {
+      doc.text(line, 12, y);
+      y += 4;
+    });
+    y += 2;
   });
-  doc.save("LonelyLessAustralia_Scenarios.pdf");
+
+  doc.save("LonelyLessAustralia_scenarios.pdf");
 }
 
 /***************************************************************************
- * Modal Popup Controls
+ * Microsoft Copilot soft integration
  ***************************************************************************/
-function openSummary() {
-  const scenario = buildScenarioFromInputs();
-  if (!scenario) return;
-  scenarioComputed = true;
-  // Render all results to ensure charts and numbers are up to date
-  renderCostsBenefits();
-  renderProbChart();
-  // Prepare summary content
-  const uptakeVal = parseFloat(scenario.predictedUptake);
-  const recommendation = generateRecommendation(scenario, uptakeVal);
-  const netBenefitNum = parseFloat(scenario.netBenefit);
-  const bcr = scenario.totalCost > 0 ? scenario.monetizedBenefits / scenario.totalCost : null;
-  // Create a briefing text
-  const bcrStr = (bcr === null) ? "N/A" : bcr.toFixed(2);
-  const briefText = `Estimated uptake is ~${uptakeVal.toFixed(1)}% and the benefit-cost ratio is ${bcrStr}. ` +
-    (bcr !== null && bcr >= 1 ? "Benefits exceed costs, indicating a positive net return. " : "Costs exceed monetized benefits in this scenario. ") +
-    `Approximately ${scenario.numberOfParticipants.toFixed(0)} participants would enroll (out of 250 targeted). ` +
-    `Total costs are roughly A$${scenario.totalCost.toFixed(0)}, with expected benefits valued at A$${scenario.monetizedBenefits.toFixed(0)}.`;
-  const modalResultsDiv = document.getElementById("modalResults");
-  modalResultsDiv.innerHTML = `
-    <h4>Calculation Results</h4>
-    <p><strong>Predicted Uptake:</strong> ${uptakeVal.toFixed(1)}%</p>
-    <p>${recommendation}</p>
-    <p><strong>Briefing Text:</strong> <em>${briefText}</em></p>
-  `;
-  openModal();
+
+async function prepareCopilotPrompt() {
+  let target = null;
+
+  if (savedScenarios.length > 0) {
+    // Use the most recently saved scenario
+    target = savedScenarios[savedScenarios.length - 1];
+  } else {
+    // Fall back to the current (unsaved) configuration
+    const res = getFullResultsForScenario();
+    if (!res) {
+      alert("Configure and apply a scenario first or save at least one scenario before using Copilot.");
+      return;
+    }
+    const name = res.scenario.scenarioName || "Current scenario (unsaved)";
+    target = { name, ...res };
+  }
+
+  const sc = target.scenario;
+
+  const exportObj = {
+    tool: "LonelyLessAustralia Decision Aid",
+    institution: "Newcastle Business School, University of Newcastle, Australia",
+    purpose: "To help assess loneliness support programmes for older adults in Australia using discrete choice evidence, realistic costs and health outcomes.",
+    scenarioName: target.name,
+    scenarioNotes: sc.scenarioNotes || "",
+    modelAssumptions: {
+      baseCohortSize: BASE_PARTICIPANTS,
+      sessionsPerProgram: SESSIONS_PER_PROGRAM,
+      qalyScenario: target.qalyScenario,
+      qalyGainPerParticipant: target.qalyPerParticipant,
+      valuePerQALY_AUD: VALUE_PER_QALY,
+      timeHorizonYears: ROI_PARAMS.timeHorizonYears,
+      includesOpportunityCost: sc.includeOppCost
+    },
+    inputs: {
+      state: sc.state || null,
+      costOfLivingAdjusted: sc.adjustCosts === "yes",
+      participantFeePerSession_raw_AUD: sc.rawCost,
+      participantFeePerSession_adjusted_AUD: target.adjustedUnitCost,
+      programmeType: sc.commCheck ? "Community engagement" : sc.psychCheck ? "Psychological counselling" : sc.vrCheck ? "Virtual reality" : "Peer support (reference)",
+      method: sc.virtualCheck ? "Virtual" : sc.hybridCheck ? "Hybrid" : "In person",
+      frequency: sc.weeklyCheck ? "Weekly" : sc.monthlyCheck ? "Monthly" : "Daily (reference)",
+      duration: sc.twoHCheck ? "2 hour sessions" : sc.fourHCheck ? "4 hour sessions" : "30 minute sessions (reference)",
+      accessibility: sc.localCheck ? "Local area (around 12 km)" : sc.widerCheck ? "Wider community (50 km or more)" : "At home (reference)"
+    },
+    results: {
+      uptakePercent: target.uptakePercent,
+      participants: target.participants,
+      totalEconomicCost_AUD: target.totalEconomicCost,
+      costPerParticipant_AUD: target.participants > 0 ? target.totalEconomicCost / target.participants : null,
+      qalyMonetisedBenefits_AUD: target.qalyMonetised,
+      totalQALYs: target.totalQALYs,
+      healthSavings_AUD: target.healthSavings,
+      productivitySavings_AUD: target.productivitySavings,
+      totalSavings_AUD: target.totalSavings,
+      wtpPerParticipantPerSession_AUD: target.wtpPerParticipantSession,
+      wtpPerParticipantPerProgram_AUD: target.wtpPerParticipantProgram,
+      totalWTPBenefits_AUD: target.totalWTPBenefits,
+      lonelinessFreeDays: target.lonelinessFreeDays,
+      netBenefit_QALY_AUD: target.netBenefitQALY,
+      netBenefit_Savings_AUD: target.netBenefitSavings,
+      netBenefit_WTP_AUD: target.netBenefitWTP,
+      bcr_QALY: target.bcrQALY,
+      bcr_Savings: target.bcrSavings,
+      bcr_WTP: target.bcrWTP
+    }
+  };
+
+  const jsonText = JSON.stringify(exportObj, null, 2);
+
+  const promptText =
+`You are assisting a policy analyst who is using the "LonelyLessAustralia Decision Aid" tool developed at Newcastle Business School, University of Newcastle, Australia.
+
+Context:
+- The tool combines a discrete choice experiment on older adults preferences for loneliness support programmes with Australian and international evidence on programme costs, QALY gains, health service use, productivity impacts and loneliness free days.
+- Each scenario represents a particular programme configuration (programme type, delivery method, frequency, duration, accessibility and participant fees) plus economic assumptions (QALY gains, value per QALY, time horizon and opportunity cost of participant time).
+
+Task:
+1. Read the JSON scenario export below.
+2. In clear, non technical language, describe what this scenario represents:
+   - The type of programme and how it would be delivered.
+   - Who is expected to participate and under what assumptions.
+3. Explain the main indicators in a way that is useful for senior decision makers:
+   - Uptake percent and number of participants.
+   - Total economic cost and cost per participant.
+   - Monetised QALY gains and what they imply about health benefits.
+   - Health system and productivity cost savings.
+   - Willingness to pay based benefits.
+   - Loneliness free days.
+   - Net benefits and benefit cost ratios for each benefit measure.
+4. Provide a short interpretation from the perspective of a health department or funding agency:
+   - Does this scenario appear to offer good value for money.
+   - Under what conditions would you recommend funding or scaling this programme.
+   - What simple changes to programme design (for example cost, frequency, venue or delivery method) might improve uptake or value for money.
+5. Highlight any important caveats or sensitivities:
+   - For example, dependence on assumed QALY gains, the five year time horizon, cost of living region or uncertainty around cost savings and WTP estimates.
+
+Please keep the response to around 400 to 600 words and structure it with short headings such as "Programme overview", "Key indicators", "Value for money" and "Caveats".
+
+JSON scenario export:
+${jsonText}
+`;
+
+  const box = document.getElementById("copilotPromptBox");
+  if (box) {
+    box.value = promptText;
+  }
+
+  let clipboardOk = false;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    try {
+      await navigator.clipboard.writeText(promptText);
+      clipboardOk = true;
+      showToast("Copilot prompt copied to clipboard. A new Copilot tab has been opened.");
+    } catch (e) {
+      showToast("Unable to copy to clipboard. Copy the prompt from the box and paste it into Copilot.");
+    }
+  } else {
+    showToast("Clipboard is not available. Copy the prompt from the box and paste it into Copilot.");
+  }
+
+  window.open("https://copilot.microsoft.com/", "_blank", "noopener");
 }
+
+/***************************************************************************
+ * Modal and toast helpers
+ ***************************************************************************/
+
 function openModal() {
-  document.getElementById("resultModal").style.display = "block";
+  const modal = document.getElementById("resultModal");
+  if (modal) modal.style.display = "block";
 }
+
 function closeModal() {
-  document.getElementById("resultModal").style.display = "none";
+  const modal = document.getElementById("resultModal");
+  if (modal) modal.style.display = "none";
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2600);
+}
+
+/***************************************************************************
+ * Helpers
+ ***************************************************************************/
+
+function formatMoney(x) {
+  if (!isFinite(x)) return "0";
+  return Number(x).toLocaleString(undefined, { maximumFractionDigits: 0 });
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, function (m) {
+    return ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#39;"
+    })[m];
+  });
 }
