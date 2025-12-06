@@ -1,0 +1,487 @@
+<!-- technical-appendix.html – full technical appendix (open in new window) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>STEPS – Technical Appendix – Version 1.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg-body: #f5f7fa;
+      --bg-elevated: #ffffff;
+      --border-subtle: #e5e7eb;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --accent: #1d4ed8;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-body);
+      color: var(--text-main);
+      font-family: var(--font-main);
+    }
+    .page {
+      max-width: 880px;
+      margin: 20px auto 40px;
+      padding: 18px 22px 26px;
+      background: var(--bg-elevated);
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 1.4rem;
+    }
+    h2 {
+      font-size: 1.15rem;
+      margin-top: 1.2rem;
+    }
+    h3 {
+      font-size: 1rem;
+      margin-top: 0.9rem;
+    }
+    p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--text-main);
+    }
+    .muted {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    ul, ol {
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+    code {
+      font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+      font-size: 0.82rem;
+    }
+    pre {
+      background: #f3f4f6;
+      border-radius: 10px;
+      padding: 8px 10px;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.82rem;
+      overflow-x: auto;
+    }
+    .header-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+    .badge {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="header-strip">
+    <div>
+      <h1>STEPS Technical Appendix</h1>
+      <p class="muted">
+        Version 1.0 – FETP Scale Up Tool (India)
+      </p>
+    </div>
+    <span class="badge">For internal policy analysis</span>
+  </div>
+
+  <p>
+    This technical appendix explains how STEPS uses discrete choice experiment (DCE) estimates,
+    cost templates and epidemiological multipliers. It sets out the utility specification, the mixed
+    logit and latent class models, derivation of willingness-to-pay (WTP), cost and benefit formulas,
+    and worked numerical examples. The goal is transparency: any analyst should be able to reproduce
+    the calculations with the underlying coefficients and cost data.
+  </p>
+
+  <h2>1. Utility specification and models</h2>
+  <p>
+    Let alternative <code>j</code> index either the FETP programme (<code>j = 1</code>) or the
+    opt-out alternative (<code>j = 0</code>). For respondent <code>n</code>, in choice task
+    <code>t</code>, the utility of alternative <code>j</code> is:
+  </p>
+  <pre>
+U<sub>ntj</sub> = V<sub>ntj</sub> + ε<sub>ntj</sub></pre>
+  <p>
+    where <code>ε<sub>ntj</sub></code> is an i.i.d. extreme value type I error term and the
+    systematic utility <code>V</code> for the programme alternative is specified as:
+  </p>
+  <pre>
+V_program =
+  ASC_Program
+  + β_tier(tier)
+  + β_career(career incentive)
+  + β_mentor(mentorship)
+  + β_delivery(delivery mode)
+  + β_response(response time)
+  + β_cost · (cost per trainee per month / 1000)</pre>
+  <p>
+    The opt-out alternative has:
+  </p>
+  <pre>
+V_optout = ASC_OptOut</pre>
+
+  <h3>1.1 Mixed logit model</h3>
+  <p>
+    In the mixed logit (MXL) model, several attribute coefficients are treated as random, capturing
+    unobserved preference heterogeneity. The cost coefficient is estimated with a lognormal
+    transformation to enforce a negative sign. For each draw <code>r = 1, …, R</code>:
+  </p>
+  <pre>
+β_cost,r = -exp(μ_cost + σ_cost · z_r)</pre>
+  <p class="muted">
+    where <code>z_r</code> is a standard normal draw. For the tool, the back-transformed mean cost
+    coefficient is approximated as β_cost ≈ −0.005 per thousand INR.
+  </p>
+
+  <h3>1.2 Latent class model</h3>
+  <p>
+    A two-class latent class logit model is also estimated. Class 2 represents “training supporters”
+    who are systematically more favourable to investing in FETP. STEPS uses Class 2 coefficients and
+    the corresponding WTP table when the user selects the “Latent Class 2” option.
+  </p>
+
+  <h2>2. From coefficients to endorsement probabilities</h2>
+  <p>
+    Given a configuration <code>x</code> (defined by tier, career incentive, mentorship, delivery
+    mode, response time and cost), the programme and opt-out utilities are:
+  </p>
+  <pre>
+V_program(x) = ASC_Program + Σ β_k · x_k
+V_optout = ASC_OptOut</pre>
+  <p>
+    The endorsement probability for the programme is:
+  </p>
+  <pre>
+P(endorse FETP | x) =
+  exp(V_program(x)) / [exp(V_program(x)) + exp(V_optout)]</pre>
+  <p>
+    and the probability of opting out is the complement. These probabilities are reported in the
+    tool as “Endorsement” and “Opt out”.
+  </p>
+
+  <h3>Worked example: endorsement</h3>
+  <p>
+    Consider an Intermediate programme with:
+  </p>
+  <ul>
+    <li>University qualification</li>
+    <li>High mentorship</li>
+    <li>Blended delivery</li>
+    <li>Response within 15 days</li>
+    <li>Cost per trainee per month = INR 150,000</li>
+  </ul>
+  <p>
+    Using the mixed logit mean coefficients (in preference space) and the back-transformed cost
+    coefficient:
+  </p>
+  <pre>
+V_program =
+  0.168 (ASC_Program)
+  + 0.220 (Intermediate)
+  + 0.017 (University qualification)
+  + 0.640 (High mentorship)
+  + 0.000 (Blended reference)
+  + 0.546 (15 days)
+  + β_cost · 150 (thousand INR)
+
+≈ 1.591 + (−0.005 × 150)
+≈ 1.591 − 0.75
+≈ 0.841
+
+V_optout = −0.601</pre>
+  <p>
+    Then:
+  </p>
+  <pre>
+P(endorse) =
+  exp(0.841) / [exp(0.841) + exp(−0.601)]
+≈ 2.32 / (2.32 + 0.55)
+≈ 0.81</pre>
+  <p>
+    So, roughly 81 percent of respondents are predicted to endorse this configuration and 19 percent
+    to opt out. These values would appear in the Results tab as ~81.0% and 19.0%.
+  </p>
+
+  <h2>3. WTP calculation in detail</h2>
+  <p>
+    For each attribute level <code>ℓ</code> with coefficient <code>β_ℓ</code> and a cost coefficient
+    <code>β_cost</code>, WTP in thousand INR per trainee per month is:
+  </p>
+  <pre>
+WTP_ℓ (thousand INR) = − β_ℓ / β_cost</pre>
+  <p>
+    STEPS uses the final WTP tables derived from this formula. For a programme configured with
+    attribute levels <code>ℓ = 1, …, L</code>, total WTP is:
+  </p>
+  <pre>
+WTP_config (INR / trainee / month) =
+  [ Σ WTP_ℓ (thousand INR) ] × 1000</pre>
+
+  <h3>Worked WTP example (mixed logit table)</h3>
+  <p>
+    Suppose the WTP table for the mixed logit model gives (thousand INR):
+  </p>
+  <ul>
+    <li>Intermediate tier: 47.06</li>
+    <li>High mentorship: 136.79</li>
+    <li>Response within 15 days: 116.70</li>
+    <li>University qualification: 3.69</li>
+    <li>Blended delivery: 0 (reference)</li>
+  </ul>
+  <p>
+    For the configuration defined above:
+  </p>
+  <pre>
+Total WTP (thousand INR) =
+  47.06 + 136.79 + 116.70 + 3.69 + 0
+= 304.24
+
+WTP_config (INR / trainee / month) =
+  304.24 × 1000 ≈ 304,240</pre>
+  <p>
+    The tool rounds this to “INR 304,000 per trainee per month” in the WTP metric.
+  </p>
+
+  <h3>Latent class WTP</h3>
+  <p>
+    When the user selects Latent Class 2 (“training supporters”), STEPS uses the LC2 WTP table. The
+    calculation is identical but uses class-specific values, which are typically larger in magnitude.
+  </p>
+
+  <h2>4. Cost construction</h2>
+  <p>
+    Let:
+  </p>
+  <ul>
+    <li><code>C_unit</code> = cost per trainee per month (INR)</li>
+    <li><code>D</code> = duration of the programme (months)</li>
+    <li><code>N</code> = trainees per cohort</li>
+    <li><code>N_cohort</code> = number of cohorts</li>
+    <li><code>C_opp</code> = opportunity cost per trainee per month (INR)</li>
+  </ul>
+  <p>
+    Then:
+  </p>
+  <pre>
+Programme cost per cohort =
+  C_unit × D × N
+
+Opportunity cost per cohort =
+  C_opp × D × N    (if switched on; otherwise 0)
+
+Total cost per cohort =
+  Programme cost per cohort + Opportunity cost per cohort
+
+Total cost, all cohorts =
+  Total cost per cohort × N_cohort</pre>
+
+  <h3>Worked cost example</h3>
+  <p>
+    For an Intermediate programme:
+  </p>
+  <ul>
+    <li><code>C_unit</code> = INR 150,000</li>
+    <li><code>D</code> = 12 months</li>
+    <li><code>N</code> = 20 trainees</li>
+    <li><code>N_cohort</code> = 6</li>
+    <li><code>C_opp</code> = INR 40,000 (opportunity cost on)</li>
+  </ul>
+  <p>
+    Programme cost per cohort:
+  </p>
+  <pre>
+= 150,000 × 12 × 20
+= 36,000,000 INR</pre>
+  <p>
+    Opportunity cost per cohort:
+  </p>
+  <pre>
+= 40,000 × 12 × 20
+= 9,600,000 INR</pre>
+  <p>
+    Total cost per cohort:
+  </p>
+  <pre>
+= 36,000,000 + 9,600,000
+= 45,600,000 INR</pre>
+  <p>
+    Total cost across six cohorts:
+  </p>
+  <pre>
+= 45,600,000 × 6
+= 273,600,000 INR</pre>
+
+  <h2>5. Benefit and benefit–cost analysis</h2>
+  <p>
+    Let:
+  </p>
+  <ul>
+    <li><code>p_end</code> = endorsement probability from the model</li>
+    <li><code>q</code> = completion rate (proportion)</li>
+    <li><code>WTP_config</code> = WTP per trainee per month (INR)</li>
+  </ul>
+  <p>
+    Graduates and endorsed graduates:
+  </p>
+  <pre>
+Graduates per cohort =
+  N × q
+
+Total graduates (all cohorts) =
+  N × q × N_cohort
+
+Endorsed graduates per cohort =
+  Graduates per cohort × p_end</pre>
+  <p>
+    WTP-based benefit per cohort:
+  </p>
+  <pre>
+Benefit per cohort =
+  WTP_config × D × Endorsed graduates per cohort</pre>
+  <p>
+    Total benefit across all cohorts:
+  </p>
+  <pre>
+Total benefit =
+  Benefit per cohort × N_cohort</pre>
+  <p>
+    Benefit–cost ratio and net benefit:
+  </p>
+  <pre>
+BCR = Total benefit / Total cost
+Net benefit = Total benefit − Total cost</pre>
+
+  <h3>Worked benefit example</h3>
+  <p>
+    Using the earlier Intermediate example:
+  </p>
+  <ul>
+    <li><code>N</code> = 20, <code>N_cohort</code> = 6</li>
+    <li><code>q</code> = 0.8</li>
+    <li><code>p_end</code> = 0.56</li>
+    <li><code>D</code> = 12 months</li>
+    <li><code>WTP_config</code> ≈ INR 304,000 per trainee per month</li>
+    <li>Total cost across cohorts = INR 273,600,000</li>
+  </ul>
+  <p>
+    Graduates per cohort:
+  </p>
+  <pre>
+= 20 × 0.8 = 16</pre>
+  <p>
+    Endorsed graduates per cohort:
+  </p>
+  <pre>
+= 16 × 0.56 ≈ 8.96</pre>
+  <p>
+    Benefit per cohort:
+  </p>
+  <pre>
+= 304,000 × 12 × 8.96
+≈ 32,700,000 INR</pre>
+  <p>
+    Total benefit (all cohorts):
+  </p>
+  <pre>
+≈ 32,700,000 × 6
+≈ 196,200,000 INR</pre>
+  <p>
+    Benefit–cost ratio:
+  </p>
+  <pre>
+BCR ≈ 196.2 / 273.6 ≈ 0.72</pre>
+  <p>
+    Net benefit:
+  </p>
+  <pre>
+≈ 196,200,000 − 273,600,000 ≈ −77,400,000 INR</pre>
+
+  <h2>6. Epidemiological multipliers</h2>
+  <p>
+    To track outbreak response outputs:
+  </p>
+  <ul>
+    <li><code>r</code> = outbreak responses per graduate per year</li>
+    <li><code>V_resp</code> = value per outbreak response (INR)</li>
+  </ul>
+  <p>
+    Total graduates across all cohorts:
+  </p>
+  <pre>
+Graduates_total = N × q × N_cohort</pre>
+  <p>
+    Outbreak responses per year:
+  </p>
+  <pre>
+Outbreak responses per year =
+  Graduates_total × r × p_end</pre>
+  <p>
+    Epidemiological benefit per year:
+  </p>
+  <pre>
+Epi benefit per year =
+  Outbreak responses per year × V_resp</pre>
+
+  <h3>Worked epidemiological example</h3>
+  <p>
+    Continuing the Intermediate example with:
+  </p>
+  <ul>
+    <li><code>r</code> = 3 responses per graduate per year</li>
+    <li><code>V_resp</code> = INR 500,000</li>
+  </ul>
+  <p>
+    Graduates across all cohorts:
+  </p>
+  <pre>
+= 20 × 0.8 × 6 = 96</pre>
+  <p>
+    Outbreak responses per year:
+  </p>
+  <pre>
+= 96 × 3 × 0.56 ≈ 161.3 responses</pre>
+  <p>
+    Epidemiological benefit per year:
+  </p>
+  <pre>
+≈ 161.3 × 500,000 ≈ 80,650,000 INR</pre>
+
+  <h2>7. Interpretation and limitations</h2>
+  <p>
+    All STEPS outputs are indicative and scenario-based. They depend on:
+  </p>
+  <ul>
+    <li>The DCE sample and final model coefficients.</li>
+    <li>The choice of cost template, unit costs and opportunity cost assumptions.</li>
+    <li>The epidemiological multipliers for outbreak responses and their value.</li>
+  </ul>
+  <p>
+    The tool is designed to make these assumptions explicit, rather than to provide point
+    estimates. For robust decision making, results should be examined under alternative
+    assumptions and in conjunction with broader country evidence.
+  </p>
+
+  <p class="muted">
+    Prepared by Mesfin Genie, Newcastle Business School, The University of Newcastle, Australia.
+    For questions or clarifications please contact
+    <a href="mailto:mesfin.genie@newcastle.edu.au">mesfin.genie@newcastle.edu.au</a>.
+  </p>
+</div>
+</body>
+</html>
