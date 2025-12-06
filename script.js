@@ -1,8 +1,10 @@
 /****************************************************************************
  * SCRIPT.JS
- * Enhanced tabs with event listenerss, improved Inputts layouts,
- * interactive cost–benefit analysis, dynamics doughnutt chart for predicted uptake with refined recommendationss,
- * WTP-based and QALY-based benefit measures, and export to PDF functionality.
+ * LonelyLessAustralia Decision Aid – premium government-style version
+ * - Enhanced tabs and layout
+ * - DCE-based uptake predictions
+ * - QALY-based and WTP-based benefit measures
+ * - Scenario saving and PDF export
  ****************************************************************************/
 
 /* Attach event listeners when DOM is loaded */
@@ -26,14 +28,9 @@ function openTab(tabId, btn) {
     button.classList.remove("active");
     button.setAttribute("aria-selected", "false");
   });
-  const target = document.getElementById(tabId);
-  if (target) {
-    target.style.display = "block";
-  }
-  if (btn) {
-    btn.classList.add("active");
-    btn.setAttribute("aria-selected", "true");
-  }
+  document.getElementById(tabId).style.display = "block";
+  btn.classList.add("active");
+  btn.setAttribute("aria-selected", "true");
 
   if (tabId === 'wtpTab') renderWTPChart();
   if (tabId === 'costsTab') renderCostsBenefits();
@@ -43,11 +40,6 @@ function openTab(tabId, btn) {
 /** Update Range Slider Display */
 function updateCostDisplay(val) {
   document.getElementById("costLabel").textContent = val;
-}
-
-/** Open Technical Appendix placeholder */
-function openTechnicalAppendix() {
-  window.open('technical-appendix.html', '_blank');
 }
 
 /***************************************************************************
@@ -99,27 +91,47 @@ const wtpDataMain = [
   { attribute: "Wider community accessibility", wtp: -13.99, pVal: 0.000, se: 3.98 }
 ];
 
-/** Helper to derive WTP per participant for a given scenario */
-function computeWTPPerParticipant(sc) {
-  let totalWTP = 0;
+/***************************************************************************
+ * Global QALY and cost constants
+ ***************************************************************************/
+const QALY_SCENARIO_VALUES = { low: 0.02, moderate: 0.05, high: 0.1 };
+const VALUE_PER_QALY = 50000;
 
-  if (sc.commCheck) totalWTP += 14.47;
-  if (sc.psychCheck) totalWTP += 4.28;
-  if (sc.vrCheck) totalWTP += -9.58;
+const FIXED_COSTS = { advertisement: 2978.80 };
+const VARIABLE_COSTS = { 
+  printing: 0.12 * 10000, 
+  postage: 0.15 * 10000, 
+  admin: 49.99 * 10, 
+  trainer: 223.86 * 100, 
+  oncosts: 44.77 * 100, 
+  facilitator: 100.00 * 100, 
+  materials: 50.00 * 100, 
+  venue: 15.00 * 100, 
+  sessionTime: 20.00 * 250, 
+  travel: 10.00 * 250 
+};
+const FIXED_TOTAL = FIXED_COSTS.advertisement + 26863.00;
+const VARIABLE_TOTAL = VARIABLE_COSTS.printing + VARIABLE_COSTS.postage + VARIABLE_COSTS.admin + VARIABLE_COSTS.trainer +
+                      VARIABLE_COSTS.oncosts + VARIABLE_COSTS.facilitator + VARIABLE_COSTS.materials +
+                      VARIABLE_COSTS.venue + VARIABLE_COSTS.sessionTime + VARIABLE_COSTS.travel;
 
-  if (sc.virtualCheck) totalWTP += -11.69;
-  if (sc.hybridCheck) totalWTP += -7.95;
-
-  if (sc.weeklyCheck) totalWTP += 16.93;
-  if (sc.monthlyCheck) totalWTP += 9.21;
-
-  if (sc.twoHCheck) totalWTP += 5.08;
-  if (sc.fourHCheck) totalWTP += 5.85;
-
-  if (sc.localCheck) totalWTP += 1.62;
-  if (sc.widerCheck) totalWTP += -13.99;
-
-  return totalWTP;
+/***************************************************************************
+ * Helper: WTP per participant based on selected levels
+ ***************************************************************************/
+function computeWTPPerParticipant(flags) {
+  let wtp = 0;
+  if (flags.commCheck) wtp += 14.47;
+  if (flags.psychCheck) wtp += 4.28;
+  if (flags.vrCheck) wtp += -9.58;
+  if (flags.virtualCheck) wtp += -11.69;
+  if (flags.hybridCheck) wtp += -7.95;
+  if (flags.weeklyCheck) wtp += 16.93;
+  if (flags.monthlyCheck) wtp += 9.21;
+  if (flags.twoHCheck) wtp += 5.08;
+  if (flags.fourHCheck) wtp += 5.85;
+  if (flags.localCheck) wtp += 1.62;
+  if (flags.widerCheck) wtp += -13.99;
+  return wtp;
 }
 
 /***************************************************************************
@@ -135,7 +147,7 @@ function buildScenarioFromInputs() {
   const frequency = document.querySelector('input[name="frequency"]:checked');
   const duration = document.querySelector('input[name="duration"]:checked');
   const accessibility = document.querySelector('input[name="accessibility"]:checked');
-
+  
   // Method is optional; if not selected, assume in-person.
   const method = document.querySelector('input[name="method"]:checked');
   let virtualCheck = false, hybridCheck = false;
@@ -143,26 +155,26 @@ function buildScenarioFromInputs() {
     virtualCheck = method.value === "virtual";
     hybridCheck = method.value === "hybrid";
   }
-
+  
   if (!support || !frequency || !duration || !accessibility) {
     alert("Please select a level for all required input cards (Support, Frequency, Duration, Accessibility).");
     return null;
   }
-
+  
   const commCheck = support.value === "community";
   const psychCheck = support.value === "counselling";
   const vrCheck = support.value === "vr";
-
+  
   const weeklyCheck = frequency.value === "weekly";
   const monthlyCheck = frequency.value === "monthly";
-
+  
   const twoHCheck = duration.value === "2hr";
   const fourHCheck = duration.value === "4hr";
-
+  
   const localCheck = accessibility.value === "local";
   const widerCheck = accessibility.value === "wider";
 
-  const scForProb = {
+  const probForParticipants = computeProbability({
     state,
     adjustCosts,
     cost_val,
@@ -177,33 +189,37 @@ function buildScenarioFromInputs() {
     commCheck,
     psychCheck,
     vrCheck
-  };
+  }, mainCoefficients);
 
-  const probForParticipants = computeProbability(scForProb, mainCoefficients);
   const uptake = probForParticipants * 100;
-
   const baseParticipants = 250;
   const numberOfParticipants = baseParticipants * probForParticipants;
 
-  const QALY_SCENARIO_VALUES_LOCAL = { low: 0.02, moderate: 0.05, high: 0.1 };
   const qalyScenario = document.getElementById("qalySelect") ? document.getElementById("qalySelect").value : "moderate";
-  const qalyPerParticipant = QALY_SCENARIO_VALUES_LOCAL[qalyScenario];
+  const qalyPerParticipant = QALY_SCENARIO_VALUES[qalyScenario];
   const totalQALY = numberOfParticipants * qalyPerParticipant;
 
-  const VALUE_PER_QALY_LOCAL = 50000;
-  const FIXED_TOTAL_LOCAL = 2978.80 + 26863.00;
-  const VARIABLE_TOTAL_LOCAL = (0.12 * 10000) + (0.15 * 10000) + (49.99 * 10) + (223.86 * 100) +
-                               (44.77 * 100) + (100.00 * 100) + (50.00 * 100) + (15.00 * 100) +
-                               (20.00 * 250) + (10.00 * 250);
-  const totalCost = FIXED_TOTAL_LOCAL + (VARIABLE_TOTAL_LOCAL * probForParticipants);
-  const monetizedBenefitsQALY = totalQALY * VALUE_PER_QALY_LOCAL;
-  const netBenefitQALY = monetizedBenefitsQALY - totalCost;
+  const totalCost = FIXED_TOTAL + (VARIABLE_TOTAL * probForParticipants);
+  const monetizedBenefits = totalQALY * VALUE_PER_QALY;
+  const netBenefit = monetizedBenefits - totalCost;
 
-  const wtpPerParticipant = computeWTPPerParticipant(scForProb);
-  const totalWTPBenefit = numberOfParticipants * wtpPerParticipant;
-  const netBenefitWTP = totalWTPBenefit - totalCost;
-
-  return {
+  const wtpPerParticipant = computeWTPPerParticipant({
+    commCheck,
+    psychCheck,
+    vrCheck,
+    virtualCheck,
+    hybridCheck,
+    weeklyCheck,
+    monthlyCheck,
+    twoHCheck,
+    fourHCheck,
+    localCheck,
+    widerCheck
+  });
+  const totalWtpBenefit = wtpPerParticipant * numberOfParticipants;
+  const wtpNetBenefit = totalWtpBenefit - totalCost;
+  
+  return { 
     state,
     adjustCosts,
     cost_val,
@@ -219,14 +235,9 @@ function buildScenarioFromInputs() {
     psychCheck,
     vrCheck,
     predictedUptake: uptake.toFixed(2),
-    totalQALY: totalQALY,
-    monetizedBenefitsQALY: monetizedBenefitsQALY,
-    netBenefitQALY: netBenefitQALY.toFixed(2),
-    netBenefitWTP: netBenefitWTP.toFixed(2),
-    wtpPerParticipant: wtpPerParticipant,
-    totalWTPBenefit: totalWTPBenefit.toFixed(2),
-    totalInterventionCost: totalCost.toFixed(2),
-    netBenefit: netBenefitQALY.toFixed(2) // preserve legacy property as QALY-based net benefit
+    netBenefit: netBenefit.toFixed(2),
+    wtpBenefit: totalWtpBenefit.toFixed(2),
+    wtpNetBenefit: wtpNetBenefit.toFixed(2)
   };
 }
 
@@ -249,6 +260,7 @@ function computeProbability(sc, coefs) {
   const type_comm = sc.commCheck ? 1 : 0;
   const type_psych = sc.psychCheck ? 1 : 0;
   const type_vr = sc.vrCheck ? 1 : 0;
+
   const U_alt = coefs.ASC_mean
     + coefs.type_comm * type_comm
     + coefs.type_psych * type_psych
@@ -262,6 +274,7 @@ function computeProbability(sc, coefs) {
     + coefs.dist_local * dist_local
     + coefs.dist_signif * dist_signif
     + coefs.cost_cont * finalCost;
+
   const U_optout = coefs.ASC_optout;
   return Math.exp(U_alt) / (Math.exp(U_alt) + Math.exp(U_optout));
 }
@@ -325,10 +338,10 @@ function renderWTPChart() {
             ctx.lineWidth = 1;
             ctx.moveTo(centerX, topY);
             ctx.lineTo(centerX, bottomY);
-            ctx.moveTo(centerX - 5, topY);
-            ctx.lineTo(centerX + 5, topY);
-            ctx.moveTo(centerX - 5, bottomY);
-            ctx.lineTo(centerX + 5, bottomY);
+            ctx.moveTo(centerX - 4, topY);
+            ctx.lineTo(centerX + 4, topY);
+            ctx.moveTo(centerX - 4, bottomY);
+            ctx.lineTo(centerX + 4, bottomY);
             ctx.stroke();
             ctx.restore();
           }
@@ -363,7 +376,27 @@ function saveScenario() {
   savedScenarios.push(scenario);
   const tableBody = document.querySelector("#scenarioTable tbody");
   const row = document.createElement("tr");
-  const props = ["name", "state", "adjustCosts", "cost_val", "localCheck", "widerCheck", "weeklyCheck", "monthlyCheck", "virtualCheck", "hybridCheck", "twoHCheck", "fourHCheck", "commCheck", "psychCheck", "vrCheck", "predictedUptake", "netBenefit"];
+  const props = [
+    "name",
+    "state",
+    "adjustCosts",
+    "cost_val",
+    "localCheck",
+    "widerCheck",
+    "weeklyCheck",
+    "monthlyCheck",
+    "virtualCheck",
+    "hybridCheck",
+    "twoHCheck",
+    "fourHCheck",
+    "commCheck",
+    "psychCheck",
+    "vrCheck",
+    "predictedUptake",
+    "netBenefit",
+    "wtpBenefit",
+    "wtpNetBenefit"
+  ];
   props.forEach(prop => {
     const cell = document.createElement("td");
     if (prop === "cost_val") {
@@ -384,10 +417,6 @@ function openComparison() {
     alert("Save at least two scenarios to compare.");
     return;
   }
-  if (!window.jspdf || !window.jspdf.jsPDF) {
-    alert("PDF library not available.");
-    return;
-  }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -403,7 +432,7 @@ function openComparison() {
     doc.setFontSize(14);
     doc.text(`Scenario ${index + 1}: ${scenario.name}`, 15, currentY);
     currentY += 7;
-    doc.setFontSize(12);
+    doc.setFontSize(11);
     doc.text(`State: ${scenario.state || 'None'}`, 15, currentY);
     currentY += 5;
     doc.text(`Cost Adjust: ${scenario.adjustCosts === 'yes' ? 'Yes' : 'No'}`, 15, currentY);
@@ -434,9 +463,11 @@ function openComparison() {
     currentY += 5;
     doc.text(`Predicted Uptake: ${scenario.predictedUptake}%`, 15, currentY);
     currentY += 5;
-    doc.text(`Net Benefit (QALY-based): A$${scenario.netBenefit}`, 15, currentY);
+    doc.text(`Net Benefit (QALY): A$${scenario.netBenefit}`, 15, currentY);
     currentY += 5;
-    doc.text(`Net Benefit (WTP-based): A$${scenario.netBenefitWTP}`, 15, currentY);
+    doc.text(`WTP-based Benefit: A$${scenario.wtpBenefit}`, 15, currentY);
+    currentY += 5;
+    doc.text(`Net Benefit (WTP-based): A$${scenario.wtpNetBenefit}`, 15, currentY);
     currentY += 10;
   });
   doc.save("Scenarios_Comparison.pdf");
@@ -446,12 +477,12 @@ function openComparison() {
  * Modal Functions for Results
  ***************************************************************************/
 function openModal() {
-  const m = document.getElementById("resultModal");
-  if (m) m.style.display = "block";
+  const modal = document.getElementById("resultModal");
+  if (modal) modal.style.display = "block";
 }
 function closeModal() {
-  const m = document.getElementById("resultModal");
-  if (m) m.style.display = "none";
+  const modal = document.getElementById("resultModal");
+  if (modal) modal.style.display = "none";
 }
 
 /***************************************************************************
@@ -460,7 +491,7 @@ function closeModal() {
 function openSingleScenario() {
   const scenario = buildScenarioFromInputs();
   if (!scenario) return;
-  renderCostsBenefits(scenario);
+  renderCostsBenefits();
   const uptakeVal = computeProbability(scenario, mainCoefficients) * 100;
   const recommendation = getRecommendation(scenario, uptakeVal);
   document.getElementById("modalResults").innerHTML = `<h4>Calculation Results</h4>
@@ -473,7 +504,7 @@ function openSingleScenario() {
 /***************************************************************************
  * Render Predicted Programme Uptake Chart (Doughnut) with Dynamic Recommendations
  ***************************************************************************/
-let uptakeChart = null;  // Single declaration.
+let uptakeChart = null;
 function renderProbChart() {
   const scenario = buildScenarioFromInputs();
   if (!scenario) return;
@@ -497,7 +528,7 @@ function drawUptakeChart(uptakeVal) {
       labels: ["Uptake", "Non-uptake"],
       datasets: [{
         data: [uptakeVal, 100 - uptakeVal],
-        backgroundColor: ["#28a745", "#dc3545"]
+        backgroundColor: ["#16a34a", "#dc2626"]
       }]
     },
     options: {
@@ -526,7 +557,8 @@ function drawUptakeChart(uptakeVal) {
  ***************************************************************************/
 function getRecommendation(scenario, uptake) {
   let rec = "Recommendation: ";
-
+  
+  // Method
   if (!scenario.virtualCheck && !scenario.hybridCheck) {
     rec += "Delivery defaults to in-person. ";
   } else if (scenario.virtualCheck && uptake < 50) {
@@ -534,32 +566,35 @@ function getRecommendation(scenario, uptake) {
   } else if (scenario.hybridCheck && uptake < 50) {
     rec += "Hybrid delivery may benefit from increasing in-person elements. ";
   }
-
+  
+  // Support type
   if (scenario.commCheck && uptake < 40) {
-    rec += "Promote community engagement more strongly. ";
+    rec += "Promote community engagement more strongly to raise awareness and participation. ";
   } else if (scenario.psychCheck && uptake < 40) {
-    rec += "Counselling alone may be less appealing; consider additional engagement strategies. ";
+    rec += "Counselling alone may be less appealing; consider combining with community engagement features. ";
   } else if (scenario.vrCheck && uptake < 40) {
-    rec += "VR-based sessions may be less effective; consider alternative support methods. ";
+    rec += "VR-based sessions may face acceptability barriers; consider alternative support modalities. ";
   }
-
+  
+  // Frequency and Duration
   if (scenario.monthlyCheck && uptake < 50) {
-    rec += "Switch from monthly to weekly sessions to improve uptake. ";
+    rec += "Switch from monthly to weekly sessions to improve programme visibility and engagement. ";
   }
   if (scenario.twoHCheck && uptake < 50) {
-    rec += "Shorter interactions might attract more participants. ";
+    rec += "Shorter interactions might attract more participants who are time-constrained. ";
   } else if (scenario.fourHCheck && uptake >= 70) {
-    rec += "Longer interactions are effective. ";
+    rec += "Longer interactions appear acceptable and may provide additional depth of support. ";
   }
-
+  
+  // Accessibility
   if (scenario.widerCheck && uptake < 50) {
-    rec += "Offering the programme locally could boost uptake. ";
+    rec += "Offering the programme locally rather than only in wider communities could boost uptake. ";
   }
-
+  
   if (uptake >= 70) {
-    rec = "Uptake is high. The current configuration is effective.";
+    rec = "Uptake is high. The current configuration is effective from an acceptability perspective.";
   }
-
+  
   return rec;
 }
 
@@ -567,28 +602,9 @@ function getRecommendation(scenario, uptake) {
  * Render Costs & Benefits Analysis (Combined Bar Chart)
  ***************************************************************************/
 let combinedChartInstance = null;
-const QALY_SCENARIO_VALUES = { low: 0.02, moderate: 0.05, high: 0.1 };
-const VALUE_PER_QALY = 50000;
-const FIXED_COSTS = { advertisement: 2978.80 };
-const VARIABLE_COSTS = {
-  printing: 0.12 * 10000,
-  postage: 0.15 * 10000,
-  admin: 49.99 * 10,
-  trainer: 223.86 * 100,
-  oncosts: 44.77 * 100,
-  facilitator: 100.00 * 100,
-  materials: 50.00 * 100,
-  venue: 15.00 * 100,
-  sessionTime: 20.00 * 250,
-  travel: 10.00 * 250
-};
-const FIXED_TOTAL = FIXED_COSTS.advertisement + 26863.00;
-const VARIABLE_TOTAL = VARIABLE_COSTS.printing + VARIABLE_COSTS.postage + VARIABLE_COSTS.admin + VARIABLE_COSTS.trainer +
-                       VARIABLE_COSTS.oncosts + VARIABLE_COSTS.facilitator + VARIABLE_COSTS.materials +
-                       VARIABLE_COSTS.venue + VARIABLE_COSTS.sessionTime + VARIABLE_COSTS.travel;
 
-function renderCostsBenefits(existingScenario) {
-  const scenario = existingScenario || buildScenarioFromInputs();
+function renderCostsBenefits() {
+  const scenario = buildScenarioFromInputs();
   if (!scenario) return;
 
   const pVal = computeProbability(scenario, mainCoefficients);
@@ -599,23 +615,37 @@ function renderCostsBenefits(existingScenario) {
   const qalyScenario = document.getElementById("qalySelect").value;
   const qalyPerParticipant = QALY_SCENARIO_VALUES[qalyScenario];
   const totalQALY = numberOfParticipants * qalyPerParticipant;
-  const monetizedBenefits = totalQALY * VALUE_PER_QALY;
+
   const totalInterventionCost = FIXED_TOTAL + (VARIABLE_TOTAL * pVal);
   const costPerPerson = numberOfParticipants > 0 ? (totalInterventionCost / numberOfParticipants) : 0;
-  const netBenefitQALY = monetizedBenefits - totalInterventionCost;
+  const monetizedBenefits = totalQALY * VALUE_PER_QALY;
+  const netBenefit = monetizedBenefits - totalInterventionCost;
 
-  const wtpPerParticipant = computeWTPPerParticipant(scenario);
-  const totalWTPBenefit = numberOfParticipants * wtpPerParticipant;
-  const netBenefitWTP = totalWTPBenefit - totalInterventionCost;
+  const wtpPerParticipant = computeWTPPerParticipant({
+    commCheck: scenario.commCheck,
+    psychCheck: scenario.psychCheck,
+    vrCheck: scenario.vrCheck,
+    virtualCheck: scenario.virtualCheck,
+    hybridCheck: scenario.hybridCheck,
+    weeklyCheck: scenario.weeklyCheck,
+    monthlyCheck: scenario.monthlyCheck,
+    twoHCheck: scenario.twoHCheck,
+    fourHCheck: scenario.fourHCheck,
+    localCheck: scenario.localCheck,
+    widerCheck: scenario.widerCheck
+  });
+  const totalWtpBenefit = wtpPerParticipant * numberOfParticipants;
+  const wtpNetBenefit = totalWtpBenefit - totalInterventionCost;
 
   scenario.predictedUptake = uptakePercentage.toFixed(2);
-  scenario.netBenefit = netBenefitQALY.toFixed(2);
-  scenario.netBenefitWTP = netBenefitWTP.toFixed(2);
+  scenario.netBenefit = netBenefit.toFixed(2);
+  scenario.wtpBenefit = totalWtpBenefit.toFixed(2);
+  scenario.wtpNetBenefit = wtpNetBenefit.toFixed(2);
 
   const costsTab = document.getElementById("costsBenefitsResults");
   if (!costsTab) return;
   costsTab.innerHTML = "";
-
+  
   const summaryDiv = document.createElement("div");
   summaryDiv.className = "calculation-info";
   summaryDiv.innerHTML = `
@@ -626,19 +656,19 @@ function renderCostsBenefits(existingScenario) {
     <p><strong>Cost per Participant:</strong> A$${costPerPerson.toFixed(2)}</p>
     <p><strong>Total QALYs:</strong> ${totalQALY.toFixed(2)}</p>
     <p><strong>Monetised Benefits (QALY-based):</strong> A$${monetizedBenefits.toLocaleString()}</p>
-    <p><strong>WTP-based Benefit per Participant:</strong> A$${wtpPerParticipant.toFixed(2)}</p>
-    <p><strong>Total WTP-based Benefits:</strong> A$${totalWTPBenefit.toLocaleString()}</p>
-    <p><strong>Net Benefit (QALY-based):</strong> A$${netBenefitQALY.toLocaleString()}</p>
-    <p><strong>Net Benefit (WTP-based):</strong> A$${netBenefitWTP.toLocaleString()}</p>
-    <p>This analysis combines fixed costs (advertisements and training) with variable costs (printing, postage, administrative personnel, trainer cost, on-costs, facilitator salaries, material costs, venue hire, session time, and travel). QALY-based benefits are calculated from QALY gains multiplied by A$50,000 per QALY, while WTP-based benefits are derived by multiplying the number of participants by the sum of WTP values for all selected programme attributes.</p>
+    <p><strong>Net Benefit (QALY-based):</strong> A$${netBenefit.toLocaleString()}</p>
+    <p><strong>Average WTP-based benefit per participant:</strong> A$${wtpPerParticipant.toFixed(2)}</p>
+    <p><strong>Total WTP-based Benefit:</strong> A$${totalWtpBenefit.toLocaleString()}</p>
+    <p><strong>Net Benefit (WTP-based):</strong> A$${wtpNetBenefit.toLocaleString()}</p>
+    <p>This analysis combines fixed costs (advertisements and training) with variable costs (printing, postage, administrative personnel, trainer cost, on-costs, facilitator salaries, material costs, venue hire, session time, and travel). Benefits are calculated using both a QALY-based monetisation at A$50,000 per QALY and an additional WTP-based benefit measure derived directly from the DCE.</p>
   `;
   costsTab.appendChild(summaryDiv);
-
+  
   const combinedChartContainer = document.createElement("div");
   combinedChartContainer.id = "combinedChartContainer";
   combinedChartContainer.innerHTML = `<canvas id="combinedChart"></canvas>`;
   costsTab.appendChild(combinedChartContainer);
-
+  
   const canvas = document.getElementById("combinedChart");
   if (!canvas) return;
   const ctxCombined = canvas.getContext("2d");
@@ -658,23 +688,23 @@ function renderCostsBenefits(existingScenario) {
         data: [
           totalInterventionCost,
           monetizedBenefits,
-          totalWTPBenefit,
-          netBenefitQALY,
-          netBenefitWTP
+          totalWtpBenefit,
+          netBenefit,
+          wtpNetBenefit
         ],
         backgroundColor: [
           'rgba(220,53,69,0.6)',
           'rgba(40,167,69,0.6)',
-          'rgba(0,123,255,0.6)',
+          'rgba(37,99,235,0.6)',
           'rgba(255,193,7,0.6)',
-          'rgba(108,92,231,0.6)'
+          'rgba(128,90,213,0.6)'
         ],
         borderColor: [
           'rgba(220,53,69,1)',
           'rgba(40,167,69,1)',
-          'rgba(0,123,255,1)',
+          'rgba(37,99,235,1)',
           'rgba(255,193,7,1)',
-          'rgba(108,92,231,1)'
+          'rgba(128,90,213,1)'
         ],
         borderWidth: 1
       }]
@@ -683,15 +713,7 @@ function renderCostsBenefits(existingScenario) {
       responsive: true,
       plugins: {
         legend: { display: false },
-        title: { display: true, text: "Combined Cost and Benefit Analysis (QALY and WTP)", font: { size: 16 } },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              const v = context.parsed.y;
-              return `${context.label}: A$${v.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
-            }
-          }
-        }
+        title: { display: true, text: "Combined Cost-Benefit Analysis (QALY and WTP-based)", font: { size: 15 } }
       },
       scales: {
         y: {
@@ -699,9 +721,9 @@ function renderCostsBenefits(existingScenario) {
           suggestedMax: Math.max(
             totalInterventionCost,
             monetizedBenefits,
-            Math.abs(netBenefitQALY),
-            totalWTPBenefit,
-            Math.abs(netBenefitWTP)
+            Math.abs(netBenefit),
+            Math.abs(totalWtpBenefit),
+            Math.abs(wtpNetBenefit)
           ) * 1.2
         }
       }
