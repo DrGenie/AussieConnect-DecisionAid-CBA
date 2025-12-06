@@ -1,186 +1,380 @@
+
+<!-- technical-appendix.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>LonelyLessAustralia – Technical Appendix</title>
+  <title>LonelyLessAustralia Technical Appendix</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; color: #333; }
-    h1, h2, h3 { color: #2c3e50; }
-    h1 { font-size: 1.8em; margin-bottom: 0.2em; }
-    h2 { font-size: 1.4em; margin-top: 1.2em; margin-bottom: 0.2em; }
-    h3 { font-size: 1.2em; margin-top: 1em; margin-bottom: 0.2em; }
-    p, ul { margin-bottom: 0.8em; }
-    ul { padding-left: 20px; list-style: disc; }
-    code { background: #eef; padding: 2px 4px; border-radius: 3px; }
+    body {
+      font-family: "Lato", "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f4f6fa;
+      color: #1f2a36;
+      margin: 0;
+      padding: 0;
+    }
+    .shell {
+      max-width: 900px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(15, 35, 52, 0.15);
+      padding: 20px 22px 18px;
+    }
+    h1, h2, h3, h4 {
+      color: #0a2f57;
+      margin-top: 12px;
+      margin-bottom: 6px;
+    }
+    h1 {
+      font-size: 1.6rem;
+      border-bottom: 2px solid #0a2f57;
+      padding-bottom: 6px;
+    }
+    p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 8px;
+      color: #3f4a5c;
+    }
+    ul, ol {
+      font-size: 0.95rem;
+      color: #3f4a5c;
+      margin-bottom: 8px;
+      padding-left: 18px;
+    }
+    .small-note {
+      font-size: 0.86rem;
+      color: #6c7a8c;
+    }
+    .section {
+      margin-top: 12px;
+    }
+    .ref-list li {
+      margin-bottom: 4px;
+    }
   </style>
 </head>
 <body>
-  <h1>LonelyLessAustralia Decision Aid – Technical Appendix</h1>
-  <p><em>Last updated: December 2025</em></p>
+  <div class="shell">
+    <h1>LonelyLessAustralia Decision Aid Tool<br />Technical Appendix</h1>
 
-  <h2>Overview</h2>
-  <p>
-    This technical appendix describes the data sources, assumptions, and calculations underlying the LonelyLessAustralia Decision Aid Tool. The tool integrates findings from a discrete choice experiment (DCE) on older adults’ programme preferences, along with cost data from economic evaluations of loneliness interventions in Australia. Its purpose is to predict programme uptake and perform cost-benefit analysis for user-defined scenarios.
-  </p>
+    <div class="section">
+      <h2>1. Overview</h2>
+      <p>
+        This appendix documents the methods, assumptions and evidence sources used in the LonelyLessAustralia
+        decision aid tool. It explains how discrete choice experiment results are translated into predicted
+        uptake and willingness to pay, how cost components and health outcomes are parameterised for the
+        Australian context and how benefit cost metrics and return on investment are derived.
+      </p>
+    </div>
 
-  <h2>Discrete Choice Experiment (DCE) and Willingness-to-Pay</h2>
-  <p>
-    The core preference estimates come from a DCE conducted among older Australians (age 65+). In this experiment, respondents chose between hypothetical loneliness intervention programs (described by various attributes) and an opt-out option. The attributes and levels included:
-  </p>
-  <ul>
-    <li><strong>Type of Support Programme:</strong> Peer support (reference), Community engagement, Psychological counselling, Virtual reality.</li>
-    <li><strong>Method of Interaction:</strong> In-person (reference), Virtual, Hybrid (mix).</li>
-    <li><strong>Frequency of Interaction:</strong> Daily (reference), Weekly, Monthly.</li>
-    <li><strong>Duration of Each Interaction:</strong> 30 minutes (reference), 2 hours, 4 hours.</li>
-    <li><strong>Accessibility (Location):</strong> At home (reference), Local area (~12 km radius), Wider community (50+ km away).</li>
-    <li><strong>Cost per Session:</strong> Continuous variable (A$0 to A$100 in the design, treated linearly).</li>
-  </ul>
-  <p>
-    A multinomial logit model (with random parameters for some attributes) was estimated from the DCE data. The table below summarizes the estimated <em>utility coefficients</em> and the derived <em>willingness-to-pay (WTP)</em> values for each attribute level. WTP is computed as <code>WTP = - (Coefficient_attribute) / (Coefficient_cost)</code>, using the cost coefficient as a conversion factor:contentReference[oaicite:40]{index=40}. Because the cost coefficient is negative (higher cost lowers utility), dividing a feature’s coefficient by the absolute cost coefficient yields how many dollars the average respondent is willing to trade for that feature.
-  </p>
-  <table border="1" cellpadding="5" cellspacing="0">
-    <tr><th>Attribute Level</th><th>Utility Coefficient</th><th>Standard Error</th><th>WTP (A$)</th><th>p-value</th></tr>
-    <tr><td>Community engagement</td><td>0.527</td><td>0.121</td><td>+14.47</td><td>&lt;0.001</td></tr>
-    <tr><td>Psychological counselling</td><td>0.156</td><td>0.133</td><td>+4.28</td><td>0.245</td></tr>
-    <tr><td>Virtual reality</td><td>-0.349</td><td>0.128</td><td>-9.58</td><td>0.009</td></tr>
-    <tr><td>Virtual (method)</td><td>-0.426</td><td>0.181</td><td>-11.69</td><td>0.019</td></tr>
-    <tr><td>Hybrid (method)</td><td>-0.289</td><td>0.089</td><td>-7.95</td><td>0.001</td></tr>
-    <tr><td>Weekly (frequency)</td><td>0.617</td><td>0.100</td><td>+16.93</td><td>&lt;0.001</td></tr>
-    <tr><td>Monthly (frequency)</td><td>0.336</td><td>0.119</td><td>+9.21</td><td>0.005</td></tr>
-    <tr><td>2-hour session</td><td>0.185</td><td>0.097</td><td>+5.08</td><td>0.059</td></tr>
-    <tr><td>4-hour session</td><td>0.213</td><td>0.103</td><td>+5.85</td><td>0.037</td></tr>
-    <tr><td>Local area (12 km)</td><td>0.059</td><td>0.160</td><td>+1.62</td><td>0.712</td></tr>
-    <tr><td>Wider community (50+ km)</td><td>-0.509</td><td>0.145</td><td>-13.99</td><td>&lt;0.001</td></tr>
-    <tr><td>Cost per session (A$1)</td><td><strong>-0.036</strong></td><td>0.005</td><td>–</td><td>&lt;0.001</td></tr>
-    <tr><td>Opt-out ASC (constant)</td><td>0.131</td><td>0.212</td><td>–</td><td>0.538</td></tr>
-  </table>
-  <p>
-    Note: The coefficients in bold (cost) and italics (if any) are statistically significant at conventional levels (p &lt; 0.05). Positive WTP indicates willingness to pay that amount for the feature (versus the reference), while negative WTP indicates how much would need to be paid to respondents for them to accept that feature (i.e., a disamenity).
-  </p>
-  <p>
-    Key insights from the DCE:
-  </p>
-  <ul>
-    <li><strong>Support Programme:</strong> Community engagement was strongly preferred (WTP ~ A$14.5):contentReference[oaicite:41]{index=41}. Counselling had a positive but not significant WTP (~A$4.3, p=0.25). VR-based support was disliked (WTP –A$9.6, p&lt;0.01), suggesting many older adults would avoid a VR intervention unless it had other compensating benefits.</li>
-    <li><strong>Method of Interaction:</strong> In-person was the implicit reference. Respondents had significant negative WTP for fully virtual delivery (~–A$11.7) and also disliked hybrid (–A$7.95):contentReference[oaicite:42]{index=42}. This indicates a clear preference for face-to-face interaction among older adults, consistent with literature emphasizing the value of direct social contact for this group.</li>
-    <li><strong>Frequency:</strong> Weekly sessions were most preferred (WTP +A$16.9):contentReference[oaicite:43]{index=43}. Monthly also had positive WTP (+A$9.2). The reference (daily) was less preferred; qualitatively, many seniors likely find daily commitment too demanding, whereas weekly hits a “goldilocks” frequency of regular engagement without being burdensome.</li>
-    <li><strong>Duration:</strong> Both 2-hour and 4-hour sessions had modest positive WTP (~A$5.1–5.9, p≈0.04–0.06). This suggests that, relative to 30 minutes, longer sessions are slightly preferred – possibly because they allow deeper engagement or simply because traveling to an event warrants a longer session.</li>
-    <li><strong>Accessibility:</strong> Local area (12 km) vs at-home had a small, non-significant positive WTP (~A$1.6), and wider community (50 km) had a large negative WTP (~–A$14):contentReference[oaicite:44]{index=44}. We interpret this as: participants don’t mind (and perhaps even slightly prefer) getting out of the house for a local program, but if the distance is large, it greatly reduces the appeal. “At home” was the baseline; some might prefer leaving home for social activities, hence the slight positive for local area.</li>
-    <li><strong>Cost:</strong> The cost coefficient is –0.036 (p&lt;0.001), indicating each additional dollar per session reduces the utility by 0.036. This was used to compute all WTP values above. It implies, for example, that a feature with coefficient 0.36 would be equivalent to $10 in utility (since 0.36/0.036 = 10).</li>
-    <li><strong>Opt-out constant:</strong> The alternative-specific constant for opting out (not joining any program) was positive (0.131) but not significant. This suggests no strong inherent bias to opting out beyond what the attributes and cost account for. In other words, respondents were mostly driven by the program features and cost when deciding, rather than an unexplained preference for or against participating.</li>
-  </ul>
-  <p>
-    These results match general expectations and other research. Group-based, community-focused interventions with regular, in-person contact are favored:contentReference[oaicite:45]{index=45}. Attributes like long travel distance or fully virtual formats create barriers to uptake.
-  </p>
-  <p>
-    In the tool, we use these coefficients to predict uptake probability for a given scenario and to display the WTP chart. The WTP chart simply visualizes the values in the table above (it’s static, since WTP values don’t change per scenario – they are population preferences). However, the **uptake prediction is dynamic**, calculated as follows.
-  </p>
+    <div class="section">
+      <h2>2. Discrete choice experiment and uptake model</h2>
+      <h3>2.1 Attributes and design</h3>
+      <p>
+        The discrete choice experiment (DCE) included attributes that describe key features of loneliness
+        support programs for older adults: type of support programme, delivery method, frequency and
+        duration of sessions, accessibility and participant cost per session. For each attribute, one level
+        was treated as the reference and additional levels represented improvements or trade offs.
+      </p>
+      <p>
+        Respondents aged 65 years and older were asked to choose between hypothetical programmes and an
+        opt out option in a series of choice tasks. The design followed standard practice in health
+        economics, with blocked experimental designs and a dual response structure where appropriate.
+      </p>
 
-  <h2>Uptake Prediction Model</h2>
-  <p>
-    The tool assumes a representative older adult, and uses a <strong>logistic regression model</strong> (binary choice between the configured program vs no program) to estimate the probability of uptake. Formally, we calculate:
-  </p>
-  <p style="margin-left: 20px;"><em>U_alt = ASC<sub>program</sub> + Σ(coeff<sub>attr</sub> * X<sub>attr</sub>) + (coeff<sub>cost</sub> * Cost)</em></p>
-  <p style="margin-left: 20px;"><em>U_opt = ASC<sub>opt-out</sub></em></p>
-  <p style="margin-left: 20px;"><em>P(uptake) = exp(U_alt) / [exp(U_alt) + exp(U_opt)]</em></p>
-  <p>
-    Where:
-  </p>
-  <ul>
-    <li>ASC<sub>program</sub> is the constant for choosing a program (in our data, –0.112 for any program vs opt-out).</li>
-    <li>ASC<sub>opt-out</sub> is the constant for opting out (0.131).</li>
-    <li>coeff<sub>attr</sub> are the coefficients for each attribute level (from the table above). X<sub>attr</sub> is 1 if that level is present, 0 otherwise. Reference levels (peer support, in-person, daily, 30min, at home) have no coefficient and thus serve as baseline.</li>
-    <li>Cost is the out-of-pocket cost per session (as selected in the scenario).</li>
-  </ul>
-  <p>
-    The probability formula is the standard logit formula:contentReference[oaicite:46]{index=46}. For example, consider a scenario: Community engagement, In-person (no virtual/hybrid), Weekly, 2-hour, Local, Cost $20. We plug in:
-  </p>
-  <p style="margin-left: 20px;">
-    U_alt = -0.112 + 0.527*(1) + 0.156*(0) + (-0.349)*(0) + (-0.426)*(0) + (-0.289)*(0) + 0.617*(1) + 0.336*(0) + 0.185*(1) + 0.213*(0) + 0.059*(1) + (-0.509)*(0) + (-0.036*20)
-  </p>
-  <p style="margin-left: 20px;">
-    = -0.112 + 0.527 + 0 + 0 + 0 + 0 + 0.617 + 0 + 0.185 + 0 + 0.059 + 0 - 0.72
-  </p>
-  <p style="margin-left: 20px;">
-    = 0.556 (approximately)
-  </p>
-  <p style="margin-left: 20px;">
-    U_opt = 0.131
-  </p>
-  <p style="margin-left: 20px;">
-    P(uptake) = exp(0.556) / [exp(0.556) + exp(0.131)] ≈ 0.61 (61% probability)
-  </p>
-  <p>
-    The tool does exactly this calculation behind the scenes when you click "Apply Configuration" or "View Results Summary." It uses the appropriate coefficients for each selected level and the cost, applies any cost-of-living multiplier (discussed next), and computes the logit probability. The predicted percentage is then displayed in the results.
-  </p>
-  <p>
-    If the user selects a state and toggles "Adjust for Cost of Living" to Yes, we adjust the cost coefficient magnitude by a multiplier for that state. These multipliers were derived from relative Consumer Price Index or wage differences by state. For example, NSW has a multiplier of 1.10 (10% higher cost of living), so the cost coefficient -0.036 would effectively become -0.0396 (10% more negative), meaning people in NSW are slightly more sensitive to cost (or equivalently, $1 feels like $1.10). This adjustment will slightly change uptake and WTP calculations when turned on. It’s a rough adjustment – the literature is sparse on precisely how WTP varies by region, so we use this as an exploratory feature.
-  </p>
+      <h3>2.2 Econometric model</h3>
+      <p>
+        The main analysis estimated an error component logit model with a random alternative specific
+        constant for the programme options to capture panel correlation and unobserved preference
+        heterogeneity, with all non cost attributes treated as fixed effects. For use in the tool, a
+        parsimonious mixed logit specification with normally distributed random part of the alternative
+        specific constant and a continuous cost coefficient was implemented.
+      </p>
+      <p>
+        The utility for the programme alternative is specified as a linear index in the coded attributes
+        and continuous cost, with an alternative specific constant for opting into any programme versus
+        the opt out choice. Coefficient values used in the interface correspond to the main model
+        estimates from the DCE analysis.
+      </p>
 
-  <h2>Cost Components and Assumptions</h2>
-  <p>
-    The cost breakdown in the tool is based on an intervention modelled by <strong>Engel et al. (2021)</strong> and summarized by the National Mental Health Commission:contentReference[oaicite:47]{index=47}:contentReference[oaicite:48]{index=48}. This was an intervention to reduce loneliness (the Friendship Enrichment Programme example for women 55+), and they itemized the costs as follows:
-  </p>
-  <ul>
-    <li><strong>Advertisements:</strong> 2 placements in local press at about A$1,489 each = A$2,978 total:contentReference[oaicite:49]{index=49}.</li>
-    <li><strong>Leaflets (Printing &amp; Postage):</strong> 10,000 leaflets printed at ~$0.12 each (A$1,200) and posted at ~$0.15 (we used $0.147 to get A$1,470 total):contentReference[oaicite:50]{index=50}. These were to reach potential participants via GP offices and mail-outs.</li>
-    <li><strong>Administrative Personnel:</strong> A project manager for outreach, assumed 10 hours at ~$50/hour = A$500.</li>
-    <li><strong>Facilitator Training:</strong> Social workers (facilitators) need to be trained/familiarized for 5 hours at ~$45/hour. With on-costs (30%) this was about $292.5 per facilitator. The model assumed each facilitator handles 3 groups of 10, but for scaling up, we included training for 100 facilitators = A$22,386, plus 20% on-costs = A$4,477 (the tool shows 20% on-cost as a separate item):contentReference[oaicite:53]{index=53}. The 20% in our cost breakdown is a slight simplification (Engel used 30%, but the numeric values given correspond closer to 20% of 223.86, as 44.77 is 20% of 223.86).</li>
-    <li><strong>Facilitator Session Delivery:</strong> The program consists of 12 sessions (2 hours each) per group, delivered by facilitators. We budgeted A$100 per session (e.g., 2 hours x $50) which, for 100 sessions, is A$10,000. In Engel’s model, facilitator salaries for running the sessions were included similarly:contentReference[oaicite:54]{index=54}. The number "100 sessions" in our tool is an arbitrary scale reference (it could represent ~8-9 groups x 12 sessions ≈ 100). The cost will scale linearly with uptake (fewer participants means fewer groups/sessions needed, etc., which we handle by multiplying by the uptake probability).</li>
-    <li><strong>Materials:</strong> A$50 per group for materials (workbooks, etc.) was assumed. For 100 groups equivalent, A$5,000.</li>
-    <li><strong>Venue Hire:</strong> Many sessions might be held in free community spaces. Engel et al. assumed 60% free, 40% paid:contentReference[oaicite:55]{index=55}. We simplified to an average cost of A$15 per hour of session. For a 2-hour session, that’s A$30 per session. Across ~100 sessions, A$3,000.</li>
-    <li><strong>Participant Time Cost:</strong> In a societal perspective, participants’ time is a cost. The Commission report scenario analysis valued older participants’ time for the sessions and homework as part of cost:contentReference[oaicite:56]{index=56}:contentReference[oaicite:57]{index=57}. We used A$20/hour as an approximate value of leisure time for retirees (this is in line with using minimum wage or average volunteer hour cost). For a 2-hour session, that’s $40 per participant per session. If 250 participants attend one session, that’s $10,000 – but not every participant attends every session if uptake is lower. Our model multiplies $20 * 250 for time and $10 * 250 for travel per session, then scales by uptake probability (so effectively $20 * number_of_participants and $10 * number_of_participants for one session – since we assume one session per participant for simplicity in one cycle of analysis). In scenario 1 of Engel’s results, including time and travel costs caused ROI to plummet:contentReference[oaicite:58]{index=58}, underscoring that these “opportunity costs” are substantial.</li>
-    <li><strong>Participant Travel Cost:</strong> Similarly, we assumed on average $10 travel cost per participant per session (could be fuel, public transport, etc.). This is added when societal perspective is chosen.</li>
-  </ul>
-  <p>
-    It’s worth noting that our cost model is a static one-session equivalent cost. We did not explicitly model 12 sessions over 12 weeks; instead, we took aggregate costs and scaled them by uptake fraction. The fixed part (advertising, training) is incurred regardless of how many join. The variable part (leaflets, sessions, etc.) is multiplied by the uptake probability (which effectively approximates costs for the expected number of participants).
-  </p>
-  <p>
-    This means, for example, if uptake is 50%, our tool would count half of the variable costs – as if only half the sessions/groups were conducted. In reality, program planning might involve discrete numbers of groups. However, for economic evaluation, treating it continuously is acceptable for expected value calculations. It provides a close estimate of cost for the expected scale of the program.
-  </p>
-  <p>
-    All cost figures are in <strong>2021 Australian dollars</strong> (approximately) as per the source study:contentReference[oaicite:59]{index=59}. No inflation adjustment has been applied in the tool for simplicity (we assume current dollars are roughly equivalent, given low inflation in that period).
-  </p>
-  <p>
-    The user can choose to include or exclude the last two items (time and travel). By default, we exclude them (so the analysis is from a healthcare/provider perspective). If included, the costs increase significantly, and net benefit will often become negative unless the program has a very large impact. This dual perspective is presented because, from a government budget perspective, you might ignore those costs, but from a societal welfare perspective, you acknowledge that participants are investing their time (which has value) to attend.
-  </p>
+      <h3>2.3 Predicted uptake</h3>
+      <p>
+        For a given configuration of attributes, the tool constructs the utility index and applies the
+        standard logit formula to estimate the probability that a representative older adult chooses the
+        programme instead of the opt out option. This probability is interpreted as the expected uptake
+        proportion in a target population of eligible older adults.
+      </p>
+      <p>
+        The base cohort size in the tool is set to 250 eligible older adults. The number of participants
+        is obtained by multiplying this cohort by the predicted uptake probability. Users can rescale
+        results to alternative cohort sizes by linear extrapolation, as the model is formulated per
+        eligible individual.
+      </p>
+    </div>
 
-  <h2>Benefit Calculations</h2>
-  <p>
-    The tool provides two parallel benefit measures:
-  </p>
-  <ol>
-    <li><strong>Health-Related (QALY-Based) Benefits:</strong> The user selects a scenario for QALY gain per participant. This is essentially an assumption about the program’s effectiveness in improving quality of life or preventing health declines (like depression). The default is 0.05 QALYs per participant, roughly equivalent to 18.25 quality-adjusted life days gained (perhaps representing, say, a moderate improvement in mental health for a year). The low (0.02) and high (0.1) are for sensitivity analysis. These numbers can be informed by literature – for instance, preventing a case of depression for a year could yield around 0.1 QALY. Engel et al. in a related analysis looked at reduction in depression cases by mitigating loneliness:contentReference[oaicite:60]{index=60}, which can be mapped to QALYs. However, lacking a precise estimate, we allow the user to explore a range.
-      <br/>Once a QALY gain is chosen, total QALYs = QALY gain * number of participants (where number of participants = 250 * uptake probability in our model). We then multiply total QALYs by A$50,000. This threshold is commonly used in Australia to value a QALY (roughly aligned with what PBAC might consider cost-effective):contentReference[oaicite:61]{index=61}. While not an exact “worth of a QALY,” it’s a policy benchmark. So if a program yields, say, 10 QALYs in total, we count that as A$500,000 of benefit.
-      <br/>Net benefit (QALY) = monetized QALYs – total cost. If positive, the program is economically worthwhile in cost-effectiveness terms; if negative, it’s not, under that QALY assumption.
-    </li>
-    <li><strong>Willingness-to-Pay (WTP) Benefits:</strong> Here we adopt a consumer surplus perspective. Each participant in the program derives some utility, which we can monetize by their willingness-to-pay. For a given scenario, we calculate the sum of WTP values for the attributes that scenario has. For example, if the scenario is community + weekly + in-person + 2h + local, we add A$14.47 + A$16.93 + (0 for in-person) + A$5.08 + A$1.62 ≈ A$38.1. This is the average WTP per participant *above* the baseline program (the baseline being peer support, in-person, daily, 30min, at home, presumably at zero cost). We do not explicitly account for the baseline program’s utility – effectively we assume baseline’s WTP = $0 (since it’s the reference).
-      <br/>If the scenario has any negative WTP elements, those subtract. For instance, if it were VR-based and distant, the WTP sum might be negative.
-      <br/>Then, total WTP benefit = (WTP per participant) * (number of participants who take up). If 100 people participate, each valuing the program $38 on average, that’s $3,800 total WTP benefit. If the program cost is, say, $2,000, then from a welfare perspective it’s generating $1,800 more value than it costs (net).
-      <br/>This WTP approach essentially answers: “If we consider the improvement in well-being as measured by what people would be willing to pay for such a program, does it justify the program’s cost?” It captures intangible benefits and personal value better than QALYs in some cases. 
-      <br/>One important note: If a program has an out-of-pocket fee (cost per session), that is a transfer from participants to providers. In our cost analysis, we did not treat participant fees as reducing cost (we assume total cost is the full cost to run, and any fee is perhaps used to fund it, but from society view it’s transfer). In WTP analysis, if participants are willing to pay $X and they actually pay $Y, the consumer surplus is $X-$Y. Our tool doesn’t explicitly compute consumer surplus; it computes total WTP as if the program were free and people’s entire WTP is realized as benefit. One could refine this by subtracting fees (the net benefit to participants would be less their payment).
-      <br/>However, since our default scenarios often have modest fees, and since this tool is primarily for comparing configurations, we keep it simple. We interpret the WTP-based net benefit as including both consumer surplus and any producer surplus (i.e., it’s as if the government subsidized the program fully to deliver that WTP value to participants).
-    </li>
-  </ol>
-  <p>
-    The tool displays both results because a program might not save money in the health system but could still be justified by the value it provides to participants. Conversely, a program could look good in QALY terms but if people don’t actually value it (low WTP, low uptake), it could fail to attract participants or public support.
-  </p>
-  <p>
-    Lastly, we mention other metrics: The Commission’s report introduced “loneliness-free days”:contentReference[oaicite:62]{index=62} as an outcome. In our context, one could estimate loneliness-free days gained per participant (for instance, Engel et al. found ~18 million LFD over 5 years for ~160k participants, which is ~112 days per participant on average):contentReference[oaicite:63]{index=63}. Our tool does not currently calculate this, but such a metric could be incorporated by estimating how a given program (with certain features) translates to reductions in loneliness (e.g., via an effect size). This would require external data on efficacy (e.g., weekly community programs might reduce UCLA Loneliness Scale by X points, corresponding to Y fewer days feeling lonely per month).
-  </p>
-  <p>
-    We encourage users to consider both the quantitative outputs and the qualitative aspects. For example, an intervention might have modest QALY gains but if it significantly reduces loneliness (hence improving life satisfaction) that might be worth more than QALYs capture. Willingness-to-pay partially captures that personal value.
-  </p>
+    <div class="section">
+      <h2>3. Willingness to pay and preference based benefits</h2>
+      <h3>3.1 Attribute level willingness to pay</h3>
+      <p>
+        Willingness to pay (WTP) for each attribute level is obtained by dividing the attribute coefficient
+        by the absolute value of the cost coefficient from the DCE model. This yields a monetary value in
+        Australian dollars representing the extra fee per session that older adults would be willing to pay
+        for that feature relative to the reference level, holding other attributes constant.
+      </p>
+      <p>
+        The tool uses point estimates of WTP per participant per session for each attribute level. Standard
+        errors and p values reported in the WTP tab are derived from the variance covariance matrix of the
+        estimated coefficients in the DCE regression models.
+      </p>
 
-  <h2>References</h2>
-  <p style="font-size: 0.95em;">
-    1. Engel, L., et al. (2021). <em>Reducing loneliness to prevent depression in older adults in Australia: A modelled cost-effectiveness analysis.</em> Mental Health &amp; Prevention, 24: 200212. (Summarized in NMHC ROI analysis):contentReference[oaicite:64]{index=64}:contentReference[oaicite:65]{index=65}<br/>
-    2. National Mental Health Commission (2023). <em>Educational interventions to reduce older persons’ loneliness – Return on Investment Analysis.</em> (Friendship Enrichment Programme case study):contentReference[oaicite:66]{index=66}:contentReference[oaicite:67]{index=67}<br/>
-    3. Bertolino, A., et al. (2025). Cost-Effectiveness of Interventions Addressing Loneliness Among Adults: A Systematic Review. <em>Value in Health</em> (online ahead of print).:contentReference[oaicite:68]{index=68}:contentReference[oaicite:69]{index=69}<br/>
-    4. KPMG Australia &amp; Groundswell Foundation (2022). <em>Connections Matter Report.</em> (Loneliness prevalence and cost in Australia):contentReference[oaicite:70]{index=70}:contentReference[oaicite:71]{index=71}<br/>
-    5. Mesfin Genie (2025). “Feeling Lonely? Preferences for Support Programs to Reduce Loneliness” – Applied Economics Seminar, UQ. (DCE results and introduction of LonelyLessAustralia tool):contentReference[oaicite:72]{index=72}:contentReference[oaicite:73]{index=73}<br/>
-    6. Relationships Australia (2018). <em>An epidemic of loneliness 2001-2017 (HILDA Survey findings).</em> (19% of 75+ lonely statistic):contentReference[oaicite:74]{index=74}<br/>
-    7. Holt-Lunstad, J., et al. (2015). Loneliness and social isolation as risk factors for mortality: a meta-analytic review. <em>Perspectives on Psych. Science, 10</em>(2): 227-237. (Loneliness ~15 cigarettes a day equivalent):contentReference[oaicite:75]{index=75}<br/>
-  </p>
+      <h3>3.2 WTP for a configuration</h3>
+      <p>
+        For any given configuration, the tool computes the per participant WTP per session by summing the
+        relevant attribute level WTP estimates. For example, if the configuration combines a community
+        engagement programme with weekly sessions, a local venue and a virtual delivery method, the
+        corresponding WTP values for those four attributes are added together.
+      </p>
+      <p>
+        The per participant WTP for the entire programme is then calculated by multiplying the per session
+        WTP by the number of sessions. In the current implementation, twelve sessions are assumed, which
+        aligns with the group based intervention used in Australian modelling of loneliness interventions
+        for older women. The total WTP based benefit for the configuration is obtained by multiplying the
+        per participant programme WTP by the number of participants predicted to enrol.
+      </p>
+      <p>
+        The WTP based benefit cost ratio is calculated as the ratio of total WTP benefits to total economic
+        costs. This ratio provides a preference based indicator of value, grounded in older adults stated
+        willingness to pay for programme features.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>4. Costing of interventions</h2>
+      <h3>4.1 Base cost structure</h3>
+      <p>
+        Cost components and unit values in the tool are based on Australian costing work for loneliness
+        interventions. The structure follows the educational friendship enrichment programme for older
+        women described by the National Mental Health Commission, which reports intervention costs, cost
+        savings and return on investment for a national implementation of a group based programme over
+        three and five year horizons. :contentReference[oaicite:0]{index=0}
+      </p>
+      <p>
+        The cost items include advertising in local press, printing and postage of leaflets, administrative
+        staff time, trainer time, on costs, facilitator salaries, materials, venue hire, participant time
+        cost and travel. Unit costs and quantities reflect those reported in the commission's technical
+        brief and related cost effectiveness work on reducing loneliness to prevent depression among older
+        adults. :contentReference[oaicite:1]{index=1}
+      </p>
+
+      <h3>4.2 Total economic cost</h3>
+      <p>
+        In the decision aid, fixed costs include advertising and a set of overheads that do not vary with
+        achieved uptake. Variable costs scale with the proportion of the cohort that takes up the
+        programme. For example, printing, postage and many session level costs are multiplied by the
+        predicted uptake probability to reflect the smaller or larger number of participants reached.
+      </p>
+      <p>
+        When users choose to include opportunity cost of participants time, the tool adds a monetised value
+        of time spent in sessions and travel. This is calculated by multiplying session and travel hours
+        per participant by an hourly value of time based on a fraction of average hourly wages for older
+        adults, consistent with the treatment of time and travel costs in scenario analyses reported by
+        the National Mental Health Commission. :contentReference[oaicite:2]{index=2}
+      </p>
+
+      <h3>4.3 Cost of living adjustments</h3>
+      <p>
+        The optional cost of living adjustment applies a state specific multiplier to programme costs and
+        participant fees. The multipliers are illustrative and based on relative differences in cost of
+        living and service costs across Australian jurisdictions as reported in public data sources and
+        wage statistics. Users can revise these multipliers if more precise local information is available.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>5. Health outcomes and QALY gains</h2>
+      <p>
+        The link between loneliness interventions and health outcomes in the tool is based on modelled
+        cost effectiveness work which examined the impact of reducing loneliness on depression in older
+        adults in Australia. In that analysis, reducing loneliness through a preventive programme led to
+        gains in quality adjusted life years (QALYs) by lowering the incidence of depression and its
+        sequelae. :contentReference[oaicite:3]{index=3}
+      </p>
+      <p>
+        The decision aid allows users to choose from low, moderate and high QALY gain scenarios per
+        participant. These values are intended to span plausible effect sizes rather than to represent
+        precise estimates for any specific intervention. The default monetary value per QALY is set at
+        fifty thousand Australian dollars, which is within the range used in Australian cost effectiveness
+        analyses and international guidelines.
+      </p>
+      <p>
+        Total QALY benefits for a configuration are calculated as the QALY gain per participant multiplied
+        by the predicted number of participants and by the value per QALY. The QALY based benefit cost
+        ratio is then obtained by dividing total QALY benefits by total economic costs.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>6. Cost savings, productivity gains and loneliness free days</h2>
+      <h3>6.1 Cost savings and productivity gains</h3>
+      <p>
+        Evidence suggests that loneliness is associated with greater use of primary care, hospital services
+        and mental health care, as well as increased sick leave and reduced productivity. An Australian
+        analysis estimated that the total cost of loneliness across the adult population can reach several
+        billion dollars per year, with older adults accounting for a substantial share of this cost. :contentReference[oaicite:4]{index=4}
+      </p>
+      <p>
+        The tool parameterises cost savings and productivity gains using per participant values drawn from
+        the National Mental Health Commission's educational friendship programme modelling. That work
+        reported total intervention costs of about twenty five million dollars, healthcare savings of over
+        twenty five million dollars and productivity gains of more than forty six million dollars over five
+        years for a national cohort of older women, producing a positive return on investment. :contentReference[oaicite:5]{index=5}
+      </p>
+      <p>
+        By dividing the reported cost savings and productivity gains by the number of programme
+        participants, the tool derives per participant savings over five years and scales these to the
+        predicted number of participants in each configuration. The resulting totals are used to compute
+        a cost saving based benefit cost ratio.
+      </p>
+
+      <h3>6.2 Loneliness free days</h3>
+      <p>
+        The National Mental Health Commission modelling also reported loneliness free days as a primary
+        outcome, with several million loneliness free days gained over three years and more than eighteen
+        million over five years for the national cohort of older women. :contentReference[oaicite:6]{index=6}
+      </p>
+      <p>
+        The decision aid converts these findings into a per participant estimate of loneliness free days
+        over five years and multiplies by the predicted number of participants for the configured
+        programme. This produces a simple, intuitive metric that reflects improvements in experienced
+        loneliness over time, independent of monetary valuation.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>7. Benefit cost ratios and return on investment</h2>
+      <p>
+        For each scenario, the tool reports several benefit cost ratios and associated net benefits:
+      </p>
+      <ul>
+        <li>
+          A QALY based benefit cost ratio, defined as monetised QALY benefits divided by total economic
+          costs, together with the net benefit equal to QALY benefits minus costs.
+        </li>
+        <li>
+          A cost saving based benefit cost ratio, defined as total health system and productivity savings
+          over five years divided by total economic costs, with the corresponding net benefit equal to
+          savings minus costs.
+        </li>
+        <li>
+          A willingness to pay based benefit cost ratio, defined as total WTP benefits divided by total
+          economic costs, with net benefit equal to WTP benefits minus costs.
+        </li>
+      </ul>
+      <p>
+        The ratio of total cost savings and productivity gains to intervention costs in the commission's
+        modelling represents a conventional return on investment metric. In that analysis, the return on
+        investment over five years was greater than two for the base case scenario, meaning that each dollar
+        spent generated more than two dollars in savings. The decision aid adopts the same interpretation
+        when reporting cost saving based benefit cost ratios. :contentReference[oaicite:7]{index=7}
+      </p>
+      <p>
+        Users should bear in mind that the underlying estimates are based on specific interventions,
+        populations and time horizons. When applying results to new settings, it is important to consider
+        differences in programme design, baseline loneliness, comorbidities and health system structures.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>8. Suggested additional benefit measures</h2>
+      <p>
+        Beyond the metrics already implemented in the tool, decision makers may wish to incorporate
+        additional benefit measures depending on data availability and policy priorities. Examples include:
+      </p>
+      <ul>
+        <li>
+          Carer outcomes, such as reduced caregiver burden and improved quality of life for family members,
+          which may be relevant when programmes support socially isolated older adults with care needs.
+        </li>
+        <li>
+          Long term impacts on dementia risk, cardiovascular disease and mortality, given evidence that
+          loneliness and social isolation are associated with higher risks of these outcomes. :contentReference[oaicite:8]{index=8}
+        </li>
+        <li>
+          Wider social benefits, such as increased volunteering, community participation and strengthened
+          social capital, which may contribute to more resilient communities and indirect economic gains.
+        </li>
+      </ul>
+      <p>
+        Incorporating these outcomes would require additional modelling and evidence synthesis and is beyond
+        the scope of the current version of the tool.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>9. Limitations</h2>
+      <p>
+        The decision aid relies on several simplifying assumptions. The DCE model represents average
+        preferences across older adults and may not capture all important sources of heterogeneity. Cost
+        parameters and savings estimates come from specific programmes and time periods and may not fully
+        reflect current wage rates, service costs or policy settings. QALY gains are represented by
+        scenario values rather than intervention specific estimates within the tool, although the default
+        values are grounded in the literature.
+      </p>
+      <p>
+        As a result, the tool is best used to support comparative scenario analysis and structured
+        discussion rather than as a stand alone decision rule. Formal business cases and funding decisions
+        should still be based on context specific analyses using up to date local data.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>10. References</h2>
+      <ol class="ref-list">
+        <li>
+          Engel L, Lee YY, Le LK, Lal A, Mihalopoulos C. Reducing loneliness to prevent depression in older
+          adults in Australia: a modelled cost effectiveness analysis. Mental Health and Prevention. 2021;24:200212. :contentReference[oaicite:9]{index=9}
+        </li>
+        <li>
+          National Mental Health Commission. Educational interventions to reduce older persons loneliness.
+          Sydney: National Mental Health Commission; 2021. :contentReference[oaicite:10]{index=10}
+        </li>
+        <li>
+          Kung CSJ, Kunz JS, Shields MA. Economic aspects of loneliness in Australia. Australian Economic
+          Review. 2021;54(1):147-163. :contentReference[oaicite:11]{index=11}
+        </li>
+        <li>
+          Engel L, Mihalopoulos C. The loneliness epidemic: a holistic view of its health and economic
+          implications in older age. Medical Journal of Australia. 2024;221(6):290-292. :contentReference[oaicite:12]{index=12}
+        </li>
+        <li>
+          National Academies of Sciences, Engineering, and Medicine. Social isolation and loneliness in
+          older adults: opportunities for the health care system. Washington, DC: National Academies Press; 2020. :contentReference[oaicite:13]{index=13}
+        </li>
+        <li>
+          Donovan NJ, Blazer DG. Social isolation and loneliness in older adults: review and commentary
+          of a National Academies report. American Journal of Geriatric Psychiatry. 2020;28(12):1233-1244. :contentReference[oaicite:14]{index=14}
+        </li>
+        <li>
+          Ending Loneliness Together. A national strategy to address loneliness and social isolation:
+          pre budget submission 2021-2022. Sydney: Ending Loneliness Together; 2021. :contentReference[oaicite:15]{index=15}
+        </li>
+        <li>
+          Australian Institute of Health and Welfare. Social isolation, loneliness and wellbeing. In:
+          Australia's welfare 2023: data insights. Canberra: AIHW; 2023. :contentReference[oaicite:16]{index=16}
+        </li>
+      </ol>
+      <p class="small-note">
+        Additional background literature on loneliness interventions, health care utilisation and economic
+        evaluation is cited in the National Mental Health Commission technical brief and related journal
+        articles.
+      </p>
+    </div>
+  </div>
 </body>
 </html>
