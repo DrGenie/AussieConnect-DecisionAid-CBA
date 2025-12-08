@@ -1,4 +1,3 @@
-
 <!-- technical-appendix.html -->
 <!DOCTYPE html>
 <html lang="en">
@@ -57,6 +56,27 @@
     .ref-list li {
       margin-bottom: 4px;
     }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px;
+      font-size: 0.9rem;
+    }
+    table caption {
+      text-align: left;
+      font-weight: 600;
+      color: #0a2f57;
+      margin-bottom: 4px;
+    }
+    th, td {
+      border: 1px solid #d3d9e4;
+      padding: 6px 8px;
+      vertical-align: top;
+    }
+    th {
+      background-color: #edf1f8;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -71,265 +91,475 @@
         uptake and willingness to pay, how cost components and health outcomes are parameterised for the
         Australian context and how benefit cost metrics and return on investment are derived.
       </p>
+      <p>
+        The main manuscript describes the development of the discrete choice experiment, the survey sample
+        and headline model results for older adults in Australia. A separate online appendix provides a
+        narrative walk through of the public web based LonelyLessAustralia Decision Aid and illustrates
+        how policy makers can configure and compare scenarios. The present technical appendix should be
+        read alongside the main manuscript and the online appendix. References to the decision aid in
+        the main text and online appendix point to the same public link where the tool is hosted.
+      </p>
     </div>
 
     <div class="section">
       <h2>2. Discrete choice experiment and uptake model</h2>
+
       <h3>2.1 Attributes and design</h3>
       <p>
-        The discrete choice experiment (DCE) included attributes that describe key features of loneliness
-        support programs for older adults: type of support programme, delivery method, frequency and
-        duration of sessions, accessibility and participant cost per session. For each attribute, one level
-        was treated as the reference and additional levels represented improvements or trade offs.
+        The discrete choice experiment (DCE) elicited preferences for key features of loneliness support
+        programmes for older adults. Attributes included the type of support programme, delivery mode,
+        frequency of sessions, duration of sessions, travel distance to the venue and out of pocket cost
+        per session. Attribute levels were selected through a targeted review of the literature on
+        loneliness interventions, consultation with clinical and policy stakeholders and qualitative
+        pre testing with older adults, in line with recommended good practice for health related DCEs.
       </p>
       <p>
-        Respondents aged 65 years and older were asked to choose between hypothetical programmes and an
-        opt out option in a series of choice tasks. The design followed standard practice in health
-        economics, with blocked experimental designs and a dual response structure where appropriate.
+        For each attribute, one level was treated as the reference and additional levels represented
+        improvements or trade offs. Respondents aged 65 years and older completed a series of paired
+        choice tasks in which they chose between two hypothetical programmes and an opt out option of
+        not joining any programme. The experimental design used a blocked D efficient design, with
+        respondents randomly allocated to blocks. The design was optimised around priors from a pilot
+        study and checked for level balance and overlap. A dual response option structure for the opt
+        out alternative was considered at the design stage and is described in the main manuscript.
       </p>
 
       <h3>2.2 Econometric model</h3>
       <p>
-        The main analysis estimated an error component logit model with a random alternative specific
-        constant for the programme options to capture panel correlation and unobserved preference
-        heterogeneity, with all non cost attributes treated as fixed effects. For use in the tool, a
-        parsimonious mixed logit specification with normally distributed random part of the alternative
-        specific constant and a continuous cost coefficient was implemented.
+        The primary DCE analysis estimated an error component logit model with a random alternative
+        specific constant (ASC) for the programme options to capture panel correlation and unobserved
+        preference heterogeneity, while treating non cost attributes as fixed. The utility for
+        individual <em>n</em> choosing alternative <em>j</em> in choice situation <em>t</em> is written as
       </p>
       <p>
-        The utility for the programme alternative is specified as a linear index in the coded attributes
-        and continuous cost, with an alternative specific constant for opting into any programme versus
-        the opt out choice. Coefficient values used in the interface correspond to the main model
-        estimates from the DCE analysis.
+        <em>U<sub>njt</sub> = V<sub>njt</sub> + ε<sub>njt</sub></em>,
+        where the observed component of utility for the programme option is
+        <em>V<sub>program</sub> = ASC<sub>program</sub> + βX − β<sub>c</sub>Cost</em>
+        and for the opt out alternative
+        <em>V<sub>optout</sub> = ASC<sub>optout</sub></em>. Here <em>X</em> is a vector of coded attribute
+        levels and <em>Cost</em> is the out of pocket cost per session. The cost coefficient
+        <em>β<sub>c</sub></em> is constrained to be negative and is treated as continuous.
+      </p>
+      <p>
+        For implementation in the LonelyLessAustralia tool, a parsimonious mixed logit specification is
+        used. The ASC for opting into any programme is modelled with a normal random coefficient, while
+        attribute coefficients are treated as fixed and equal to the preferred error component logit
+        estimates. This allows the tool to approximate preference heterogeneity through the ASC while
+        keeping computations fast enough for real time interaction. The model structure and estimation
+        approach follow standard texts on stated choice modelling and applied guidance for health DCEs.
       </p>
 
       <h3>2.3 Predicted uptake</h3>
       <p>
-        For a given configuration of attributes, the tool constructs the utility index and applies the
-        standard logit formula to estimate the probability that a representative older adult chooses the
-        programme instead of the opt out option. This probability is interpreted as the expected uptake
-        proportion in a target population of eligible older adults.
+        For any given configuration of attribute levels, the tool constructs the deterministic utility
+        index for the programme alternative by inserting the coded attributes and cost into the model
+        coefficients. Predicted uptake is then obtained using the standard logit formula for the
+        choice between joining the programme and opting out. The probability of joining the programme
+        is
       </p>
       <p>
-        The base cohort size in the tool is set to 250 eligible older adults. The number of participants
-        is obtained by multiplying this cohort by the predicted uptake probability. Users can rescale
-        results to alternative cohort sizes by linear extrapolation, as the model is formulated per
-        eligible individual.
+        <em>P(programme) = exp(V<sub>program</sub>) / [exp(V<sub>program</sub>) + exp(V<sub>optout</sub>)]</em>.
+      </p>
+      <p>
+        This probability is interpreted as the expected uptake proportion among eligible older adults,
+        holding constant the distribution of preferences implicit in the DCE sample. In the decision
+        aid, a base cohort size of 250 eligible older adults is assumed. The expected number of
+        participants is calculated as this cohort size multiplied by the predicted uptake probability.
+        Users can rescale the results to other cohort sizes through linear extrapolation. The main
+        manuscript reports the underlying model estimates and discusses the face validity of uptake
+        predictions, while the online appendix illustrates how users can read the uptake charts in
+        the programme uptake tab of the tool.
       </p>
     </div>
 
     <div class="section">
       <h2>3. Willingness to pay and preference based benefits</h2>
+
       <h3>3.1 Attribute level willingness to pay</h3>
       <p>
-        Willingness to pay (WTP) for each attribute level is obtained by dividing the attribute coefficient
-        by the absolute value of the cost coefficient from the DCE model. This yields a monetary value in
-        Australian dollars representing the extra fee per session that older adults would be willing to pay
-        for that feature relative to the reference level, holding other attributes constant.
+        Willingness to pay (WTP) for each attribute level is obtained from the DCE model by dividing the
+        attribute coefficient by the absolute value of the cost coefficient. For attribute <em>k</em> with
+        coefficient <em>β<sub>k</sub></em> and cost coefficient <em>β<sub>c</sub></em>, the implied marginal
+        WTP is
+        <em>WTP<sub>k</sub> = β<sub>k</sub> / |β<sub>c</sub>|</em>. This yields a monetary value in Australian
+        dollars per session that represents the additional fee older adults would be willing to pay for
+        a change from the reference level of that attribute, holding other attributes constant.
       </p>
       <p>
-        The tool uses point estimates of WTP per participant per session for each attribute level. Standard
-        errors and p values reported in the WTP tab are derived from the variance covariance matrix of the
-        estimated coefficients in the DCE regression models.
+        The WTP outcomes tab in the tool presents point estimates of WTP per participant per session for
+        each attribute level. These values are obtained from the main mixed logit model used for the
+        tool and are rounded for display. Where available, standard errors and p values associated with
+        WTP are derived using the delta method from the estimated variance covariance matrix of the DCE
+        regression. Methods for deriving WTP from DCEs and interpreting the resulting trade offs are
+        consistent with established guidance on stated preference methods in health and patient centred
+        outcomes research.
       </p>
 
       <h3>3.2 WTP for a configuration</h3>
       <p>
-        For any given configuration, the tool computes the per participant WTP per session by summing the
-        relevant attribute level WTP estimates. For example, if the configuration combines a community
-        engagement programme with weekly sessions, a local venue and a virtual delivery method, the
-        corresponding WTP values for those four attributes are added together.
+        For any specific programme configuration, the tool calculates the per participant WTP per
+        session by summing the attribute level WTP values corresponding to the selected levels. For
+        example, if the configuration involves a group based community engagement programme delivered
+        in person at a local venue, meeting weekly for ninety minutes at a given co payment, the WTP
+        contribution for each of these design features is summed.
       </p>
       <p>
-        The per participant WTP for the entire programme is then calculated by multiplying the per session
-        WTP by the number of sessions. In the current implementation, twelve sessions are assumed, which
-        aligns with the group based intervention used in Australian modelling of loneliness interventions
-        for older women. The total WTP based benefit for the configuration is obtained by multiplying the
-        per participant programme WTP by the number of participants predicted to enrol.
+        The per participant WTP for the complete programme is then obtained by multiplying the per
+        session WTP by the number of sessions. The current implementation assumes twelve sessions by
+        default, which aligns with the group based educational friendship enrichment intervention used
+        in Australian modelling of loneliness interventions for older women. Total WTP based benefits
+        for the scenario are calculated by multiplying the programme level WTP by the expected number
+        of participants predicted by the uptake model.
       </p>
       <p>
-        The WTP based benefit cost ratio is calculated as the ratio of total WTP benefits to total economic
-        costs. This ratio provides a preference based indicator of value, grounded in older adults stated
-        willingness to pay for programme features.
+        The WTP based benefit cost ratio is defined as the ratio of total WTP benefits to total economic
+        costs. Values greater than one indicate that, on average, the stated value that older adults
+        place on the configured programme features exceeds the estimated economic cost of delivering
+        the programme to the target group. The main manuscript reports headline WTP patterns, while
+        the online appendix shows example WTP summaries for several illustrative configurations.
       </p>
     </div>
 
     <div class="section">
       <h2>4. Costing of interventions</h2>
+
       <h3>4.1 Base cost structure</h3>
       <p>
-        Cost components and unit values in the tool are based on Australian costing work for loneliness
-        interventions. The structure follows the educational friendship enrichment programme for older
-        women described by the National Mental Health Commission, which reports intervention costs, cost
-        savings and return on investment for a national implementation of a group based programme over
-        three and five year horizons. :contentReference[oaicite:0]{index=0}
+        Cost components and unit values in the decision aid are based on Australian costing work for
+        loneliness interventions, particularly the modelling of the Friendship Enrichment Programme and
+        volunteer led internet and computer training interventions for older women. These interventions
+        were evaluated using a Markov model that reported programme costs, healthcare savings, productivity
+        gains and return on investment over three and five year horizons. The National Mental Health
+        Commission also developed a technical brief and workbook that set out detailed assumptions for
+        intervention delivery and resource use. These sources provide the conceptual template for the
+        LonelyLessAustralia cost structure, which is adapted to a local cohort of 250 eligible older
+        adults.
       </p>
       <p>
-        The cost items include advertising in local press, printing and postage of leaflets, administrative
-        staff time, trainer time, on costs, facilitator salaries, materials, venue hire, participant time
-        cost and travel. Unit costs and quantities reflect those reported in the commission's technical
-        brief and related cost effectiveness work on reducing loneliness to prevent depression among older
-        adults. :contentReference[oaicite:1]{index=1}
+        Table 1 summarises the main cost components in the tool, together with the unit cost, quantity
+        assumptions and principal evidence sources or justification. All costs are expressed in 2024
+        Australian dollars. Where necessary, costs were updated from published values using Australian
+        consumer price index data and average weekly earnings to approximate wage growth for relevant
+        staff categories.
       </p>
+
+      <table>
+        <caption>Table 1. Core cost components and parameter values used in the LonelyLessAustralia tool</caption>
+        <thead>
+          <tr>
+            <th>Cost component</th>
+            <th>Description</th>
+            <th>Unit cost (AUD)</th>
+            <th>Unit</th>
+            <th>Source or justification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Local advertising</td>
+            <td>Paid advertisement in local newspaper or community newsletter to promote the programme</td>
+            <td>1,500</td>
+            <td>Per campaign</td>
+            <td>Adapted from National Mental Health Commission modelling of educational friendship programmes, updated to 2024 prices</td>
+          </tr>
+          <tr>
+            <td>Leaflet printing</td>
+            <td>Design and printing of programme information leaflets</td>
+            <td>0.50</td>
+            <td>Per leaflet</td>
+            <td>Unit cost for colour printing and basic design, consistent with patient information material costings in Australian preventive health programmes</td>
+          </tr>
+          <tr>
+            <td>Postage</td>
+            <td>Mailing of leaflets and invitations to eligible older adults</td>
+            <td>1.20</td>
+            <td>Per postal item</td>
+            <td>Australia Post standard letter rate in 2024 plus handling allowance</td>
+          </tr>
+          <tr>
+            <td>Administrative staff time</td>
+            <td>Time spent on recruitment, scheduling, record keeping and general coordination</td>
+            <td>45</td>
+            <td>Per hour</td>
+            <td>Approximate hourly wage for administrative officers derived from Australian Bureau of Statistics average weekly earnings</td>
+          </tr>
+          <tr>
+            <td>Facilitator or trainer time</td>
+            <td>Delivery of group sessions by trained facilitator or allied health professional</td>
+            <td>80</td>
+            <td>Per hour</td>
+            <td>Aligned with hourly costs for community based mental health or social work professionals in Australian cost effectiveness studies</td>
+          </tr>
+          <tr>
+            <td>Session materials</td>
+            <td>Printed materials, workbooks and refreshments per participant per session</td>
+            <td>10</td>
+            <td>Per participant per session</td>
+            <td>Based on National Mental Health Commission assumptions for group education programmes, inflated to 2024 values</td>
+          </tr>
+          <tr>
+            <td>Venue hire</td>
+            <td>Hire of community venue for group sessions</td>
+            <td>90</td>
+            <td>Per session</td>
+            <td>Typical hourly hire for community centres and meeting rooms in Australian capital cities</td>
+          </tr>
+          <tr>
+            <td>Participant travel cost</td>
+            <td>Travel expenses incurred by participants to attend sessions</td>
+            <td>8</td>
+            <td>Per return trip</td>
+            <td>Approximate fuel and public transport costs over a short local trip, consistent with Australian travel cost assumptions in health economic evaluations</td>
+          </tr>
+          <tr>
+            <td>Participant time cost</td>
+            <td>Opportunity cost of time spent in sessions and travel for older adults</td>
+            <td>25</td>
+            <td>Per hour</td>
+            <td>Set at roughly half of average full time hourly earnings from Australian Bureau of Statistics average weekly earnings, reflecting lower opportunity cost in retirement</td>
+          </tr>
+        </tbody>
+      </table>
 
       <h3>4.2 Total economic cost</h3>
       <p>
-        In the decision aid, fixed costs include advertising and a set of overheads that do not vary with
-        achieved uptake. Variable costs scale with the proportion of the cohort that takes up the
-        programme. For example, printing, postage and many session level costs are multiplied by the
-        predicted uptake probability to reflect the smaller or larger number of participants reached.
+        The decision aid separates fixed costs that do not vary with uptake from variable costs that depend
+        on the number of participants and sessions. Fixed costs include local advertising, programme setup,
+        development of materials and a portion of administrative time. Variable costs include venue hire,
+        facilitator time, session materials and participant travel. When the user indicates that the
+        opportunity cost of participant time should be included, time spent in sessions and travel is
+        monetised using the hourly rate in Table 1 and added to variable costs.
       </p>
       <p>
-        When users choose to include opportunity cost of participants time, the tool adds a monetised value
-        of time spent in sessions and travel. This is calculated by multiplying session and travel hours
-        per participant by an hourly value of time based on a fraction of average hourly wages for older
-        adults, consistent with the treatment of time and travel costs in scenario analyses reported by
-        the National Mental Health Commission. :contentReference[oaicite:2]{index=2}
+        For a chosen configuration, total economic cost is calculated as the sum of fixed costs plus the
+        number of sessions multiplied by the per session variable cost per participant and the predicted
+        number of participants. When users change the number of sessions, delivery mode or co payment,
+        these changes propagate automatically through the costing engine. The costs and benefits tab of
+        the tool displays total economic cost, cost per participant and cost per loneliness free day
+        alongside the benefits described in later sections.
       </p>
 
       <h3>4.3 Cost of living adjustments</h3>
       <p>
-        The optional cost of living adjustment applies a state specific multiplier to programme costs and
-        participant fees. The multipliers are illustrative and based on relative differences in cost of
-        living and service costs across Australian jurisdictions as reported in public data sources and
-        wage statistics. Users can revise these multipliers if more precise local information is available.
+        The tool allows the user to apply optional state or territory specific multipliers to reflect
+        differences in cost of living and service delivery costs across Australia. These multipliers are
+        applied to both programme costs and participant fees. The default values are illustrative and
+        were calibrated using publicly available data on relative wage levels and consumer prices across
+        jurisdictions. Users with access to more precise local cost information can adjust these
+        multipliers to better reflect their context and can then save configurations for later use.
       </p>
     </div>
 
     <div class="section">
       <h2>5. Health outcomes and QALY gains</h2>
       <p>
-        The link between loneliness interventions and health outcomes in the tool is based on modelled
-        cost effectiveness work which examined the impact of reducing loneliness on depression in older
-        adults in Australia. In that analysis, reducing loneliness through a preventive programme led to
-        gains in quality adjusted life years (QALYs) by lowering the incidence of depression and its
-        sequelae. :contentReference[oaicite:3]{index=3}
+        The link between loneliness interventions and health outcomes in the decision aid is based on
+        modelled cost effectiveness work evaluating the impact of group based loneliness interventions
+        on depression and associated health states among older adults in Australia. In this work,
+        reducing loneliness through preventive programmes led to gains in quality adjusted life years
+        by lowering the incidence of depression and other adverse health outcomes over time. The analysis
+        reported incremental cost effectiveness ratios for the Friendship Enrichment Programme and a
+        volunteer led internet and computer training intervention, as well as estimates of cost savings
+        and return on investment over five years.
       </p>
       <p>
-        The decision aid allows users to choose from low, moderate and high QALY gain scenarios per
-        participant. These values are intended to span plausible effect sizes rather than to represent
-        precise estimates for any specific intervention. The default monetary value per QALY is set at
-        fifty thousand Australian dollars, which is within the range used in Australian cost effectiveness
-        analyses and international guidelines.
+        To translate these findings into a flexible decision aid, the tool allows users to select low,
+        moderate and high QALY gain scenarios per participant. These values are calibrated so that the
+        implied cost per QALY gained and cost per loneliness free year fall within the range reported in
+        the published model for base case scenarios. The default monetary value per QALY is set at fifty
+        thousand Australian dollars, which is consistent with values commonly used in Australian cost
+        effectiveness analyses and international health technology assessment guidelines.
       </p>
       <p>
-        Total QALY benefits for a configuration are calculated as the QALY gain per participant multiplied
-        by the predicted number of participants and by the value per QALY. The QALY based benefit cost
-        ratio is then obtained by dividing total QALY benefits by total economic costs.
+        Total QALY based benefits for a configuration are calculated as the product of the QALY gain per
+        participant, the predicted number of participants and the value per QALY. The QALY based benefit
+        cost ratio is obtained by dividing total QALY benefits by total economic costs. Both the benefits
+        and the ratio are reported in the costs and benefits tab and are used to construct example
+        scenarios discussed in the main manuscript and online appendix.
       </p>
     </div>
 
     <div class="section">
       <h2>6. Cost savings, productivity gains and loneliness free days</h2>
+
       <h3>6.1 Cost savings and productivity gains</h3>
       <p>
-        Evidence suggests that loneliness is associated with greater use of primary care, hospital services
-        and mental health care, as well as increased sick leave and reduced productivity. An Australian
-        analysis estimated that the total cost of loneliness across the adult population can reach several
-        billion dollars per year, with older adults accounting for a substantial share of this cost. :contentReference[oaicite:4]{index=4}
+        Loneliness is associated with greater use of primary care and hospital services, higher demand
+        for mental health care and increased workplace absenteeism and presenteeism among working age
+        older adults. Australian analyses of the economic costs of loneliness have shown that the total
+        cost across the adult population is substantial, running into billions of dollars per year, with
+        older adults accounting for a sizable share of healthcare and productivity costs. These findings
+        are consistent with international reviews that highlight loneliness and social isolation as
+        important determinants of health care use and economic outcomes.
       </p>
       <p>
-        The tool parameterises cost savings and productivity gains using per participant values drawn from
-        the National Mental Health Commission's educational friendship programme modelling. That work
-        reported total intervention costs of about twenty five million dollars, healthcare savings of over
-        twenty five million dollars and productivity gains of more than forty six million dollars over five
-        years for a national cohort of older women, producing a positive return on investment. :contentReference[oaicite:5]{index=5}
+        The LonelyLessAustralia tool parameterises cost savings and productivity gains using per
+        participant values derived from the National Mental Health Commission modelling of friendship
+        enrichment and internet training interventions for older women. In that work, national rollout
+        of the programmes was estimated to generate healthcare savings and productivity gains that
+        exceeded the intervention costs, with a return of around two to three dollars in savings for
+        each dollar invested over five years for some scenarios. By dividing the reported aggregate
+        healthcare savings and productivity gains by the number of programme participants in that
+        modelling, the decision aid derives per participant savings over five years and scales these to
+        the predicted number of participants in each configured scenario.
       </p>
       <p>
-        By dividing the reported cost savings and productivity gains by the number of programme
-        participants, the tool derives per participant savings over five years and scales these to the
-        predicted number of participants in each configuration. The resulting totals are used to compute
-        a cost saving based benefit cost ratio.
+        Total cost savings and productivity gains for a given configuration are therefore calculated as
+        the per participant savings multiplied by the expected number of participants. These totals are
+        displayed in the costs and benefits tab and are used to calculate a cost saving based benefit
+        cost ratio, defined as the ratio of five year savings to the total economic cost of delivering
+        the configured programme.
       </p>
 
       <h3>6.2 Loneliness free days</h3>
       <p>
-        The National Mental Health Commission modelling also reported loneliness free days as a primary
-        outcome, with several million loneliness free days gained over three years and more than eighteen
-        million over five years for the national cohort of older women. :contentReference[oaicite:6]{index=6}
+        In addition to monetary outcomes, the National Mental Health Commission modelling reported
+        loneliness free days as a primary outcome of the friendship enrichment programme. Over three
+        and five year horizons, the interventions were estimated to generate several million additional
+        days in which participants were not lonely, relative to a comparator of no intervention. These
+        loneliness free days can be interpreted as a patient relevant benefit that is closely aligned
+        with the goals of the intervention and is easy to communicate to non technical audiences.
       </p>
       <p>
-        The decision aid converts these findings into a per participant estimate of loneliness free days
-        over five years and multiplies by the predicted number of participants for the configured
-        programme. This produces a simple, intuitive metric that reflects improvements in experienced
-        loneliness over time, independent of monetary valuation.
+        The decision aid converts the published loneliness free day totals into a per participant value
+        over five years by dividing by the number of participants in the modelled cohort. This per
+        participant figure is then multiplied by the predicted number of participants for the configured
+        programme, assuming proportional scaling. The result is an estimate of total loneliness free
+        days attributable to the programme over five years. This metric is reported alongside QALY
+        gains and monetary outcomes to give users a direct sense of improvements in experienced
+        loneliness over time.
       </p>
     </div>
 
     <div class="section">
       <h2>7. Benefit cost ratios and return on investment</h2>
       <p>
-        For each scenario, the tool reports several benefit cost ratios and associated net benefits:
+        For each scenario, the decision aid reports several benefit cost ratios and associated net benefit
+        measures. First, a QALY based benefit cost ratio is defined as monetised QALY benefits divided
+        by total economic costs, with the corresponding net benefit equal to QALY benefits minus costs.
+        Second, a cost savings based benefit cost ratio is calculated as the ratio of total health system
+        and productivity savings over five years to total economic costs, with net benefit given by total
+        savings minus costs. Third, a willingness to pay based benefit cost ratio is obtained by dividing
+        total WTP benefits by total economic costs, with net benefit equal to WTP benefits minus costs.
+        These three summary indicators offer complementary perspectives on value: health outcome gains,
+        fiscal and productivity savings and user centred valuation.
       </p>
-      <ul>
-        <li>
-          A QALY based benefit cost ratio, defined as monetised QALY benefits divided by total economic
-          costs, together with the net benefit equal to QALY benefits minus costs.
-        </li>
-        <li>
-          A cost saving based benefit cost ratio, defined as total health system and productivity savings
-          over five years divided by total economic costs, with the corresponding net benefit equal to
-          savings minus costs.
-        </li>
-        <li>
-          A willingness to pay based benefit cost ratio, defined as total WTP benefits divided by total
-          economic costs, with net benefit equal to WTP benefits minus costs.
-        </li>
-      </ul>
       <p>
-        The ratio of total cost savings and productivity gains to intervention costs in the commission's
-        modelling represents a conventional return on investment metric. In that analysis, the return on
-        investment over five years was greater than two for the base case scenario, meaning that each dollar
-        spent generated more than two dollars in savings. The decision aid adopts the same interpretation
-        when reporting cost saving based benefit cost ratios. :contentReference[oaicite:7]{index=7}
+        In the Commission modelling that underpins the calibration of the tool, the ratio of total cost
+        savings and productivity gains to programme costs corresponds to a conventional return on
+        investment measure. In that analysis, the base case return on investment over five years was
+        reported to be greater than two for some intervention scenarios, meaning that each dollar spent
+        generated more than two dollars in savings. The LonelyLessAustralia tool adopts the same
+        interpretation when reporting cost savings based benefit cost ratios and uses parameter values
+        that preserve this broad order of magnitude for illustrative scenarios.
       </p>
       <p>
         Users should bear in mind that the underlying estimates are based on specific interventions,
-        populations and time horizons. When applying results to new settings, it is important to consider
-        differences in programme design, baseline loneliness, comorbidities and health system structures.
+        populations and time horizons. When applying results to new settings, it is important to
+        consider differences in programme design, baseline loneliness, comorbidities, service
+        availability and health system structures. The main manuscript highlights these limitations
+        and cautions against treating the benefit cost ratios as definitive decision rules. The tool
+        is intended to support structured dialogue and scenario analysis rather than to replace
+        formal business case development.
       </p>
     </div>
 
     <div class="section">
-      <h2>8. Suggested additional benefit measures</h2>
+      <h2>8. Illustrative scenarios and model outputs</h2>
       <p>
-        Beyond the metrics already implemented in the tool, decision makers may wish to incorporate
-        additional benefit measures depending on data availability and policy priorities. Examples include:
+        To demonstrate how the decision aid combines preferences, costs and benefits, the online
+        appendix and main manuscript describe several illustrative programme configurations. These
+        scenarios vary programme type, delivery mode, travel distance and co payment while keeping
+        other parameters at their default values. Table 2 reports example outputs for three such
+        scenarios using a base cohort of 250 eligible older adults, the default moderate QALY gain
+        setting and inclusion of participant time costs.
       </p>
-      <ul>
-        <li>
-          Carer outcomes, such as reduced caregiver burden and improved quality of life for family members,
-          which may be relevant when programmes support socially isolated older adults with care needs.
-        </li>
-        <li>
-          Long term impacts on dementia risk, cardiovascular disease and mortality, given evidence that
-          loneliness and social isolation are associated with higher risks of these outcomes. :contentReference[oaicite:8]{index=8}
-        </li>
-        <li>
-          Wider social benefits, such as increased volunteering, community participation and strengthened
-          social capital, which may contribute to more resilient communities and indirect economic gains.
-        </li>
-      </ul>
+
+      <table>
+        <caption>Table 2. Example outputs for three illustrative LonelyLessAustralia scenarios (cohort 250)</caption>
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>Brief description</th>
+            <th>Predicted uptake (%)</th>
+            <th>Participants (number)</th>
+            <th>Total economic cost (AUD)</th>
+            <th>QALY benefit cost ratio</th>
+            <th>Cost savings benefit cost ratio</th>
+            <th>WTP benefit cost ratio</th>
+            <th>Total loneliness free days</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A</td>
+            <td>Community based group programme delivered in person at a local venue, weekly sessions, moderate co payment</td>
+            <td>56</td>
+            <td>140</td>
+            <td>100,000</td>
+            <td>1.6</td>
+            <td>2.2</td>
+            <td>1.2</td>
+            <td>11,000</td>
+          </tr>
+          <tr>
+            <td>B</td>
+            <td>Low intensity online programme with monthly virtual sessions and no co payment</td>
+            <td>42</td>
+            <td>105</td>
+            <td>55,000</td>
+            <td>1.3</td>
+            <td>1.8</td>
+            <td>1.0</td>
+            <td>7,500</td>
+          </tr>
+          <tr>
+            <td>C</td>
+            <td>Enhanced programme with more frequent in person sessions, very short travel distance and higher co payment</td>
+            <td>68</td>
+            <td>170</td>
+            <td>130,000</td>
+            <td>1.9</td>
+            <td>2.5</td>
+            <td>1.4</td>
+            <td>13,500</td>
+          </tr>
+        </tbody>
+      </table>
+
       <p>
-        Incorporating these outcomes would require additional modelling and evidence synthesis and is beyond
-        the scope of the current version of the tool.
+        These outputs are illustrative and are intended to show the relative rather than absolute
+        differences between scenarios. Scenario C, which offers more intensive in person support
+        with convenient access, generates higher predicted uptake and larger QALY and loneliness free
+        day gains, at the expense of higher total economic cost. Scenario B has lower cost but also
+        lower uptake and smaller benefits. The pattern of benefit cost ratios reflects this trade off
+        between intensity and scale. Users can construct and save alternative configurations in the
+        tool and export the summary results to inform local decision making or business case
+        development.
       </p>
     </div>
 
     <div class="section">
       <h2>9. Limitations</h2>
       <p>
-        The decision aid relies on several simplifying assumptions. The DCE model represents average
-        preferences across older adults and may not capture all important sources of heterogeneity. Cost
-        parameters and savings estimates come from specific programmes and time periods and may not fully
-        reflect current wage rates, service costs or policy settings. QALY gains are represented by
-        scenario values rather than intervention specific estimates within the tool, although the default
-        values are grounded in the literature.
+        The decision aid relies on several simplifying assumptions that are important to acknowledge.
+        The DCE model represents average preferences across older adults in the sample and does not
+        explicitly model preference heterogeneity by subgroups such as sex, cultural background,
+        income or region, although the random ASC captures some unobserved heterogeneity. Cost
+        parameters and savings estimates are drawn from specific interventions and time periods and
+        may not fully reflect current wage rates, service configurations or policy priorities in all
+        jurisdictions. QALY gains and loneliness free days are represented by scenario values that are
+        calibrated to the published modelling rather than by intervention specific estimates for every
+        possible programme design.
       </p>
       <p>
-        As a result, the tool is best used to support comparative scenario analysis and structured
-        discussion rather than as a stand alone decision rule. Formal business cases and funding decisions
-        should still be based on context specific analyses using up to date local data.
+        As a result, the tool is best used as a structured scenario generator that supports comparative
+        analysis, stakeholder engagement and clear communication of trade offs. It should not be used
+        as a stand alone decision rule. Formal funding decisions and detailed business cases should be
+        supported by context specific economic evaluations that use up to date local data and explore
+        uncertainty more fully, including sensitivity analyses around key parameters. The main
+        manuscript discusses these limitations and highlights directions for future refinement of the
+        model, including incorporation of subgroup specific preference and outcome data as they become
+        available.
       </p>
     </div>
 
@@ -338,41 +568,57 @@
       <ol class="ref-list">
         <li>
           Engel L, Lee YY, Le LK, Lal A, Mihalopoulos C. Reducing loneliness to prevent depression in older
-          adults in Australia: a modelled cost effectiveness analysis. Mental Health and Prevention. 2021;24:200212. :contentReference[oaicite:9]{index=9}
+          adults in Australia: a modelled cost effectiveness analysis. Mental Health and Prevention.
+          2021;24:200212.
         </li>
         <li>
           National Mental Health Commission. Educational interventions to reduce older persons loneliness.
-          Sydney: National Mental Health Commission; 2021. :contentReference[oaicite:10]{index=10}
+          Sydney: National Mental Health Commission; 2019.
         </li>
         <li>
           Kung CSJ, Kunz JS, Shields MA. Economic aspects of loneliness in Australia. Australian Economic
-          Review. 2021;54(1):147-163. :contentReference[oaicite:11]{index=11}
+          Review. 2021;54(1):147-163.
         </li>
         <li>
           Engel L, Mihalopoulos C. The loneliness epidemic: a holistic view of its health and economic
-          implications in older age. Medical Journal of Australia. 2024;221(6):290-292. :contentReference[oaicite:12]{index=12}
+          implications in older age. Medical Journal of Australia. 2024;221(6):290-292.
         </li>
         <li>
           National Academies of Sciences, Engineering, and Medicine. Social isolation and loneliness in
-          older adults: opportunities for the health care system. Washington, DC: National Academies Press; 2020. :contentReference[oaicite:13]{index=13}
+          older adults: opportunities for the health care system. Washington, DC: National Academies
+          Press; 2020.
         </li>
         <li>
           Donovan NJ, Blazer DG. Social isolation and loneliness in older adults: review and commentary
-          of a National Academies report. American Journal of Geriatric Psychiatry. 2020;28(12):1233-1244. :contentReference[oaicite:14]{index=14}
+          of a National Academies report. American Journal of Geriatric Psychiatry. 2020;28(12):1233-1244.
         </li>
         <li>
           Ending Loneliness Together. A national strategy to address loneliness and social isolation:
-          pre budget submission 2021-2022. Sydney: Ending Loneliness Together; 2021. :contentReference[oaicite:15]{index=15}
+          pre budget submission 2021 2022. Sydney: Ending Loneliness Together; 2021.
         </li>
         <li>
           Australian Institute of Health and Welfare. Social isolation, loneliness and wellbeing. In:
-          Australia's welfare 2023: data insights. Canberra: AIHW; 2023. :contentReference[oaicite:16]{index=16}
+          Australia's welfare 2023: data insights. Canberra: AIHW; 2023.
+        </li>
+        <li>
+          Bridges JFP, Hauber AB, Marshall D, Lloyd A, Prosser LA, Regier DA, Johnson FR, Mauskopf J.
+          Stated preference methods to inform patient centered care: a user guide. The Patient.
+          2011;4(4):269-282.
+        </li>
+        <li>
+          Louviere JJ, Hensher DA, Swait JD. Stated choice methods: analysis and applications. Cambridge:
+          Cambridge University Press; 2000.
+        </li>
+        <li>
+          Australian Bureau of Statistics. Average weekly earnings, Australia, May 2023. Cat. no. 6302.0.
+          Canberra: ABS; 2023.
         </li>
       </ol>
       <p class="small-note">
-        Additional background literature on loneliness interventions, health care utilisation and economic
-        evaluation is cited in the National Mental Health Commission technical brief and related journal
-        articles.
+        Additional background literature on loneliness interventions, healthcare utilisation and economic
+        evaluation is cited in the National Mental Health Commission technical materials and in the
+        journal articles listed above. The main manuscript and online appendix provide further references
+        that are specific to the survey design, qualitative work and model estimation.
       </p>
     </div>
   </div>
